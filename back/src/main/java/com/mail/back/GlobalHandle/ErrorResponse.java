@@ -1,4 +1,4 @@
-package com.learning.security.GlobalHandle;
+package com.mail.back.GlobalHandle;
 
 public class ErrorResponse {
     private String message;

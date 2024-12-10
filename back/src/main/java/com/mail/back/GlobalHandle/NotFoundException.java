@@ -1,4 +1,4 @@
-package com.learning.security.GlobalHandle;
+package com.mail.back.GlobalHandle;
 
 public class NotFoundException extends RuntimeException{
     public NotFoundException (String message) {

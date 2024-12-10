@@ -1,4 +1,4 @@
-package com.learning.security.GlobalHandle;
+package com.mail.back.GlobalHandle;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
