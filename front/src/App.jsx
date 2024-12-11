@@ -1,15 +1,32 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BrowserRouter, Routes,Route , Link } from 'react-router-dom'
 import SignUp from './signUp/signUp.jsx'
+import HomePage from './homePage/homePage.jsx'
 import './App.css'
+import Draft from './Draft/Draft.jsx'
+import Filter from './Filter/Filter.jsx'
+import Trash from './Trash/Trash.jsx'
+import InboxFolder from './InboxFolder/InboxFolder.jsx'
+import SentMails from './SentMails/SentMails.jsx'
+import UserFolder from './UserFolder/UserFolder.jsx'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <SignUp/>     
+      {/* <SignUp/> */}
+      <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<SignUp />} />
+        <Route path="/Home" element={ <HomePage/>} />
+        <Route path="/Home/Draft" element={ <Draft/>} />
+        <Route path="/Home/Filter" element={ <Filter/>} />
+        <Route path="/Home/SentMails" element={ <SentMails/>} />
+        <Route path="/Home/Trash" element={ <Trash/>} />
+        <Route path="/Home/InboxFolder" element={ <InboxFolder/>} />
+        <Route path="/Home/UserFolder" element={ <UserFolder/>} />
+      </Routes>
+      </BrowserRouter>
+           
     </>
   )
 }
