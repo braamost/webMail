@@ -1,10 +1,13 @@
 package com.mail.back.Service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.mail.back.entity.*;
 import com.mail.back.DAO.UserRepository;
 import java.util.List;
 import java.util.Optional;
+@Service
 public class UserServiceImp implements UserService {
     private  UserRepository userRepository;
     @Autowired
