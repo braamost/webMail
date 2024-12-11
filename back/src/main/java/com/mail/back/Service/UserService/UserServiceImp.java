@@ -42,4 +42,10 @@ public class UserServiceImp implements UserService {
     public void deleteById(int theId) {
         userRepository.deleteById(theId);
     }
+
+    @Override
+    public User getByUserName(String Username){
+      User user = userRepository.getByUserName(Username);
+      return user;
+    }
 }

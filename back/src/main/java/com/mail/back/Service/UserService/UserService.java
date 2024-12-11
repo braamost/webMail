@@ -9,4 +9,6 @@ public interface UserService {
   User save(User theUser);
 
   void deleteById(int theId);
+
+  User getByUserName(String Username);
 }
