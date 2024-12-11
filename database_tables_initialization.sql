@@ -6,7 +6,7 @@ drop table if exists `users`;
 create table `users`(
 
   `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `username` varchar(50) DEFAULT NULL,
+  `user_name` varchar(50) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `email` varchar(320) DEFAULT NULL,
   `phone_number` varchar(20) DEFAULT NULL,
@@ -42,7 +42,7 @@ create table `user_emails`(
     
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE INDEX `idx_users_username` ON `users` (`username`);
+CREATE INDEX `idx_users_username` ON `users` (`user_name`);
 CREATE INDEX `idx_users_email` ON `users` (`email`);
 CREATE INDEX `idx_user_emails_user_id` ON `user_emails` (`sender_id`, `receiver_id`);
 CREATE INDEX `idx_user_emails_email_id` ON `user_emails` (`email_id`);
