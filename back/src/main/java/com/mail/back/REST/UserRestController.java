@@ -1,63 +1,84 @@
 package com.mail.back.REST;
 
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.*;
+import com.mail.back.GlobalHandle.NotFoundException;
 import com.mail.back.Service.UserService.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import java.util.List;
 import com.mail.back.entity.User;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-
-
+import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class UserRestController {
-  private UserService userService;
+
+  private final UserService userService;
 
   @Autowired
   public UserRestController(UserService userService) {
     this.userService = userService;
   }
-  
-  @GetMapping("/users")
+
+  // Fetch all users
+  @GetMapping
   public List<User> findAll() {
     return userService.findAll();
   }
-  
-  @GetMapping("/users/{id}")
-  public User get(@PathVariable int id) {
-    return userService.findById(id);
-  }
-  @GetMapping("/users/{userName}")
-  public User getByUserName(@PathVariable String userName) {
-    return userService.getByUserName(userName);
-  }
-  @PostMapping("/users")
-  public User postMethodName(@RequestBody User user) {
-    user.setId((long)0);
-      User entity = userService.save(user);
-      return entity;
+
+  // Fetch user by ID
+  @GetMapping("/{id}")
+  public User findById(@PathVariable int id) {
+      return userService.findById(id);
   }
 
-  @PutMapping("/users")
-  public User putMethodName(@PathVariable User user) {
-      User entity = userService.save(user);
-      return entity;
+  // Fetch user by username
+  @GetMapping("/username/{userName}")
+  public User findByUserName(@PathVariable String userName) {
+    User user = userService.getByUserName(userName);
+    if (user == null) {
+      throw new NotFoundException("User with username " + userName + " not found.");
+    }
+    return user;
   }
-  
-  @DeleteMapping("/users/{id}")
-  public void delete(@PathVariable int id) {
+
+  // Add a new user
+  @PostMapping
+  public User addUser(@RequestBody User user) {
+    user.setId(null); // Ensure the ID is set to null for creating a new entity
+    return userService.save(user);
+  }
+
+  // Update an existing user
+  @PutMapping("/{id}")
+  public User updateUser(@RequestBody User user, @PathVariable int id) {
+    User theUser = userService.findById(id);
+    if(theUser == null) {
+      throw new NotFoundException("User with ID " + id + " not found.");
+    }
+    user.setId(id);
+    user.setCreatedAt(theUser.getCreatedAt());
+    return userService.save(user);
+  }
+
+  // Delete user by ID
+  @DeleteMapping("/{id}")
+  public String deleteById(@PathVariable int id) {
+    User user = userService.findById(id);
+    if (user == null) {
+      throw new NotFoundException("User with ID " + id + " not found.");
+    }
     userService.deleteById(id);
+    return "Deleted user with ID " + id;
   }
 
-  @DeleteMapping("/users/{username}")
-  public void delete(@PathVariable String username) {
-    long id = userService.getByUserName(username).getId();
-    userService.deleteById((int)id);
+  // Delete user by username
+  @DeleteMapping("/username/{userName}")
+  public String deleteByUserName(@PathVariable String userName) {
+    User user = userService.getByUserName(userName);
+    if (user == null) {
+      throw new NotFoundException("User with username " + userName + " not found.");
+    }
+    userService.deleteById(user.getId());
+    return "Deleted user with username " + userName;
   }
 }

@@ -1,6 +1,7 @@
 CREATE DATABASE  IF NOT EXISTS `web_mail`;
 USE `web_mail`;
 
+drop table if exists `user_emails`;
 drop table if exists `users`;
 
 create table `users`(
@@ -10,7 +11,7 @@ create table `users`(
   `password` varchar(255) DEFAULT NULL,
   `email` varchar(320) DEFAULT NULL,
   `phone_number` varchar(20) DEFAULT NULL,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
   
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
@@ -22,13 +23,11 @@ create table `emails`(
     `id` int NOT NULL AUTO_INCREMENT primary key,
 	`subject` VARCHAR(255) NOT NULL,
     `body` TEXT NOT NULL,
-	`sent_at` datetime DEFAULT CURRENT_TIMESTAMP,
+	`sent_at` DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     `is_read` BOOLEAN DEFAULT FALSE, -- Tracks whether the email has been read
     `folder` ENUM('INBOX', 'OUTBOX', 'TRASH', 'ARCHIVE', 'starred') DEFAULT 'INBOX' -- Organize emails into folders
 
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
-
-drop table if exists `user_emails`;
 
 create table `user_emails`(
 

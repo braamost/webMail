@@ -14,7 +14,7 @@ public class handleException {
     }
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> otherException(Exception exception) {
-        ErrorResponse errorResponse = new ErrorResponse("unknown error", 500, System.currentTimeMillis());
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), 500, System.currentTimeMillis());
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -1,14 +1,17 @@
 package com.mail.back.Service.EmailService;
+
 import com.mail.back.DAO.EmailRepository;
+import com.mail.back.GlobalHandle.NotFoundException;
 import com.mail.back.entity.*;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 @Service
 public class EmailServiceImp implements EmailService{
-  private EmailRepository emailRepository;
+  private final EmailRepository emailRepository;
   
   @Autowired
   public EmailServiceImp(EmailRepository emailRepository){
@@ -21,7 +24,7 @@ public class EmailServiceImp implements EmailService{
     }
 
     @Override
-    public Email findById(int theId) {
+    public Email findById(Integer theId) {
         Optional<Email> result = emailRepository.findById(theId);
 
         Email theEmail = null;
@@ -31,7 +34,7 @@ public class EmailServiceImp implements EmailService{
         }
         else {
             // we didn't find the Email
-            throw new RuntimeException("Did not find Email id - " + theId);
+            throw new NotFoundException("Email with id " + theId + " not found.");
         }
 
         return theEmail;
@@ -43,7 +46,7 @@ public class EmailServiceImp implements EmailService{
     }
 
     @Override
-    public void deleteById(int theId) {
+    public void deleteById(Integer theId) {
         emailRepository.deleteById(theId);
     }
 

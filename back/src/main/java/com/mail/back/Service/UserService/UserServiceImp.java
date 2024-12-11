@@ -1,5 +1,6 @@
 package com.mail.back.Service.UserService;
 
+import com.mail.back.GlobalHandle.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,18 +10,20 @@ import java.util.List;
 import java.util.Optional;
 @Service
 public class UserServiceImp implements UserService {
-    private  UserRepository userRepository;
+    private final UserRepository userRepository;
+
     @Autowired
     public UserServiceImp(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
     @Override
-    public User findById(int theId) {
+    public User findById(Integer theId) {
         Optional<User> result = userRepository.findById(theId);
 
         User theUser = null;
@@ -30,7 +33,7 @@ public class UserServiceImp implements UserService {
         }
         else {
             // we didn't find the User
-            throw new RuntimeException("Did not find User id - " + theId);
+            throw new NotFoundException("User with ID " + theId + " not found.");
         }
 
         return theUser;
@@ -42,13 +45,12 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void deleteById(int theId) {
+    public void deleteById(Integer theId) {
         userRepository.deleteById(theId);
     }
 
     @Override
     public User getByUserName(String Username){
-      User user = userRepository.getByUserName(Username);
-      return user;
+        return userRepository.getByUserName(Username);
     }
 }

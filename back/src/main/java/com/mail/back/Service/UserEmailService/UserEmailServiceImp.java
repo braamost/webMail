@@ -1,5 +1,6 @@
 package com.mail.back.Service.UserEmailService;
 
+import com.mail.back.GlobalHandle.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,12 +10,12 @@ import java.util.List;
 import java.util.Optional;
 @Service
 public class UserEmailServiceImp implements UserEmailService{
-    private UserEmailRepository userEmailRepository;
+
+    private final UserEmailRepository userEmailRepository;
     @Autowired
     public UserEmailServiceImp(UserEmailRepository userEmailRepository) {
         this.userEmailRepository = userEmailRepository;
     }
-  
 
     @Override
     public List<UserEmail> findAll() {
@@ -32,7 +33,7 @@ public class UserEmailServiceImp implements UserEmailService{
         }
         else {
             // we didn't find the UserEmail
-            throw new RuntimeException("Did not find UserEmail id - " + theId);
+            throw new NotFoundException("Did not find UserEmail id - " + theId);
         }
 
         return theUserEmail;

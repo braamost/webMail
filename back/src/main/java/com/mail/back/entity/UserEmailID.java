@@ -56,4 +56,12 @@ public class UserEmailID implements Serializable {
     public int hashCode() {
         return Objects.hash(senderId, receiverId, emailId);
     }
+    @Override
+    public String toString() {
+        return "UserEmailID{" +
+                "senderId=" + senderId +
+                ", receiverId=" + receiverId +
+                ", emailId=" + emailId +
+                '}';
+    }
 }

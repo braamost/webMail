@@ -1,52 +1,62 @@
 package com.mail.back.REST;
 
-import java.util.List;
-
+import com.mail.back.GlobalHandle.NotFoundException;
+import com.mail.back.Service.EmailService.EmailService;
+import com.mail.back.entity.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
-
-import com.mail.back.Service.EmailService.EmailService;
-import com.mail.back.entity.Email;
-import com.mail.back.entity.User;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/emails")
 public class EmailRestController {
 
-    private EmailService emailService;
+    private final EmailService emailService;
+
     @Autowired
     public EmailRestController(EmailService emailService) {
         this.emailService = emailService;
     }
-    
-    @GetMapping("/emails")
-  public List<Email> findAll() {
-    return emailService.findAll();
-  }
 
-  @GetMapping("/emails/{id}")
-  public Email get(@PathVariable int id) {
-    return emailService.findById(id);
-  }
+    // Fetch all emails
+    @GetMapping
+    public List<Email> findAll() {
+        return emailService.findAll();
+    }
 
+    // Fetch email by ID
+    @GetMapping("/{id}")
+    public Email getById(@PathVariable Integer id) {
+        return emailService.findById(id);
+    }
 
-  @PostMapping("/emails")
-  public Email postMethodName(@RequestBody Email email) {
-    email.setId((long)0);
-      Email entity = emailService.save(email);
-      return entity;
-  }
-  
-  @PutMapping("/emails")
-  public Email putMethodName(@PathVariable Email email) {
-      Email entity = emailService.save(email);
-      return entity;
-  }
-  
-  @DeleteMapping("/email/{id}")
-  public void delete(@PathVariable int id) {
-    emailService.deleteById(id);
-  }
+    // Add a new email
+    @PostMapping
+    public Email addEmail(@RequestBody Email email) {
+        email.setId(null); // Ensure the ID is 0 for creating a new entity
+        return emailService.save(email);
+    }
+
+    // Update an existing email
+    @PutMapping("/{id}")
+    public Email updateEmail(@RequestBody Email email, @PathVariable Integer id) {
+        Email existingEmail = emailService.findById(id);
+        if (existingEmail == null) {
+            throw new NotFoundException("Email with id " + id + " not found.");
+        }
+        email.setId(id); // Ensure the ID matches the one in the URL
+        email.setSentAt(existingEmail.getSentAt());
+        return emailService.save(email);
+    }
+
+    // Delete an email by ID
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Integer id) {
+        Email existingEmail = emailService.findById(id);
+        if (existingEmail == null) {
+            throw new NotFoundException("Email with id " + id + " not found.");
+        }
+        emailService.deleteById(id);
+    }
 }

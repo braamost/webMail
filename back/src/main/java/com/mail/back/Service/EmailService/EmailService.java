@@ -5,9 +5,9 @@ public interface EmailService {
   
     List<Email> findAll();
 
-    Email findById(int id);
+    Email findById(Integer id);
 
     Email save(Email employee);
 
-    void deleteById(int id);
+    void deleteById(Integer id);
 }
