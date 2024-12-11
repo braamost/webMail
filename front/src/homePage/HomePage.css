@@ -1,0 +1,38 @@
+.menu-bar {
+    position: fixed; /* Keeps the menu fixed as you scroll */
+    top: 50%; /* Center vertically */
+    right: 0; /* Align to the left of the page */
+    transform: translateY(-50%); /* Center correction */
+    background: #ffffff; /* Background for the menu */
+    border-radius: 10px 10px 10px 10px; /* Rounded corners on the right side */
+    padding: 10px 0; /* Padding inside the menu */
+    width: 200px; /* Set a fixed width for the menu */
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+  }
+  
+  .menu-bar button {
+    display: flex; /* Use flexbox for better alignment */
+    align-items: center; /* Center items vertically */
+    justify-content: start; /* Align content to the start (left) */
+    width: 100%; /* Full width of the container */
+    padding: 10px 20px; /* Padding inside buttons */
+    background: transparent; /* Transparent background for buttons */
+    border: none; /* Remove default button border */
+    text-align: left; /* Align text to the left */
+    font-size: 16px; /* Adjust font size */
+    color: #333; /* Button text color */
+    cursor: pointer; /* Pointer cursor on hover */
+  }
+  
+  .menu-bar button:hover {
+    background: #f5f5f5; /* Highlight background on hover */
+  }
+  
+  .menu-bar button:focus {
+    outline: none; /* Remove default focus outline */
+  }
+  
+  .menu-bar button + button {
+    border-top: 1px solid #ddd; /* Add a separator between buttons */
+  }
+  
