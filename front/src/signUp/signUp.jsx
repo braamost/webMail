@@ -5,7 +5,6 @@ function SignUp() {
     const [isLogin , setIsLogin] = useState(true)
     return (
         <>
-        <section>
         <div className="form-box">
             <div className="form-value">
                 {(isLogin)
@@ -76,7 +75,6 @@ function SignUp() {
                 }
             </div>
         </div>
-        </section>
         </>
     );
 }
