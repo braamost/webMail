@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { BrowserRouter, Routes,Route , Link } from 'react-router-dom'
+
+import { BrowserRouter, Routes,Route } from 'react-router-dom'
 import SignUp from './signUp/signUp.jsx'
 import HomePage from './homePage/homePage.jsx'
 import Draft from './Draft/Draft.jsx'
@@ -10,9 +10,6 @@ import SentMails from './SentMails/SentMails.jsx'
 import UserFolder from './UserFolder/UserFolder.jsx'
 import Register from './Register/RegisterPage.jsx'
 function App() {
-
-  const [isLogin, setIsLogin] = useState(true);
-  const [error, setError] = useState('');
   const emails = [
     {
       id: 1,
@@ -39,7 +36,7 @@ function App() {
       <BrowserRouter>
       <Routes>
         <Route path="/" element={<SignUp />} /> 
-        <Route path='/Register' element={<Register setIsLogin={setIsLogin} />} /> //2
+        <Route path='/Register' element={<Register/>} /> 
         <Route path="/Home" element={ <HomePage emails={emails}/>} />
         <Route path="/Home/Draft" element={ <Draft emails={emails}/>} />
         <Route path="/Home/Filter" element={ <Filter emails={emails}/>} />

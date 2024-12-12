@@ -3,10 +3,10 @@ import axios from "axios";
 export async function Login(username, password, setError) {
   try {
     const apiUrl = `http://localhost:8080/api/users/username/${username}/${password}`;
-    
+
     const response = await axios.get(apiUrl, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     console.log(response.data);
