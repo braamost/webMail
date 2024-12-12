@@ -13,21 +13,40 @@ function App() {
 
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState('');
+  const emails = [
+    {
+      id: 1,
+      sender: "john@example.com",
+      subject: "Meeting Reminder",
+      timestamp: "2024-12-12 10:00 AM",
+    },
+    {
+      id: 2,
+      sender: "jane@example.com",
+      subject: "Project Update",
+      timestamp: "2024-12-11 03:00 PM",
+    },
+    {
+        id: 3,
+        sender: "hhghj@example.com",
+        subject: "Project Update",
+        timestamp: "2024-12-11 03:00 PM",
+      },
+  ];
 
   return (
     <>
-      {/* <SignUp/> */}
       <BrowserRouter>
       <Routes>
         <Route path="/" element={<SignUp setIsLogin={setIsLogin} setError={setError} error={error}/>} /> 
         <Route path='/Register' element={<Register setIsLogin={setIsLogin} setError={setError}/>} /> //2
-        <Route path="/Home" element={ <HomePage/>} />
-        <Route path="/Home/Draft" element={ <Draft/>} />
-        <Route path="/Home/Filter" element={ <Filter/>} />
-        <Route path="/Home/SentMails" element={ <SentMails/>} />
-        <Route path="/Home/Trash" element={ <Trash/>} />
-        <Route path="/Home/InboxFolder" element={ <InboxFolder/>} />
-        <Route path="/Home/UserFolder" element={ <UserFolder/>} />
+        <Route path="/Home" element={ <HomePage emails={emails}/>} />
+        <Route path="/Home/Draft" element={ <Draft emails={emails}/>} />
+        <Route path="/Home/Filter" element={ <Filter emails={emails}/>} />
+        <Route path="/Home/SentMails" element={ <SentMails emails={emails}/>} />
+        <Route path="/Home/Trash" element={ <Trash emails={emails}/>} />
+        <Route path="/Home/InboxFolder" element={ <InboxFolder emails={emails}/>} />
+        <Route path="/Home/UserFolder" element={ <UserFolder emails={emails}/>} />
       </Routes>
       </BrowserRouter>
           

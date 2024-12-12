@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom"
-function SentMails (){
+import HomePage from "../homePage/homePage"
+function SentMails ({ emails }) {
     return (
     <>
-        <Link to="/Home/SentMails">
-            <button type="button">Sent mails</button>
-        </Link>
+        <HomePage emails={emails}/>
     </>
     )
 }

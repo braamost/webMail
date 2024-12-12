@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom"
-function InboxFolder (){
+import HomePage from "../homePage/homePage"
+function InboxFolder ({emails}){
     return (
     <>
-        <Link to ="/Home/InboxFolder">
-            <button type="button">InboxFolder</button>
-        </Link>
+        <HomePage emails={emails}/>
     </>
     )
 }

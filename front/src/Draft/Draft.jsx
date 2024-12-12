@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom"
-function Draft (){
+import HomePage from "../homePage/homePage"
+function Draft ({emails}){
     return (
     <>
-        <Link to="/Home/Draft">
-        <button type="button">Draft</button>
-        </Link>
+        <HomePage emails={emails}/>
     </>
     )
 }

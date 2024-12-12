@@ -31,6 +31,9 @@
   .menu-bar button:focus {
     outline: none; /* Remove default focus outline */
   }
+  .menu-bar button:active {
+    background: #e5e5e5; /* Change background on active state */
+  }
   
   .menu-bar button + button {
     border-top: 1px solid #ddd; /* Add a separator between buttons */

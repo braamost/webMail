@@ -25,6 +25,7 @@ export default function RegisterPage({ setIsLogin }) {
   };
 
   return (
+    <div className="form-box">
     <form onSubmit={CreateAccount}>
       <h2>Register</h2>
       
@@ -92,5 +93,6 @@ export default function RegisterPage({ setIsLogin }) {
         </Link>
       </div>
     </form>
+    </div>
   );
 }
