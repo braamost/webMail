@@ -10,9 +10,6 @@ import SentMails from './SentMails/SentMails.jsx'
 import UserFolder from './UserFolder/UserFolder.jsx'
 import Register from './Register/RegisterPage.jsx'
 function App() {
-
-  const [isLogin, setIsLogin] = useState(true);
-  const [error, setError] = useState('');
   const emails = [
     {
       id: 1,
@@ -38,7 +35,7 @@ function App() {
     <>
       <BrowserRouter>
       <Routes>
-        <Route path="/" element={<SignUp setIsLogin={setIsLogin} setError={setError} error={error}/>} /> 
+        <Route path="/" element={<SignUp />} /> 
         <Route path='/Register' element={<Register setIsLogin={setIsLogin} setError={setError}/>} /> //2
         <Route path="/Home" element={ <HomePage emails={emails}/>} />
         <Route path="/Home/Draft" element={ <Draft emails={emails}/>} />
