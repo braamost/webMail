@@ -10,5 +10,7 @@ public interface UserService {
 
   void deleteById(Integer theId);
 
-  User getByUserName(String Username);
+  User findByUserName(String Username);
+
+  User findByEmail(String email);
 }

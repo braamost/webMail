@@ -1,13 +1,13 @@
 package com.mail.back.GlobalHandle;
 
-public class UserAlreadyExistsException extends RuntimeException {
-    public UserAlreadyExistsException(String message) {
+public class WrongPasswordException extends RuntimeException {
+    public WrongPasswordException(String message) {
         super(message);
     }
-    public UserAlreadyExistsException (String message, Throwable cause) {
+    public WrongPasswordException(String message, Throwable cause) {
         super(message, cause);
     }
-    public UserAlreadyExistsException (Throwable cause) {
+    public WrongPasswordException(Throwable cause) {
         super(cause);
     }
 }
