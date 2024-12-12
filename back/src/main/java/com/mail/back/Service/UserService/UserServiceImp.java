@@ -1,7 +1,9 @@
 package com.mail.back.Service.UserService;
 
 import com.mail.back.GlobalHandle.NotFoundException;
+import com.mail.back.Security.SecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mail.back.entity.*;
@@ -11,9 +13,11 @@ import java.util.Optional;
 @Service
 public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImp(UserRepository userRepository) {
+    public UserServiceImp(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
     }
 
@@ -41,6 +45,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public User save(User theUser) {
+        theUser.setPassword(passwordEncoder.encode(theUser.getPassword()));
         return userRepository.save(theUser);
     }
 
@@ -55,5 +60,8 @@ public class UserServiceImp implements UserService {
     }
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+    public boolean checkPassword(User user, String password) {
+        return passwordEncoder.matches(password, user.getPassword());
     }
 }

@@ -13,4 +13,6 @@ public interface UserService {
   User findByUserName(String Username);
 
   User findByEmail(String email);
+
+  boolean checkPassword(User user, String password);
 }

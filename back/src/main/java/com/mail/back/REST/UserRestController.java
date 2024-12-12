@@ -43,7 +43,7 @@ public class UserRestController {
     if (user == null) {
       throw new NotFoundException("User with username " + userName + " not found.");
     }
-    if(!user.getPassword().equals(password)) {
+    if(!userService.checkPassword(user, password)) {
       throw new WrongPasswordException("Wrong password.");
     }
     return ResponseEntity.ok(user);
