@@ -1,10 +1,11 @@
 import "./style.css";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Register } from "../REST/RegisterRequest";
+import { Register } from "./RegisterRequest";
 
-export default function RegisterPage({ setIsLogin }) {
+export default function RegisterPage({ setIsLogin  }) {
   const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
