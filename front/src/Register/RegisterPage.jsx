@@ -2,20 +2,29 @@ import "./style.css";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Register } from "../REST/RegisterRequest";
-
+import { Login } from "../REST/UserRest";
 export default function RegisterPage({ setIsLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-
+  const [error , setError] = useState("");
   const navigate = useNavigate();
 
   const CreateAccount = async (e) => {
     e.preventDefault();
 
     // Call the Register function with the user inputs
-    const response = await Register(username, password, email, phoneNumber);
+    const response2 = await Login(username, "0");
+    console.log(response2)
+    if(response2){
+      setError("Username already exists");
+   
+    }else{
+      const response = await Register(username, password, email, phoneNumber);
+      navigate("/Home");
+    }
+   
     // Handle response (e.g., show success, error messages, etc.)
   };
 
@@ -48,6 +57,7 @@ export default function RegisterPage({ setIsLogin }) {
           onChange={(e) => setUsername(e.target.value)} // Update username state on change
         />
         <label htmlFor="text">Username</label>
+        {error}
       </div>
 
       <div className="inputbox">

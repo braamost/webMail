@@ -19,7 +19,7 @@ export default function SignUp({setIsLogin , setError, error}) {
       console.log('Attempting login with:', { username, password });
       
       const response = await Login(username, password);
-      console.log(response);
+      console.log(response+"444");
       if (response && response != "passError") {
         navigate('/Home');
       } else {
