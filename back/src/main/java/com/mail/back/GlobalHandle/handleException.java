@@ -7,14 +7,23 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class handleException {
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException exception) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), 404, System.currentTimeMillis());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> otherException(Exception exception) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), 500, System.currentTimeMillis());
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+
+    @ExceptionHandler(WrongPasswordException.class)
+    public ResponseEntity<String> handleWrongPasswordException(WrongPasswordException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<String> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGeneralException(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
     }
 }

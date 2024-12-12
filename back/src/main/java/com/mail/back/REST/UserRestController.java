@@ -1,9 +1,13 @@
 package com.mail.back.REST;
 
 import com.mail.back.GlobalHandle.NotFoundException;
+import com.mail.back.GlobalHandle.UserAlreadyExistsException;
+import com.mail.back.GlobalHandle.WrongPasswordException;
 import com.mail.back.Service.UserService.UserService;
 import com.mail.back.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,20 +37,33 @@ public class UserRestController {
   }
 
   // Fetch user by username
-  @GetMapping("/username/{userName}")
-  public User findByUserName(@PathVariable String userName) {
-    User user = userService.getByUserName(userName);
+  @GetMapping("/username/{userName}/{password}")
+  public ResponseEntity<User> findByUserName(@PathVariable String userName, @PathVariable String password) {
+    User user = userService.findByUserName(userName);
     if (user == null) {
       throw new NotFoundException("User with username " + userName + " not found.");
     }
-    return user;
+    if(!user.getPassword().equals(password)) {
+      throw new WrongPasswordException("Wrong password.");
+    }
+    return ResponseEntity.ok(user);
   }
 
   // Add a new user
   @PostMapping
-  public User addUser(@RequestBody User user) {
+  public ResponseEntity<User> addUser(@RequestBody User user) {
     user.setId(null); // Ensure the ID is set to null for creating a new entity
-    return userService.save(user);
+    String userName = user.getUserName();
+    String email = user.getEmail();
+
+    if (userService.findByUserName(userName) != null) {
+      throw new UserAlreadyExistsException("User with username " + userName + " already exists.");
+    }
+    if (userService.findByEmail(email) != null) {
+      throw new UserAlreadyExistsException("User with email " + email + " already exists.");
+    }
+    User savedUser = userService.save(user);
+    return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
   }
 
   // Update an existing user
@@ -75,7 +92,7 @@ public class UserRestController {
   // Delete user by username
   @DeleteMapping("/username/{userName}")
   public String deleteByUserName(@PathVariable String userName) {
-    User user = userService.getByUserName(userName);
+    User user = userService.findByUserName(userName);
     if (user == null) {
       throw new NotFoundException("User with username " + userName + " not found.");
     }

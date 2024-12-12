@@ -128,3 +128,15 @@ button {
 .register p a:hover {
   text-decoration: underline;
 }
+
+.error-message {
+  color: red;
+  padding: 10px;
+  background-color: #ffeeee;
+  border: 1px solid red;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}

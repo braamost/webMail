@@ -28,7 +28,7 @@ export default function RegisterPage({ setIsLogin }) {
     <div className="form-box">
     <form onSubmit={CreateAccount}>
       <h2>Register</h2>
-      
+      {error && <p className="error-message">{error}</p>}
       <div className="inputbox">
         <ion-icon name="mail-outline"></ion-icon>
         <input
