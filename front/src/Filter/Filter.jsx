@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom"
-function Filter (){
+import HomePage from "../homePage/homePage"
+function Filter ({emails}){
     return (
     <>
-        <Link to="/Home/Filter">
-        <button type="button">Filter</button>
-        </Link>
+        <HomePage emails={emails}/>
         
     </>
     )
