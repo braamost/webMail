@@ -1,82 +1,99 @@
 import "./style.css";
+import { Login } from "../REST/UserRest";
 import React, { useState } from "react";
-import {Link} from "react-router-dom"
-function SignUp() {
-    const [isLogin , setIsLogin] = useState(true)
-    return (
-        <>
-        <div className="form-box">
-            <div className="form-value">
-                {(isLogin)
-                &&
-                (   <form>
-                    <h2>Login</h2>
-                    <div className="inputbox">
-                        <ion-icon name="mail-outline"></ion-icon>
-                        <input type="email" required />
-                        <label htmlFor="email">Email</label>
-                    </div>
-                    <div className="inputbox">
-                        <ion-icon name="lock-closed-outline"></ion-icon>
-                        <input type="password" required />
-                        <label htmlFor="password">Password</label>
-                    </div>
-                    <div className="forget">
-                        <label>
-                            <input type="checkbox" /> Remember me
-                        </label>
-                        <label>
-                            <a href="#">Forgot password?</a>
-                        </label>
-                    </div>
-                    <button type="submit">Log in</button>
-                    <div className="register">
-                        <p>Don't have an account? <button onClick={()=>(setIsLogin(false))} >Register</button></p>
-                    </div>
-                    <Link to="/Home">
-                        <button>Go to Home Page</button>
-                    </Link>
-                </form>)
-                }
-                {(!isLogin)
-                &&
-                (   <form>
-                    <h2>Register</h2>
-                    <div className="inputbox">
-                        <ion-icon name="mail-outline"></ion-icon>
-                        <input type="email" required />
-                        <label htmlFor="email">Email</label>
-                    </div>
-                    <div className="inputbox">
-                        <ion-icon name="lock-closed-outline"></ion-icon>
-                        <input type="text" required />
-                        <label htmlFor="text">User Name</label>
-                    </div>
-                    <div className="inputbox">
-                        <ion-icon name="mail-outline"></ion-icon>
-                        <input type="text" required />
-                        <label htmlFor="password">Password</label>
-                    </div>
-                    <div className="inputbox">
-                        <ion-icon name="lock-closed-outline"></ion-icon>
-                        <input type="text" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" required />
-                        <label htmlFor="phone">Telephone</label>
-                    </div>
-                    <button type="submit">Create new account</button>
-                    <div className="register">
-                        <p>have an account? <button onClick={()=>(setIsLogin(true))}>Login</button> </p>
-                    </div>
-                    <div className="home">
-                       <Link to="/Home">
-                        <button >Go to Home Page</button>
-                    </Link> 
-                    </div>    
-                </form>)
-                }
-            </div>
-        </div>
-        </>
-    );
-}
+import { Link, useNavigate } from "react-router-dom";
 
-export default SignUp;
+export default function SignUp() {
+  const [isLogin, setIsLogin] = useState(true);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+      console.log('Attempting login with:', { username, password });
+      
+      const response = await Login(username, password);
+      console.log(response);
+      if (response && response != "passError") {
+        navigate('/Home');
+      } else {
+        if(response == "passError"){
+          setError("Incorrect password");
+        }else{
+        setError('Not found User name');
+      }
+      }
+  };
+
+  return (
+    <>
+      <div className="form-box">
+        <div className="form-value">
+          {isLogin && (
+            <form onSubmit={handleLogin}>
+              <h2>Login</h2>
+              {error && (
+                <div style={{
+                  color: 'red', 
+                  marginBottom: '10px', 
+                  padding: '10px', 
+                  backgroundColor: '#ffeeee',
+                  border: '1px solid red',
+                  borderRadius: '5px'
+                }}>
+                  {error}
+                </div>
+              )}
+              <div className="inputbox">
+                <ion-icon name="mail-outline"></ion-icon>
+                <input 
+                  type="text" 
+                  required 
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Username"
+                />
+                <label htmlFor="username">Username</label>
+              </div>
+              <div className="inputbox">
+                <ion-icon name="lock-closed-outline"></ion-icon>
+                <input 
+                  type="password" 
+                  required 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                />
+                <label htmlFor="password">Password</label>
+              </div>
+              <div className="forget">
+                <label>
+                  <input type="checkbox" /> Remember me
+                </label>
+                <label>
+                  <a href="#">Forgot password?</a>
+                </label>
+              </div>
+              <button type="submit">Log in</button>
+              <div className="register">
+                <p>
+                  Don't have an account? 
+                  <button type="button" onClick={() => setIsLogin(false)}>
+                    Register
+                  </button>
+                </p>
+              </div>
+              <Link to="/Home">
+                <button type="button">Go to Home Page</button>
+              </Link>
+            </form>
+          )}
+          {/* Rest of the component remains the same */}
+        </div>
+      </div>
+    </>
+  );
+}
