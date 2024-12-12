@@ -4,20 +4,21 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Register } from "../REST/RegisterRequest";
 
-export default function SignUp() {
-  const [isLogin, setIsLogin] = useState(true);
+export default function SignUp({setIsLogin , setError, error}) {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
 
+  const handleRegisterClick = () => {
+    setIsLogin(false); // Update the login state
+    navigate('/Register'); // Navigate to the Register page
+  };
   const handleLogin = async (e) => {
     e.preventDefault();
 
       console.log('Attempting login with:', { username, password });
       
       const response = await Login(username, password);
-      //const response = await Register("maria", "1234", "a@gmail", "1234");
       console.log(response);
       if (response && response != "passError") {
         navigate('/Home');
@@ -34,7 +35,7 @@ export default function SignUp() {
     <>
       <div className="form-box">
         <div className="form-value">
-          {isLogin && (
+          { (
             <form onSubmit={handleLogin}>
               <h2>Login</h2>
               {error && (
@@ -83,8 +84,8 @@ export default function SignUp() {
               <div className="register">
                 <p>
                   Don't have an account? 
-                  <button type="button" onClick={() => setIsLogin(false)}>
-                    Register
+                  <button type="button" onClick={handleRegisterClick}>
+                  Register
                   </button>
                 </p>
               </div>
@@ -93,40 +94,6 @@ export default function SignUp() {
               </Link>
             </form>
           )}
-          {(!isLogin)
-            &&
-            (   <form>
-                <h2>Register</h2>
-                <div className="inputbox">
-                    <ion-icon name="mail-outline"></ion-icon>
-                    <input type="email" required />
-                    <label htmlFor="email">Email</label>
-                </div>
-                <div className="inputbox">
-                    <ion-icon name="lock-closed-outline"></ion-icon>
-                    <input type="text" required />
-                    <label htmlFor="text">User Name</label>
-                </div>
-                <div className="inputbox">
-                    <ion-icon name="mail-outline"></ion-icon>
-                    <input type="text" required />
-                    <label htmlFor="password">Password</label>
-                </div>
-                <div className="inputbox">
-                    <ion-icon name="lock-closed-outline"></ion-icon>
-                    <input type="text" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" required />
-                    <label htmlFor="phone">Telephone</label>
-                </div>
-                <button type="submit">Create new account</button>
-                <div className="register">
-                    <p>have an account? <button onClick={()=>(setIsLogin(true))}>Login</button> </p>
-                </div>
-                <div className="home">
-                   <Link to="/Home">
-                    <button >Go to Home Page</button>
-                </Link> 
-                </div>    
-            </form>)}
         </div>
       </div>
     </>
