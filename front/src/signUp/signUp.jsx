@@ -2,6 +2,7 @@ import "./style.css";
 import { Login } from "../REST/UserRest";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Register } from "../REST/RegisterRequest";
 
 export default function SignUp() {
   const [isLogin, setIsLogin] = useState(true);
@@ -16,6 +17,7 @@ export default function SignUp() {
       console.log('Attempting login with:', { username, password });
       
       const response = await Login(username, password);
+      //const response = await Register("maria", "1234", "a@gmail", "1234");
       console.log(response);
       if (response && response != "passError") {
         navigate('/Home');
