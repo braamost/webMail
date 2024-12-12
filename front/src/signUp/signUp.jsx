@@ -27,9 +27,9 @@ export default function SignUp() {
         }else{
         setError('Not found User name');
       }
-      }
+    }
   };
-
+  
   return (
     <>
       <div className="form-box">
@@ -93,7 +93,40 @@ export default function SignUp() {
               </Link>
             </form>
           )}
-          {/* Rest of the component remains the same */}
+          {(!isLogin)
+            &&
+            (   <form>
+                <h2>Register</h2>
+                <div className="inputbox">
+                    <ion-icon name="mail-outline"></ion-icon>
+                    <input type="email" required />
+                    <label htmlFor="email">Email</label>
+                </div>
+                <div className="inputbox">
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                    <input type="text" required />
+                    <label htmlFor="text">User Name</label>
+                </div>
+                <div className="inputbox">
+                    <ion-icon name="mail-outline"></ion-icon>
+                    <input type="text" required />
+                    <label htmlFor="password">Password</label>
+                </div>
+                <div className="inputbox">
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                    <input type="text" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" required />
+                    <label htmlFor="phone">Telephone</label>
+                </div>
+                <button type="submit">Create new account</button>
+                <div className="register">
+                    <p>have an account? <button onClick={()=>(setIsLogin(true))}>Login</button> </p>
+                </div>
+                <div className="home">
+                   <Link to="/Home">
+                    <button >Go to Home Page</button>
+                </Link> 
+                </div>    
+            </form>)}
         </div>
       </div>
     </>

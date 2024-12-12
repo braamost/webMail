@@ -2,13 +2,13 @@ import axios from "axios";
 
 export async function Register(username, password, email, phoneNumber) {
   const userData = {
-    "userName": "moazz",
-    "password": "123",
-    "email": "moaz@",
-    "phoneNumber": "164894984"
-};
-  console.log(jsonData);
-  //const jsonData = JSON.stringify(userData);
+    "userName": username, // Typo: Should be `username`
+    "password": password, // Typo: Should be `password,
+    "email": email,
+    "phoneNumber": phoneNumber// Typo: Should be phoneNumber
+  };
+  console.log(userData);
+  const jsonData = JSON.stringify(userData);
   console.log(jsonData);
   try {
     const apiUrl = `http://localhost:8080/api/users`;
@@ -17,13 +17,10 @@ export async function Register(username, password, email, phoneNumber) {
     const response = await axios.post(apiUrl, jsonData, { // Concise headers
       headers: { 'Content-Type': 'application/json' }
     });
-
-    if (response.ok) {
+    console.log(response);
+    if (response) {
       console.log(response); // Logs the entire response object
-    } else {
-      console.error('Registration failed:', response.statusText); // More informative error message
-      return false;
-    }
+    } 
   } catch (error) {
     console.error('Error during registration:', error);
     return false;
