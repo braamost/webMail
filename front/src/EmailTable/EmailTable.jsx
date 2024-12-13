@@ -1,7 +1,7 @@
 import React from "react";
 import "./email.css"; // Link the CSS file
 
-const EmailTable = ({ emails }) => {
+const EmailTable = ({ emails  }) => {
   return (
     <div className="container">
       <h1>Email List</h1>

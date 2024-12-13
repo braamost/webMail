@@ -100,11 +100,11 @@ public class UserRestController {
     return "Deleted user with username " + userName;
   }
 
-  @GetMapping("/username/{userName}")
-  public ResponseEntity<User> findByUserName(@PathVariable String userName) {
-    User user = userService.findByUserName(userName);
+  @GetMapping("/username/{reciverEmail}")
+  public ResponseEntity<User> findByUserName(@PathVariable String reciveremail) {
+    User user = userService.findByEmail(reciveremail);
     if (user == null) {
-      throw new NotFoundException("User with username " + userName + " not found.");
+      throw new NotFoundException("User with username " + reciveremail + " not found.");
     }
     return ResponseEntity.ok(user);
   }

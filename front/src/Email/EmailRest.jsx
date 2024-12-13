@@ -1,29 +1,26 @@
 import axios from "axios";
 import { UserIsfound } from "./CheckUserExistence";
-export async function createEmail(SenderUserName , reciverUserName , Subject ,body,  isread , folder){
+export async function createEmail(SenderId , reciverEmail , Subject ,body,  isread , folder){
   // check if the reciver is already existing
   try {
-    const userId = await UserIsfound(reciverUserName);
-    console.log(`User found with name: ${reciverUserName}`)
+    const userId = await UserIsfound(reciverEmail); 
+    console.log(`User found with name: ${reciverEmail}`)
     if(userId){
-      const emailData = { // just for testing purposes
-        "subject": "Hello World",
-        "body": "This is a test email.",
-        "isRead": false,
-        "folder": "INBOX" // Must match the `Folder` enum values
+      const emailData = {
+        "subject": Subject,
+        "body": body,
+        "isRead": isread,
+        "folder": folder
       };
-      try {
+      {
         const response = await axios.post("http://localhost:8080/api/emails", emailData, {
           headers: {
             "Content-Type": "application/json",
           },
         });
         console.log("Email saved:", response.data);
-        //! calling the functin that request userEmails rest api 
-      } catch (error) {
-        console.error("Error saving email:", error);
+        //! calling the functin that request userEmails rest api
       }
-        return null ;
     }
   } catch (error) {
     if (error.message === "notFound") {

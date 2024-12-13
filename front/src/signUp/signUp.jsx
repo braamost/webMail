@@ -5,7 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function SignUp({userName , setUserName}) {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -14,10 +13,10 @@ export default function SignUp({userName , setUserName}) {
   };
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Attempting login with:", { username, password });
-    const response = await Login(username, password, setError);
+    console.log("Attempting login with:", { userName, password });
+    const response = await Login(userName, password, setError);
     if(response!=null){
-      //setUsername(username);
+      setUserName(userName);
       console.log(response);
       navigate("/Home");
     }
@@ -33,8 +32,8 @@ export default function SignUp({userName , setUserName}) {
             <input
               type="text"
               required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
             />
             <label htmlFor="username">Username</label>
           </div>

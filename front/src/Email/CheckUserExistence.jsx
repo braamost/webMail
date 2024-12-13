@@ -1,7 +1,7 @@
 import axios from "axios";
-export async function UserIsfound(username){
-  try {
-    const apiUrl = `http://localhost:8080/api/users/username/${username}/`;
+export async function UserIsfound(reciverEmail){
+  
+    const apiUrl = `http://localhost:8080/api/users/username/${reciverEmail}/`;
 
     const response = await axios.get(apiUrl, {
       headers: {
@@ -10,15 +10,4 @@ export async function UserIsfound(username){
     });
     console.log(response.data);
     return response.data.id;
-  } catch (error) {
-    if (error.response) {
-      const { status, data } = error.response;
-      if (status === 404) {
-        throw new Error("notFound");
-      }
-    } else {
-      throw new Error("Network error or server unreachable.");
-    }
-    return null;
   }
-}
