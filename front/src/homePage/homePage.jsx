@@ -12,12 +12,11 @@ import MenuBar from "../MenuBar/MenuBar";
 function HomePage({emails}){
           
     return (
-    <>
-        <MenuBar/>
-        <div className="space">
-            <EmailTable emails={emails} />
-        </div>
-    </>
+    <div className="pagecontent">
+        <EmailTable emails={emails} />
+        <MenuBar />
+        
+    </div>
     )
 
 }

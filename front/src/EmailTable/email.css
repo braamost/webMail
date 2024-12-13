@@ -1,6 +1,12 @@
  .container {
-  max-width: 800px; /* Adjust the width to fit your content */
-  width :90% ;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  left :320px;
+  min-height: 800px;
+  position: fixed;
+  /* max-width: 800px; Adjust the width to fit your content */
+  min-width: 1460px;
   margin: 50px auto; /* Centers the container vertically and horizontally */
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.9); /* Transparent background for readability */
@@ -25,7 +31,7 @@
   
   thead th {
     padding: 15px;
-    text-align: left;
+    text-align: center;
     font-weight: bold;
   }
   
@@ -42,9 +48,6 @@
     border-bottom: 1px solid #ddd;
   }
   
-  tbody td:last-child {
-    text-align: right;
-  }
   
   .table-container {
     overflow-x: auto; /* For responsiveness */
