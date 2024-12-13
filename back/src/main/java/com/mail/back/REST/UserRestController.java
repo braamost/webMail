@@ -99,4 +99,13 @@ public class UserRestController {
     userService.deleteById(user.getId());
     return "Deleted user with username " + userName;
   }
+
+  @GetMapping("/username/{userName}")
+  public ResponseEntity<User> findByUserName(@PathVariable String userName) {
+    User user = userService.findByUserName(userName);
+    if (user == null) {
+      throw new NotFoundException("User with username " + userName + " not found.");
+    }
+    return ResponseEntity.ok(user);
+  }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/emails")
 public class EmailRestController {
 
@@ -32,8 +33,9 @@ public class EmailRestController {
     }
 
     // Add a new email
-    @PostMapping
+    @PostMapping("/add")
     public Email addEmail(@RequestBody Email email) {
+        System.out.println(email.toString());
         email.setId(null); // Ensure the ID is 0 for creating a new entity
         return emailService.save(email);
     }

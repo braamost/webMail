@@ -10,7 +10,9 @@ import com.mail.back.Service.UserEmailService.UserEmailService;
 import com.mail.back.entity.UserEmail;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/userEmails")
+
 public class UserEmailRestController {
   private final UserEmailService userEmailService ;
   @Autowired

@@ -15,7 +15,6 @@ export default function SignUp() {
   const handleLogin = async (e) => {
     e.preventDefault();
     console.log("Attempting login with:", { username, password });
-
     const response = await Login(username, password, setError);
     if (response != null) {
       console.log(response);
