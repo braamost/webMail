@@ -9,12 +9,12 @@ import Filter from "../Filter/Filter";
 import SearchSort from "../SearchAndSort/SearchAndSort";
 import EmailTable from "../EmailTable/EmailTable";
 import MenuBar from "../MenuBar/MenuBar";
-function HomePage({emails , UserName}){
+function HomePage({emails , user}){
           
     return (
     <div className="pagecontent">
         <EmailTable emails={emails}  />
-        <MenuBar UserName={UserName} />
+        <MenuBar user={user} />
         
     </div>
     )

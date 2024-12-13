@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./newMail.css"
 import { createEmail } from "../Email/EmailRest";
-function NewMail(){
+function NewMail({user}){
     const [toMail, setToMail] = useState("");
     const [fromMail, setFromMail] = useState("");
     const [subject, setSubject] = useState("");
@@ -11,7 +11,7 @@ function NewMail(){
     const handleCreateEmail = async (e) => {
         e.preventDefault();
         console.log(message);
-        const response = await createEmail(5,toMail,subject,message, true , "INBOX");
+        const response = await createEmail(5,toMail,subject,message, true , "INBOX", setError);
         if(response!=null){
           console.log(response);
           navigate("/Home");
@@ -39,9 +39,10 @@ function NewMail(){
               <input 
                 type="email" 
                 required 
-                value={fromMail}
+                value={user.email}
                 onChange={(e) => setFromMail(e.target.value)}
-                placeholder="From: "
+                placeholder={user.email}
+                readOnly
               />
               
             </div>

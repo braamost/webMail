@@ -1,15 +1,14 @@
 import axios from "axios";
-import { UserIsfound } from "./CheckUserExistence";
-export async function createEmail(SenderId , reciverEmail , Subject ,body,  isread , folder){
-  // check if the reciver is already existing
+import { UserIsFound } from "./CheckUserExistence";
+export async function createEmail(SenderId , receiverEmail , Subject ,body,  isRead , folder){
   try {
-    const userId = await UserIsfound(reciverEmail); 
-    console.log(`User found with name: ${reciverEmail}`)
+    const userId = await UserIsFound(receiverEmail); 
+    console.log(`User found with name: ${receiverEmail}`)
     if(userId){
       const emailData = {
         "subject": Subject,
         "body": body,
-        "isRead": isread,
+        "isRead": isRead,
         "folder": folder
       };
       {
@@ -19,16 +18,18 @@ export async function createEmail(SenderId , reciverEmail , Subject ,body,  isre
           },
         });
         console.log("Email saved:", response.data);
-        //! calling the functin that request userEmails rest api
       }
     }
   } catch (error) {
-    if (error.message === "notFound") {
-      console.log("User not found.");
-    } else if (error.message === "Network error or server unreachable.") {
-      console.log("Network or server issue.");
+    if (error.response) {
+      const { status, data } = error.response;
+      if (status === 404) {
+        setError("User not found.");
+      }else {
+        setError(`Unexpected error: ${data}`);
+      }
     } else {
-      console.error("Unexpected error:", error.message);
+      setError("Network error or server unreachable.");
     }
     return null;
   }
