@@ -41,9 +41,10 @@ function NewMail(){
               onChange={(e) => setSubject(e.target.value)}
               placeholder="subject: "
             />
+          <textarea placeholder="Message..." rows={8} cols= {48} ></textarea>
+          <button type="submit">Send</button>
           </div>
-          <textarea placeholder="Message..." rows={7} cols= {42}>
-          </textarea>
+          
           </form>
           </>
     )

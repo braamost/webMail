@@ -1,7 +1,7 @@
 .menu-bar {
     position: fixed; /* Keeps the menu fixed as you scroll */
     top: 50%; /* Center vertically */
-    right: 0; /* Align to the left of the page */
+    left: 10%; /* Align to the left of the page */
     transform: translateY(-50%); /* Center correction */
     background: #ffffff; /* Background for the menu */
     border-radius: 10px 10px 10px 10px; /* Rounded corners on the right side */
@@ -9,7 +9,12 @@
     width: 200px; /* Set a fixed width for the menu */
     box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
   }
-  
+  .pagecontent{
+    display: flex;
+    height: 100vh;
+    align-content: stretch;
+
+  }
   .menu-bar button {
     display: flex; /* Use flexbox for better alignment */
     align-items: center; /* Center items vertically */

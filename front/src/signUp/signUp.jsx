@@ -3,7 +3,7 @@ import { Login } from "./signUpRequest";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function SignUp() {
+export default function SignUp({userName , setUserName}) {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -16,7 +16,8 @@ export default function SignUp() {
     e.preventDefault();
     console.log("Attempting login with:", { username, password });
     const response = await Login(username, password, setError);
-    if (response != null) {
+    if(response!=null){
+      //setUsername(username);
       console.log(response);
       navigate("/Home");
     }
