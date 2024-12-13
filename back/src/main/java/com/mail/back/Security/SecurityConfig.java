@@ -19,7 +19,8 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection (enable and configure it properly in production)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/users/**").permitAll() // Allow public access to /api/users/** endpoints
+                        .requestMatchers("/api/users/**").permitAll()
+                        .requestMatchers("/api/emails/**").permitAll()// Allow public access to /api/users/** endpoints
                         .anyRequest().authenticated() // Require authentication for all other endpoints
                 )
                 .formLogin(formLogin -> formLogin // Configure form login

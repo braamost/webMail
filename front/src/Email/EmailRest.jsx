@@ -3,7 +3,7 @@ import { UserIsfound } from "./CheckUserExistence";
 export async function createEmail(SenderId , reciverEmail , Subject ,body,  isread , folder){
   // check if the reciver is already existing
   try {
-    const userId = await UserIsfound(reciverEmail); 
+    const userId = 1;//await UserIsfound(reciverEmail); 
     console.log(`User found with name: ${reciverEmail}`)
     if(userId){
       const emailData = {
@@ -13,7 +13,7 @@ export async function createEmail(SenderId , reciverEmail , Subject ,body,  isre
         "folder": folder
       };
       {
-        const response = await axios.post("http://localhost:8080/api/emails", emailData, {
+        const response = await axios.post("http://localhost:8080/api/emails/add", emailData, {
           headers: {
             "Content-Type": "application/json",
           },

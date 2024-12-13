@@ -1,7 +1,7 @@
 import axios from "axios";
 export async function UserIsfound(reciverEmail){
   
-    const apiUrl = `http://localhost:8080/api/users/username/${reciverEmail}/`;
+    const apiUrl = `http://localhost:8080/api/users/username/${reciverEmail}`;
 
     const response = await axios.get(apiUrl, {
       headers: {

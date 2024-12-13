@@ -101,11 +101,12 @@ public class UserRestController {
   }
 
   @GetMapping("/username/{reciverEmail}")
-  public ResponseEntity<User> findByUserName(@PathVariable String reciveremail) {
+  public ResponseEntity<User> findByUserName(@PathVariable("reciverEmail") String reciveremail) {
     User user = userService.findByEmail(reciveremail);
     if (user == null) {
       throw new NotFoundException("User with username " + reciveremail + " not found.");
     }
     return ResponseEntity.ok(user);
   }
+
 }
