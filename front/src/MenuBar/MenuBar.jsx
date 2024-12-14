@@ -1,5 +1,4 @@
 import "./MenuBar.css" 
-import "./man.jpg";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import NewMail from "../NewMail/NewMail";

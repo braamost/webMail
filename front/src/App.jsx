@@ -1,6 +1,5 @@
 
 import { BrowserRouter, Routes,Route } from 'react-router-dom'
-import SignUp from './signUp/signUp.jsx'
 import HomePage from './homePage/homePage.jsx'
 import Draft from './Draft/Draft.jsx'
 import Filter from './Filter/Filter.jsx'
@@ -9,7 +8,8 @@ import InboxFolder from './InboxFolder/InboxFolder.jsx'
 import SentMails from './SentMails/SentMails.jsx'
 import UserFolder from './UserFolder/UserFolder.jsx'
 import Register from './Register/RegisterPage.jsx'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import LoginPage from './signUp/Login.jsx'
 function App() {
   const [user , setUser] = useState("")
   const emails = [
@@ -32,12 +32,18 @@ function App() {
         timestamp: "2024-12-11 03:00 PM",
       },
   ];
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, [])
 
   return (
     <>
       <BrowserRouter>
       <Routes>
-        <Route path="/" element={<SignUp setUser={setUser}/>} /> 
+        <Route path="/" element={<LoginPage setUser={setUser}/>} /> 
         <Route path='/Register' element={<Register />} /> 
         <Route path="/Home" element={ <HomePage emails={emails} user={user}/>} />
         <Route path="/Home/Draft" element={ <Draft emails={emails}/>} />

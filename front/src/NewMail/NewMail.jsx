@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./newMail.css"
-import { createEmail } from "../Email/EmailRest";
+import { emailCreation } from "../Email/EmailCreation";
 import { useNavigate } from "react-router-dom";
 function NewMail({user, setIsNewMail}){
     const [toMail, setToMail] = useState("");
@@ -12,7 +12,8 @@ function NewMail({user, setIsNewMail}){
 
     const handleCreateEmail = async (e) => {
         e.preventDefault();
-        const response = await createEmail(user.id,toMail,subject,message, true , "INBOX", setError);
+        const response = await emailCreation(user.id,toMail,subject,message, true , "INBOX", setError);
+
         if(response!=null){
           setError("");
           setIsNewMail(false);
@@ -44,7 +45,8 @@ function NewMail({user, setIsNewMail}){
                 required 
                 value={user.email}
                 onChange={(e) => setFromMail(e.target.value)}
-                placeholder={user.email || "From: "}
+                placeholder={user.email}
+                readOnly
               />
               
             </div>

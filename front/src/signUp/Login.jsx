@@ -3,7 +3,7 @@ import { Login } from "./signUpRequest";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function SignUp({setUser}) {
+export default function LoginPage({setUser}) {
   const navigate = useNavigate();
 
   const [userName, setUserName] = useState("");
@@ -21,6 +21,7 @@ export default function SignUp({setUser}) {
     if(response!=null){
       setUserName(userName);
       setUser(response);
+      localStorage.setItem("user", JSON.stringify(response));
       console.log(response);
       navigate("/Home");
     }
