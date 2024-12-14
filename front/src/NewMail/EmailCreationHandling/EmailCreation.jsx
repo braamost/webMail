@@ -18,7 +18,7 @@ export async function emailCreation(
 
     const userEmailData = await UserEmailCreation(senderId, receiverId, emailId);
 
-    return userEmailData.data;
+    return emailId;
   } catch (error) {
     if (error.response) {
       const { status, data } = error.response;

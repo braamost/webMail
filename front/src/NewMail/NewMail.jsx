@@ -1,18 +1,21 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "./newMail.css";
 import { emailCreation } from "./EmailCreationHandling/EmailCreation";
 import { useNavigate } from "react-router-dom";
+import { handleFileSelection } from "./AttachmentHandling/HandleFileSelection";
+import { uploadAttachments } from "./AttachmentHandling/upload";
 function NewMail({ user, setIsNewMail }) {
   const [toMail, setToMail] = useState("");
   const [fromMail, setFromMail] = useState("");
   const [subject, setSubject] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const attachments = useRef(new FormData());
   const navigate = useNavigate();
 
-  const handleCreateEmail = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await emailCreation(
+    const emailID = await emailCreation(
       user.id,
       toMail,
       subject,
@@ -21,8 +24,11 @@ function NewMail({ user, setIsNewMail }) {
       "INBOX",
       setError
     );
+    attachments.current.append("emailId", emailID);
 
-    if (response != null) {
+    const attachmentResponse = await uploadAttachments(attachments.current, setError);
+
+    if (emailID != null && attachmentResponse != null) {
       setError("");
       setIsNewMail(false);
       window.alert("Email sent successfully!");
@@ -32,8 +38,8 @@ function NewMail({ user, setIsNewMail }) {
 
   return (
     <>
-      <form onSubmit={handleCreateEmail} className="form-container">
-        <div>
+      <div className="form-container">
+        <div >
           <ion-icon name="mail-outline"></ion-icon>
           <label htmlFor="toMail">TO:</label>
           <input
@@ -73,10 +79,11 @@ function NewMail({ user, setIsNewMail }) {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           ></textarea>
-          <button type="submit">Send</button>
+          <button onClick={(e) => handleFileSelection(e, { attachments })}>Upload Files</button>
+          <button onClick={handleSubmit} type="submit">Send</button>
           {error && <div className="error-message">{error}</div>}
         </div>
-      </form>
+      </div>
     </>
   );
 }

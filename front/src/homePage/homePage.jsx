@@ -10,14 +10,12 @@ import SearchSort from "../SearchAndSort/SearchAndSort";
 import EmailTable from "../EmailTable/EmailTable";
 import MenuBar from "../MenuBar/MenuBar";
 import SearchBar from "../SearchAndSort/SearchBar";
-import UploadFiles from "../Attachment/Attachment";
 function HomePage({emails , user}){
           
     return (<>
     <SearchBar />
     <div className="pagecontent">
         <SearchBar />
-        <UploadFiles emailID={1} />
         <EmailTable emails={emails}  />
         <MenuBar user={user} />
         
