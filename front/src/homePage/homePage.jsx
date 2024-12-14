@@ -12,13 +12,15 @@ import MenuBar from "../MenuBar/MenuBar";
 import SearchBar from "../SearchAndSort/SearchBar";
 function HomePage({emails , user}){
           
-    return (
+    return (<>
+    <SearchBar />
     <div className="pagecontent">
         <SearchBar />
         <EmailTable emails={emails}  />
         <MenuBar user={user} />
         
     </div>
+    </>
     )
 
 }
