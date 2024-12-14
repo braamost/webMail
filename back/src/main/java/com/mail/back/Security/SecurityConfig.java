@@ -7,9 +7,12 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -17,37 +20,37 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection (enable and configure it properly in production)
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // Use a dedicated configuration source
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/users/**").permitAll() // Allow public access to /api/users/** endpoints
-                        .anyRequest().authenticated() // Require authentication for all other endpoints
+                        .requestMatchers("/api/**").permitAll()  // Simplified pattern to match all API endpoints
+                        .anyRequest().authenticated()
                 )
-                .formLogin(formLogin -> formLogin // Configure form login
-                        .loginPage("http://localhost:5173/") // Specify custom login page URL (optional)
-                        .permitAll() // Allow everyone to access the login page
+                .formLogin(formLogin -> formLogin
+                        .loginPage("http://localhost:5173/")
+                        .permitAll()
                 )
-                .httpBasic(AbstractHttpConfigurer::disable) // Disable HTTP Basic if not needed
-                .addFilterBefore(corsFilter(), CorsFilter.class); // Add the CORS filter
+                .httpBasic(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
+        config.setAllowCredentials(true);
+        config.setMaxAge(3600L); // 1 hour cache for preflight requests
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", config);
+        return source;
     }
 
     @Bean
-    public CorsFilter corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:5173"); // Allow the frontend origin (React app)
-        config.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, etc.)
-        config.addAllowedHeader("*"); // Allow all headers
-        config.setAllowCredentials(true); // Allow cookies to be sent with requests
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", config); // Apply CORS configuration to all endpoints under /api/**
-
-        return new CorsFilter(source);
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

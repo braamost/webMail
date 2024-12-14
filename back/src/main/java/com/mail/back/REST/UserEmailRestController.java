@@ -3,6 +3,8 @@ package com.mail.back.REST;
 import java.util.List;
 
 import com.mail.back.GlobalHandle.NotFoundException;
+import com.mail.back.Service.EmailService.EmailService;
+import com.mail.back.Service.UserService.UserService;
 import com.mail.back.entity.UserEmailID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +17,12 @@ import com.mail.back.entity.UserEmail;
 
 public class UserEmailRestController {
   private final UserEmailService userEmailService ;
+  private final UserService userService;
+  private final EmailService emailService;
   @Autowired
-  public UserEmailRestController(UserEmailService userEmailService) {
+  public UserEmailRestController(UserEmailService userEmailService, UserService userService, EmailService emailService) {
+    this.userService = userService;
+    this.emailService = emailService;
     this.userEmailService = userEmailService;
   }
   
@@ -33,7 +39,13 @@ public class UserEmailRestController {
 
   @PostMapping
   public UserEmail addUserEmail(@RequestBody UserEmail userEmail) {   // I'm not sure if this is enough
-      return userEmailService.save(userEmail);
+    if (userEmail.getUserEmailID() == null) {
+      throw new IllegalArgumentException("UserEmailID must be provided");
+    }
+    userEmail.setEmail(emailService.findById(userEmail.getUserEmailID().getEmailId()));
+    userEmail.setReceiver(userService.findById(userEmail.getUserEmailID().getReceiverId()));
+    userEmail.setSender(userService.findById(userEmail.getUserEmailID().getSenderId()));
+    return userEmailService.save(userEmail);
   }
 
   // don't know if we should enable updating...

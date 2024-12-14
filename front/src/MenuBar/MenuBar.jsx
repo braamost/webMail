@@ -54,7 +54,7 @@ function MenuBar({user}){
                     </Link>
                 </li>
             </ul>
-            {(isNewMail)&&<NewMail user={user}/>} 
+            {(isNewMail)&&<NewMail user={user} setIsNewMail={setIsNewMail}/>} 
         </div>
     )
 }

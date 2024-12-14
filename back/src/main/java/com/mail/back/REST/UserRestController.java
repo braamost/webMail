@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RequestMapping("/api/users")
 public class UserRestController {
 
@@ -100,12 +100,13 @@ public class UserRestController {
     return "Deleted user with username " + userName;
   }
 
-  @GetMapping("/username/{reciverEmail}")
-  public ResponseEntity<User> findByUserName(@PathVariable String reciveremail) {
-    User user = userService.findByEmail(reciveremail);
+  @GetMapping("/username/{receiverEmail}")
+  public ResponseEntity<User> findByEmail(@PathVariable String receiverEmail) {
+    User user = userService.findByEmail(receiverEmail);
     if (user == null) {
-      throw new NotFoundException("User with username " + reciveremail + " not found.");
+      throw new NotFoundException("User with username " + receiverEmail + " not found.");
     }
     return ResponseEntity.ok(user);
   }
+
 }
