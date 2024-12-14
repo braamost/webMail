@@ -3,7 +3,7 @@ import "./man.jpg";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import NewMail from "../NewMail/NewMail";
-function MenuBar({UserName}){
+function MenuBar({user}){
     const [isNewMail ,setIsNewMail] = useState(false);
     /*{username}*/
     const newMail= ()=>{
@@ -17,7 +17,7 @@ function MenuBar({UserName}){
                     <div className="img-box">
                         <img src="man.jpg" alt="profile" />
                     </div>
-                    <h2>{UserName}</h2>
+                    <h2>{user.userName}</h2>
                 </Link> 
                 </li>
                 <li>
@@ -54,7 +54,7 @@ function MenuBar({UserName}){
                     </Link>
                 </li>
             </ul>
-            {(isNewMail)&&<NewMail/>} 
+            {(isNewMail)&&<NewMail user={user} setIsNewMail={setIsNewMail}/>} 
         </div>
     )
 }

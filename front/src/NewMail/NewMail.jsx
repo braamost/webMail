@@ -1,19 +1,22 @@
 import { useState } from "react";
 import "./newMail.css"
 import { createEmail } from "../Email/EmailRest";
-function NewMail(){
+import { useNavigate } from "react-router-dom";
+function NewMail({user, setIsNewMail}){
     const [toMail, setToMail] = useState("");
     const [fromMail, setFromMail] = useState("");
     const [subject, setSubject] = useState("");
     const [error , setError] = useState("");
     const [message, setMessage] = useState("");
+    const navigate = useNavigate();
 
     const handleCreateEmail = async (e) => {
         e.preventDefault();
-        console.log(message);
-        const response = await createEmail(5,toMail,subject,message, true , "INBOX");
+        const response = await createEmail(user.id,toMail,subject,message, true , "INBOX", setError);
         if(response!=null){
-          console.log(response);
+          setError("");
+          setIsNewMail(false);
+          window.alert("Email sent successfully!");
           navigate("/Home");
         }
       };
@@ -39,9 +42,9 @@ function NewMail(){
               <input 
                 type="email" 
                 required 
-                value={fromMail}
+                value={user.email}
                 onChange={(e) => setFromMail(e.target.value)}
-                placeholder="From: "
+                placeholder={user.email || "From: "}
               />
               
             </div>
@@ -57,7 +60,7 @@ function NewMail(){
             />
           <textarea placeholder="Message..." rows={8} cols= {48} value={message} onChange={(e) => setMessage(e.target.value)}></textarea>
           <button type="submit">Send</button>
-          {error}
+          {(error)&&(<div className="error-message">{error}</div>)}
           </div>
           
           </form>

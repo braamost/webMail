@@ -11,17 +11,17 @@ public class UserEmail {
 
     @ManyToOne
     @MapsId("senderId")
-    @JoinColumn(name = "sender_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "sender_id", referencedColumnName = "id")
     private User sender;
 
     @ManyToOne
     @MapsId("receiverId")
-    @JoinColumn(name = "receiver_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "receiver_id", referencedColumnName = "id")
     private User receiver;
 
     @ManyToOne
     @MapsId("emailId")
-    @JoinColumn(name = "email_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "email_id", referencedColumnName = "id")
     private Email email;
 
     public UserEmail() {}

@@ -11,7 +11,7 @@ import UserFolder from './UserFolder/UserFolder.jsx'
 import Register from './Register/RegisterPage.jsx'
 import { useState } from 'react'
 function App() {
-  const [userName , setUserName] = useState("")
+  const [user , setUser] = useState("")
   const emails = [
     {
       id: 1,
@@ -37,9 +37,9 @@ function App() {
     <>
       <BrowserRouter>
       <Routes>
-        <Route path="/" element={<SignUp userName={userName} setUserName={setUserName}/>} /> 
-        <Route path='/Register' element={<Register />} /> //2
-        <Route path="/Home" element={ <HomePage emails={emails} UserName={userName}/>} />
+        <Route path="/" element={<SignUp setUser={setUser}/>} /> 
+        <Route path='/Register' element={<Register />} /> 
+        <Route path="/Home" element={ <HomePage emails={emails} user={user}/>} />
         <Route path="/Home/Draft" element={ <Draft emails={emails}/>} />
         <Route path="/Home/Filter" element={ <Filter emails={emails}/>} />
         <Route path="/Home/SentMails" element={ <SentMails emails={emails}/>} />
