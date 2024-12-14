@@ -9,6 +9,7 @@ import InboxFolder from './InboxFolder/InboxFolder.jsx'
 import SentMails from './SentMails/SentMails.jsx'
 import UserFolder from './UserFolder/UserFolder.jsx'
 import Register from './Register/RegisterPage.jsx'
+import SearchBar from './SearchAndSort/SearchBar.jsx'
 import { useState } from 'react'
 function App() {
   const [user , setUser] = useState("")
@@ -46,6 +47,7 @@ function App() {
         <Route path="/Home/Trash" element={ <Trash emails={emails}/>} />
         <Route path="/Home/InboxFolder" element={ <InboxFolder emails={emails}/>} />
         <Route path="/Home/UserFolder" element={ <UserFolder emails={emails}/>} />
+        <Route path = "/SearchBar" element={<SearchBar />} />
       </Routes>
       </BrowserRouter>
           

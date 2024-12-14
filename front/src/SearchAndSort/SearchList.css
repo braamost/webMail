@@ -1,0 +1,23 @@
+/* Results list styling */
+.results-list {
+    width: 100%; /* Ensure it takes up the full width of the search bar */
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 0px 8px #ddd;
+    border-radius: 10px;
+    max-height: 300px; /* Limit the height of the results */
+    overflow-y: auto; /* Enable scrolling if content exceeds max height */
+  }
+  
+  /* Style for individual result items */
+  .results-list div {
+    padding: 10px; /* Add some padding for better readability */
+    border-bottom: 1px solid #ddd; /* Add a divider between result items */
+    font-size: 1.1rem;
+  }
+  
+  .results-list div:hover {
+    background-color: #f9f9f9; /* Highlight on hover */
+    cursor: pointer; /* Indicate clickable items */
+  }
