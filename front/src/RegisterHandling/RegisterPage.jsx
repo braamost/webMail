@@ -1,4 +1,4 @@
-import "./style.css";
+import "../style.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Register } from "./RegisterRequest";

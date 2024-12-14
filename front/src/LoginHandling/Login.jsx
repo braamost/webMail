@@ -1,5 +1,5 @@
 import "../style.css";
-import { Login } from "./signUpRequest";
+import { Login } from "./LoginRequest";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -21,7 +21,7 @@ export default function LoginPage({setUser}) {
     if(response!=null){
       setUserName(userName);
       setUser(response);
-      localStorage.setItem("user", JSON.stringify(response));
+      sessionStorage.setItem("user", JSON.stringify(response));
       console.log(response);
       navigate("/Home");
     }

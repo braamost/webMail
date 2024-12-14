@@ -7,9 +7,9 @@ import Trash from './Trash/Trash.jsx'
 import InboxFolder from './InboxFolder/InboxFolder.jsx'
 import SentMails from './SentMails/SentMails.jsx'
 import UserFolder from './UserFolder/UserFolder.jsx'
-import Register from './Register/RegisterPage.jsx'
+import Register from './RegisterHandling/RegisterPage.jsx'
 import { useEffect, useState } from 'react'
-import LoginPage from './signUp/Login.jsx'
+import LoginPage from './LoginHandling/Login.jsx'
 function App() {
   const [user , setUser] = useState("")
   const emails = [
@@ -33,7 +33,7 @@ function App() {
       },
   ];
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = sessionStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
