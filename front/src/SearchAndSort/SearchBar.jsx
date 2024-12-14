@@ -7,6 +7,7 @@ import SearchList from './SearchList.jsx';
 function SearchBar() {
     const [inputSearch, setInputSearch] = useState('');
     const [results, setResults] = useState([]);
+    const [showList, setShowList] = useState(false);
 
     const fetchData = (value) => {
         fetch('https://jsonplaceholder.typicode.com/users')
@@ -21,7 +22,13 @@ function SearchBar() {
     const handleOnChange = (value) => {
         setInputSearch(value);
         fetchData(value);
+        setShowList(true);
       };
+
+    const handleOnClickUser = () => {
+        setInputSearch('');
+        setShowList(false);
+    }
   return (
     <div className = "search-bar-container">
         <div className="input-wrapper">
@@ -34,7 +41,7 @@ function SearchBar() {
             value = {inputSearch} 
             />
         </div>
-        <SearchList results={results} />
+        {showList && <SearchList results={results}  onClickRemoveList={handleOnClickUser}/>}
     </div>
   )
 }
