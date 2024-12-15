@@ -51,7 +51,7 @@ function App() {
         <Route path="/Home/SentMails" element={ <SentMails emails={emails}/>} />
         <Route path="/Home/Trash" element={ <Trash emails={emails}/>} />
         <Route path="/Home/InboxFolder" element={ <InboxFolder emails={emails}/>} />
-        <Route path="/Home/UserFolder" element={ <UserFolder emails={emails}/>} />
+        <Route path="/Home/UserFolder" element={ <UserFolder  user={user} />} />
       </Routes>
       </BrowserRouter>
           
