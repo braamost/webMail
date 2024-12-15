@@ -85,6 +85,7 @@ function EmailTable({emails}) {
             data={filteredEmails}  
             customStyles={customStyles}
             onRowClicked={handleRowClick} 
+            fixedHeader
             />
         </div>
     </div>

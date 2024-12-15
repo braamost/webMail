@@ -3,9 +3,9 @@
 .tableContainer {
     position: absolute; /* Position it independently of other elements */
     top: 65px; /* Space from the top of the page */
-    left: 57%; /* Center horizontally */
+    left: 59.6%; /* Center horizontally */
     transform: translateX(-50%); /* Ensure it's perfectly centered */
-    width: 70%; /* Full width */
+    width: 75%; /* Full width */
     max-width: 100%; /* Control the width of the search bar and results */
     display: flex;
     flex-direction: column;
@@ -13,7 +13,7 @@
     min-width: 200px;
     padding: 0 15px;
     overflow-x: hidden;
-    z-index: 100; /* Ensure it stays on top */
+    z-index: 10; /* Ensure it stays on top */
   }
   
   

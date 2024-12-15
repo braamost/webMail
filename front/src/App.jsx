@@ -9,9 +9,7 @@ import SentMails from './SentMails/SentMails.jsx'
 import UserFolder from './UserFolder/UserFolder.jsx'
 import Register from './RegisterHandling/RegisterPage.jsx'
 import { useEffect, useState } from 'react'
-import LoginPage from './LoginHandling/Login.jsx'
-
-import EmailTable from  "./IsTable/EmailTable.jsx"                          // islam
+import LoginPage from './LoginHandling/Login.jsx'                       
 import { MocData } from './MocData.jsx'
 
 function App() {
@@ -56,8 +54,6 @@ function App() {
         <Route path="/Home/Trash" element={ <Trash emails={emails}/>} />
         <Route path="/Home/InboxFolder" element={ <InboxFolder emails={emails}/>} />
         <Route path="/Home/UserFolder" element={ <UserFolder emails={emails}/>} />
-
-        <Route path="/EmailTable" element={ <EmailTable emails={MocData}/>} />
       </Routes>
       </BrowserRouter>
           
