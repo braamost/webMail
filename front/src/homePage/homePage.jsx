@@ -13,12 +13,12 @@ import SearchBar from "../SearchAndSort/SearchBar";
 import EmailTable from "../IsTable/EmailTable";
 import {MocData} from "../MocData.jsx"
 function HomePage({emails , user}){
-          
+    
     return (
     <>
     <div className="pagecontent">
-        <MenuBar user={user} />
         <EmailTable emails={MocData}  />
+        <MenuBar user={user} />   
     </div>
     </>
     )
