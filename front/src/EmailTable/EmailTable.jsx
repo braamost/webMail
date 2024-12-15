@@ -10,9 +10,9 @@ const EmailTable = ({ emails  }) => {
           <table>
             <thead>
               <tr>
-                <th>Sender</th>
-                <th>Subject</th>
-                <th>Timestamp</th>
+                <th><button className="thead">Sender</button></th>
+                <th><button className="thead">Subject</button></th>
+                <th><button className="thead">Timestamp</button></th>
               </tr>
             </thead>
             <tbody>

@@ -12,8 +12,8 @@ import MenuBar from "../MenuBar/MenuBar";
 import SearchBar from "../SearchAndSort/SearchBar";
 function HomePage({emails , user}){
           
-    return (<>
-    <SearchBar />
+    return (
+    <>
     <div className="pagecontent">
         <SearchBar />
         <EmailTable emails={emails}  />

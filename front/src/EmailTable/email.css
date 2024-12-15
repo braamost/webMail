@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   left :320px;
+  top: 20px;
   min-height: 800px;
   position: fixed;
   /* max-width: 800px; Adjust the width to fit your content */
@@ -25,6 +26,10 @@
   }
   
   thead {
+    background-color: #007bff;
+    color: #fff;
+  }
+  .thead {
     background-color: #007bff;
     color: #fff;
   }
