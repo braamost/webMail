@@ -8,7 +8,7 @@
     border-radius: 8px;
     padding: 15px 15px;
     width: 450px; /* Adjust size as needed */
-    height: 450px;
+    height: 550px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for effect */
     z-index: 20;
   }
@@ -36,3 +36,35 @@
     background-color: #f4faff;
   }
   
+
+  .file-preview {
+    max-height: 50px; /* Adjust the height as per your preference */
+    overflow-y: auto; /* Allow scrolling if the list of files is too long */
+    border: 1px solid #ccc; /* Optional: to give a border around the file list */
+    padding: 5px;
+  }
+  
+  .file-preview ul {
+    padding: 0;
+    margin: 0;
+  }
+  
+  .file-preview li {
+    list-style: none;
+    padding: 3px 0;
+  }
+
+  .upload-button{
+    margin: 10px;
+    text-align: center;
+    border : 10px;
+    color : black !important;
+  }
+  .send-button{
+    background-color: #117fda;
+    color: white;
+
+  }
+  .send-button:hover{
+    color: black;
+  }

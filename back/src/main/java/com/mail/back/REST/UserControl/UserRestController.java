@@ -58,6 +58,7 @@ public class UserRestController implements IUserController {
     User user = userService.findByUserName(loginRequest.getUserName());
     request.getSession().setAttribute("userId", user.getId());
     user.setSessionId(request.getSession().getId());
+    System.out.println(request.getSession().getAttribute("userId"));
     return ResponseEntity.ok(user);
   }
 

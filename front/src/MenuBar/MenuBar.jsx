@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import NewMail from "../NewMail/NewMail";
 import { LogOut } from "../LoginHandling/LogOut";
-
+import EmailFetcher from "../getEmails/getEmails";
 function MenuBar({user}) {
     const [isNewMail ,setIsNewMail] = useState(false);
     const navigate = useNavigate();
@@ -50,6 +50,7 @@ function MenuBar({user}) {
                         <button type="button">Filter</button>
                     </Link>
                 </li>
+                <EmailFetcher></EmailFetcher>
                 <li className="logOut">
                     <Link className="Link" to="/">
                         <button className="logbutton" type="button" onClick={()=>LogOut(navigate)}>Log Out</button>
@@ -57,6 +58,7 @@ function MenuBar({user}) {
                 </li>
             </ul>
             {(isNewMail)&&<NewMail user={user} setIsNewMail={setIsNewMail}/>} 
+            
         </div>
     )
 }
