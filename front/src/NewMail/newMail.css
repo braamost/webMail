@@ -35,8 +35,16 @@
   .form-container button:hover{
     background-color: #f4faff;
   }
-  
-
+  .newMailButton{
+    /* position: absolute;
+    top: 38%; */
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    
+}
   .file-preview {
     max-height: 50px; /* Adjust the height as per your preference */
     overflow-y: auto; /* Allow scrolling if the list of files is too long */

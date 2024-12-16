@@ -24,27 +24,27 @@ function MenuBar({user}) {
                     <button className="newmail"onClick={()=> newMail()}>NEW Mail</button>
                 </li>
                 <li>
-                    <Link className="active" to ="/Home/InboxFolder">
+                    <Link className="active" to ="/InboxFolder">
                         <button type="button">InboxFolder</button>
                     </Link>  
                 </li>
                 <li>
-                    <Link className="Link" to="/Home/Trash" content="">
+                    <Link className="Link" to="/Trash" content="">
                         <button type="button">Trash</button>
                     </Link>  
                 </li>
                 <li>
-                    <Link className="Link" to="/Home/Draft">
+                    <Link className="Link" to="/Draft">
                         <button type="button">Draft</button>
                     </Link> 
                 </li>
                 <li>
-                    <Link className="Link" to="/Home/SentMails">
+                    <Link className="Link" to="/SentMails">
                         <button type="button">Sent mails</button>
                     </Link> 
                 </li>
                 <li>
-                    <Link className="Link" to="/Home/Filter">
+                    <Link className="Link" to="/Filter">
                         <button type="button">Filter</button>
                     </Link>
                 </li>

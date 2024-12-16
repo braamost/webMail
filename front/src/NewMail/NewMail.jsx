@@ -79,8 +79,8 @@ function NewMail({ user, setIsNewMail }) {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           ></textarea>
-          <button onClick={(e) => handleFileSelection(e, { attachments })}>Upload Files</button>
-          <button onClick={handleSubmit} type="submit">Send</button>
+          <button onClick={(e) => handleFileSelection(e, { attachments })} className="newMailButton">Upload Files</button>
+          <button onClick={handleSubmit} type="submit" className="newMailButton">Send</button>
           {error && <div className="error-message">{error}</div>}
         </div>
       </div>
