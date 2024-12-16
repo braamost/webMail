@@ -3,7 +3,6 @@ package com.mail.back.REST.UserControl;
 import com.mail.back.GlobalHandle.NotFoundException;
 import com.mail.back.Service.UserService.UserService;
 import com.mail.back.entity.User;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,18 +53,9 @@ public class UserRestController implements IUserController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<User> login(@RequestBody User loginRequest, HttpServletRequest request) {
+  public ResponseEntity<User> login(@RequestBody User loginRequest) {
     User user = userService.findByUserName(loginRequest.getUserName());
-    request.getSession().setAttribute("userId", user.getId());
-    user.setSessionId(request.getSession().getId());
-    System.out.println(request.getSession().getAttribute("userId"));
     return ResponseEntity.ok(user);
-  }
-
-  @PostMapping("/logout")
-  public ResponseEntity<String> logout(HttpServletRequest request) {
-    request.getSession().invalidate();
-    return ResponseEntity.ok("Logged out");
   }
 
   @PostMapping
@@ -74,14 +64,13 @@ public class UserRestController implements IUserController {
   }
 
   @PutMapping
-  public ResponseEntity<User> updateUser(@RequestBody User user,
-                                         HttpServletRequest request) {
+  public ResponseEntity<User> updateUser(@RequestBody User user) {
     user.setId(user.getId());
     return ResponseEntity.ok(userService.save(user));
   }
 
   @DeleteMapping
-  public ResponseEntity<String> deleteUser(@RequestBody User user, HttpServletRequest request) {
+  public ResponseEntity<String> deleteUser(@RequestBody User user) {
     userService.deleteById(user.getId());
     return ResponseEntity.ok("Deleted user " + user.getId());
   }

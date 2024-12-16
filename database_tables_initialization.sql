@@ -6,14 +6,13 @@ DROP TABLE IF EXISTS user_emails;
 DROP TABLE IF EXISTS attachments;
 DROP TABLE IF EXISTS emails;
 DROP TABLE IF EXISTS users;
- 
+
 
 -- Create the users table
 CREATE TABLE users (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   user_name VARCHAR(50) COLLATE utf8mb4_bin DEFAULT NULL, -- Case-sensitive collation
   password VARCHAR(255) COLLATE utf8mb4_bin DEFAULT NULL, -- Case-sensitive collation
-  session_id VARCHAR(255) COLLATE utf8mb4_bin DEFAULT NULL, -- Case-sensitive collation
   email VARCHAR(320) COLLATE utf8mb4_bin DEFAULT NULL,
   phone_number VARCHAR(20) DEFAULT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL

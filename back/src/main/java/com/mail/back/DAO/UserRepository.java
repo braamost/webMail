@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
     // Define custom query methods here if needed
-    public User findByUserName(String Username);
-    public User findByEmail(String email);
+    User findByUserName(String Username);
+    User findByEmail(String email);
 }

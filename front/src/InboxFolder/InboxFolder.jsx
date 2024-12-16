@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom"
 import { useEffect } from "react";
 import HomePage from "../homePage/homePage"
-import { getEmails } from "../getEmails/getEmails";
 function InboxFolder ({emails, user}){
   // Fetch emails when component mounts
 

@@ -58,9 +58,11 @@ public class UserServiceImp implements UserService {
     public User findByUserName(String Username){
         return userRepository.findByUserName(Username);
     }
+    @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+    @Override
     public boolean checkPassword(User user, String password) {
         return passwordEncoder.matches(password, user.getPassword());
     }

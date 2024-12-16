@@ -2,7 +2,6 @@ import "./MenuBar.css"
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import NewMail from "../NewMail/NewMail";
-import { LogOut } from "../LoginHandling/LogOut";
 import EmailFetcher from "../getEmails/getEmails";
 function MenuBar({user}) {
     const [isNewMail ,setIsNewMail] = useState(false);
@@ -52,7 +51,10 @@ function MenuBar({user}) {
                 </li>
                 <EmailFetcher></EmailFetcher>
                 <li className="logOut">
-                    <button className="logbutton" type="button" onClick={()=>LogOut(navigate)}>Log Out</button>
+                    <button className="logbutton" type="button" onClick={()=>{
+                        sessionStorage.removeItem("user");
+                        navigate("/");
+                    }}>Log Out</button>
                 </li>
             </ul>
             {(isNewMail)&&<NewMail user={user} setIsNewMail={setIsNewMail}/>} 

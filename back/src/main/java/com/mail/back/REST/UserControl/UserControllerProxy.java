@@ -5,7 +5,6 @@ import com.mail.back.GlobalHandle.UnauthorizedException;
 import com.mail.back.GlobalHandle.UserAlreadyExistsException;
 import com.mail.back.Service.UserService.UserService;
 import com.mail.back.entity.User;
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +21,6 @@ public class UserControllerProxy implements IUserController {
     public UserControllerProxy(UserRestController realController, UserService userService) {
         this.realController = realController;
         this.userService = userService;
-    }
-
-    private void validateSession(HttpServletRequest request, int userId) {
-        Integer sessionUserId = (Integer) request.getSession().getAttribute("userId");
-        if (sessionUserId == null || sessionUserId != userId) {
-            throw new UnauthorizedException("Unauthorized access");
-        }
     }
 
     @Override
@@ -56,7 +48,7 @@ public class UserControllerProxy implements IUserController {
     }
 
     @Override
-    public ResponseEntity<User> login(User loginRequest, HttpServletRequest request) {
+    public ResponseEntity<User> login(User loginRequest) {
         logger.info("Login attempt: {}", loginRequest.getUserName());
         User user = userService.findByUserName(loginRequest.getUserName());
         if (user == null) {
@@ -65,13 +57,7 @@ public class UserControllerProxy implements IUserController {
         if (!userService.checkPassword(user, loginRequest.getPassword())) {
             throw new UnauthorizedException("Invalid password");
         }
-        return realController.login(loginRequest, request);
-    }
-
-    @Override
-    public ResponseEntity<String> logout(HttpServletRequest request) {
-        logger.info("Logout user: {}", request.getSession().getAttribute("userId"));
-        return realController.logout(request);
+        return realController.login(loginRequest);
     }
 
     @Override
@@ -87,22 +73,20 @@ public class UserControllerProxy implements IUserController {
     }
 
     @Override
-    public ResponseEntity<User> updateUser(User user, HttpServletRequest request) {
+    public ResponseEntity<User> updateUser(User user) {
         logger.info("Updating user: {}", user.getUserName());
-        validateSession(request, user.getId());
         if (userService.findById(user.getId()) == null) {
             throw new NotFoundException("User not found");
         }
-        return realController.updateUser(user, request);
+        return realController.updateUser(user);
     }
 
     @Override
-    public ResponseEntity<String> deleteUser(User user, HttpServletRequest request) {
+    public ResponseEntity<String> deleteUser(User user) {
         logger.info("Deleting user: {}", user.getUserName());
-        validateSession(request, user.getId());
         if (userService.findById(user.getId()) == null) {
             throw new NotFoundException("User not found");
         }
-        return realController.deleteUser(user, request);
+        return realController.deleteUser(user);
     }
 }

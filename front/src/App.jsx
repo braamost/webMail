@@ -48,11 +48,11 @@ function App() {
         <Route path="/" element={<LoginPage setUser={setUser}/>} /> 
         <Route path='/Register' element={<Register />} /> 
         <Route path="/Home" element={ <HomePage emails={emails} user={user}/>} />
-        <Route path="/Home/Draft" element={ <Draft emails={emails}/>} />
-        <Route path="/Home/Filter" element={ <Filter emails={emails}/>} />
-        <Route path="/Home/SentMails" element={ <SentMails emails={emails}/>} />
-        <Route path="/Home/Trash" element={ <Trash emails={emails}/>} />
-        <Route path="/Home/InboxFolder" element={ <InboxFolder emails={emails}/>} />
+        <Route path="/Home/Draft" element={ <Draft emails={emails} user={user}/>} />
+        <Route path="/Home/Filter" element={ <Filter emails={emails} user={user}/>} />
+        <Route path="/Home/SentMails" element={ <SentMails emails={emails} user={user}/>} />
+        <Route path="/Home/Trash" element={ <Trash emails={emails} user={user}/>} />
+        <Route path="/Home/InboxFolder" element={ <InboxFolder emails={emails} user={user}/>} />
         <Route path="/Home/UserFolder" element={ <UserFolder  user={user} />} />
       </Routes>
       </BrowserRouter>
