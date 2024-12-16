@@ -12,8 +12,8 @@ public class handleException {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
-    @ExceptionHandler(WrongPasswordException.class)
-    public ResponseEntity<String> handleWrongPasswordException(WrongPasswordException e) {
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<String> handleWrongPasswordException(UnauthorizedException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 

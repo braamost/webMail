@@ -1,0 +1,162 @@
+package com.mail.back.REST;
+
+import com.mail.back.GlobalHandle.NotFoundException;
+import com.mail.back.GlobalHandle.UserAlreadyExistsException;
+import com.mail.back.GlobalHandle.UnauthorizedException;
+import com.mail.back.Service.UserService.UserService;
+import com.mail.back.SessionManagement.SessionService;
+import com.mail.back.entity.User;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@RequestMapping("/api/users")
+public class UserRestController {
+
+  private final UserService userService;
+  private final SessionService sessionService;
+
+  @Autowired
+  public UserRestController(UserService userService, SessionService sessionService) {
+    this.sessionService = sessionService;
+    this.userService = userService;
+  }
+
+  // Fetch all users
+  @GetMapping
+  public List<User> findAll() {
+    return userService.findAll();
+  }
+
+  // Fetch user by ID
+  // Fetch user by ID (uses session ID)
+  @GetMapping("/{id}")
+  public ResponseEntity<User> findById(@PathVariable int id, HttpServletRequest request) {
+    User user = userService.findById(id);
+    if (user == null) {
+      throw new NotFoundException("User with ID " + id + " not found.");
+    }
+    return ResponseEntity.ok(user);
+  }
+
+  // Fetch user by username
+  @GetMapping("/{username}")
+  public ResponseEntity<User> findByUserName(@PathVariable String username,HttpServletRequest request) {
+    User user = userService.findByUserName(username);
+    if (user == null) {
+      throw new NotFoundException("User with username " + username + " not found.");
+    }
+    return ResponseEntity.ok(user);
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<User> login(@RequestBody User loginRequest, HttpServletRequest request) {
+    // Authenticate the user
+    User user = userService.findByUserName(loginRequest.getUserName());
+    if (user == null) {
+      throw new NotFoundException("User with username " + loginRequest.getUserName() + " not found.");
+    }
+    if (!userService.checkPassword(user, loginRequest.getPassword())) {
+      throw new UnauthorizedException("Wrong password.");
+    }
+
+    // Set userId in the session after successful login
+    String sessionId = request.getSession().getId();
+    sessionService.setUserIdToSession(sessionId, user.getId());
+    user.setSessionId(sessionId);
+    return ResponseEntity.ok(user);
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<String> logout(HttpServletRequest request) {
+    request.getSession().removeAttribute("userId");
+    request.getSession().invalidate(); // Invalidate the session
+    return ResponseEntity.ok("Logged out successfully.");
+  }
+
+  // Add a new user
+  @PostMapping
+  public ResponseEntity<User> addUser(@RequestBody User user) {
+    user.setId(null); // Ensure the ID is set to null for creating a new entity
+    String userName = user.getUserName();
+    String email = user.getEmail();
+
+    if (userService.findByUserName(userName) != null) {
+      throw new UserAlreadyExistsException("User with username " + userName + " already exists.");
+    }
+    if (userService.findByEmail(email) != null) {
+      throw new UserAlreadyExistsException("User with email " + email + " already exists.");
+    }
+    User savedUser = userService.save(user);
+    return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+  }
+
+  // Update an existing user
+  @PutMapping("/{id}")
+  public User updateUser(@RequestBody User user, @PathVariable int id, HttpServletRequest request) {
+    String sessionId = request.getSession().getId();
+    Integer userId = sessionService.getUserIdFromSession(sessionId);
+    if (userId == null || userId != id) {
+      throw new UnauthorizedException("Unauthorized");  // Unauthorized if userId doesn't match
+    }
+    User theUser = userService.findById(id);
+    if(theUser == null) {
+      throw new NotFoundException("User with ID " + id + " not found.");
+    }
+    user.setId(id);
+    return userService.save(user);
+  }
+
+  // Delete user by ID
+  @DeleteMapping("/{id}")
+  public String deleteById(@PathVariable int id, HttpServletRequest request) {
+    String sessionId = request.getSession().getId();
+    Integer userId = sessionService.getUserIdFromSession(sessionId);
+    if (userId == null || userId != id) {
+      throw new UnauthorizedException("Unauthorized");  // Unauthorized if userId doesn't match
+    }
+    User user = userService.findById(id);
+    if (user == null) {
+      throw new NotFoundException("User with ID " + id + " not found.");
+    }
+    userService.deleteById(id);
+    return "Deleted user with ID " + id;
+  }
+
+  // Delete user by username
+  @DeleteMapping("/username/{userName}")
+  public String deleteByUserName(@PathVariable String userName, HttpServletRequest request) {
+    String sessionId = request.getSession().getId();
+    Integer userId = sessionService.getUserIdFromSession(sessionId);
+    if(userId == null || !userName.equals(userService.findById(userId).getUserName())) {
+      throw new UnauthorizedException("Unauthorized");
+    }
+    User user = userService.findByUserName(userName);
+    if (user == null) {
+      throw new NotFoundException("User with username " + userName + " not found.");
+    }
+    userService.deleteById(user.getId());
+    return "Deleted user with username " + userName;
+  }
+
+  @GetMapping("/username/{receiverEmail}")
+  public ResponseEntity<User> findByEmail(@PathVariable String receiverEmail, HttpServletRequest request) {
+    String sessionId = request.getSession().getId();
+    Integer userId = sessionService.getUserIdFromSession(sessionId);
+    if(userId == null || !receiverEmail.equals(userService.findById(userId).getEmail())) {
+      throw new UnauthorizedException("Unauthorized");
+    }
+    User user = userService.findByEmail(receiverEmail);
+    if (user == null) {
+      throw new NotFoundException("User with username " + receiverEmail + " not found.");
+    }
+    return ResponseEntity.ok(user);
+  }
+
+}
