@@ -18,7 +18,7 @@ function HomePage({emails , user}){
     <>
     <div className="pagecontent">
         <SearchBar/>
-        <EmailTable emails={emails}  />
+        <EmailTable emails={MocData}  />
         <MenuBar user={user}/>   
     </div>
     </>

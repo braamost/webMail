@@ -97,4 +97,39 @@
   }
   
   
-  
+  /*******************************************************************/
+ /* Timestamp Cell Styling */
+.timestamp-cell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+}
+
+/* Timestamp Text */
+.timestamp-text {
+  margin-right: 10px;
+}
+
+/* Icons Container */
+.timestamp-icons {
+  display: flex;
+  gap: 10px;
+  visibility: hidden; /* Initially hidden */
+}
+
+/* Icons Styling */
+.timestamp-icons .icon {
+  color: gray;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.timestamp-icons .icon:hover {
+  color: black;
+}
+
+/* Show Icons When Row is Hovered */
+.rdt_TableRow:hover .timestamp-icons {
+  visibility: visible;
+}
