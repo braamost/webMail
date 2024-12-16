@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.mail.back.entity.*;
 import com.mail.back.DAO.UserEmailRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -48,5 +50,20 @@ public class UserEmailServiceImp implements UserEmailService{
     public void deleteById(UserEmailID theId) {
         userEmailRepository.deleteById(theId);
     }
+
+    @Override
+    public List<Email> getEmailsByReceiverAndFolder(Integer receiverId,Email.Folder folder) {
+        // Fetch UserEmails by receiverId and folder
+        List<UserEmail> userEmails = userEmailRepository.findByReceiverIdAndFolder(receiverId, folder);
+
+        // Extract the Email data (with ids and attachments) from UserEmail entries
+        List<Email> emails = new ArrayList<>();
+        for (UserEmail userEmail : userEmails) {
+            emails.add(userEmail.getEmail());  // Add associated Email entity, including attachments
+        }
+
+        return emails;
+    }
+
 
 }

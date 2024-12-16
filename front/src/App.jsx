@@ -55,7 +55,7 @@ function App() {
         <Route path="/Home/InboxFolder" element={ <InboxFolder emails={emails}/>} />
         <Route path="/Home/UserFolder" element={ <UserFolder  user={user} />} />
 
-        <Route path="/EmailTable" element={ <EmailTable emails={MocData}/>} />
+       
       </Routes>
       </BrowserRouter>
           

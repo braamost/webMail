@@ -50,4 +50,8 @@ public class EmailServiceImp implements EmailService{
         emailRepository.deleteById(theId);
     }
 
+    public List<Attachment> getAttachmentsForEmail(Integer emailId) {
+        return emailRepository.findAttachmentsByEmailId(emailId);
+    }
+
 }

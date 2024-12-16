@@ -1,4 +1,5 @@
 package com.mail.back.Service.UserEmailService;
+import com.mail.back.entity.Email;
 import com.mail.back.entity.UserEmail;
 import com.mail.back.entity.UserEmailID;
 
@@ -11,4 +12,5 @@ public interface UserEmailService {
   UserEmail save(UserEmail theUserEmail);
 
   void deleteById(UserEmailID theId);
+  public List<Email> getEmailsByReceiverAndFolder(Integer receiverId,  Email.Folder folder);
 }

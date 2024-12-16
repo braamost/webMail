@@ -1,5 +1,6 @@
 package com.mail.back.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -16,6 +17,7 @@ public class Attachment {
 
     @ManyToOne
     @JoinColumn(name = "email_id", nullable = false)
+    @JsonBackReference
     private Email email; // Associated email
 
     private String fileName; // The file's name

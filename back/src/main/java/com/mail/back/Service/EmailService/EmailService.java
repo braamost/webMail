@@ -10,4 +10,6 @@ public interface EmailService {
     Email save(Email employee);
 
     void deleteById(Integer id);
+
+    public List<Attachment> getAttachmentsForEmail(Integer emailId);
 }

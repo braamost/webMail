@@ -3,8 +3,11 @@ package com.mail.back.REST;
 import java.util.List;
 
 import com.mail.back.GlobalHandle.NotFoundException;
+import com.mail.back.Service.AttachmentService.AttachmentService;
 import com.mail.back.Service.EmailService.EmailService;
 import com.mail.back.Service.UserService.UserService;
+import com.mail.back.entity.Attachment;
+import com.mail.back.entity.Email;
 import com.mail.back.entity.UserEmailID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +22,12 @@ public class UserEmailRestController {
   private final UserEmailService userEmailService ;
   private final UserService userService;
   private final EmailService emailService;
+
   @Autowired
   public UserEmailRestController(UserEmailService userEmailService, UserService userService, EmailService emailService) {
     this.userService = userService;
     this.emailService = emailService;
-    this.userEmailService = userEmailService;
+    this.userEmailService = userEmailService;;
   }
   
 
@@ -66,5 +70,15 @@ public class UserEmailRestController {
     userEmailService.deleteById(userEmailID);
     return "Deleted UserEmail with senderId " + senderId + ", receiverId " + receiverId + " and emailId " + emailId;
   }
-  
+
+  @GetMapping("/emails")
+  public List<Email> getEmails(@RequestParam Integer receiverId, @RequestParam Email.Folder folder) {
+    List<Email> Temp =  userEmailService.getEmailsByReceiverAndFolder(receiverId, folder);
+    for (Email email : Temp){
+      List<Attachment> attachments = emailService.getAttachmentsForEmail(email.getId());
+      email.setAttachments(attachments);
+    }
+    return Temp ;
+  }
+
 }

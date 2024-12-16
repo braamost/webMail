@@ -1,5 +1,6 @@
 package com.mail.back.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +38,21 @@ public class Email {
     @Enumerated(EnumType.STRING)
     @Column(name = "folder")
     private Folder folder;
+
+
+    @OneToMany(mappedBy = "email", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Attachment> attachments;
+
+    // Getter and Setter for attachments
+    public List<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
+    }
+
 
     public Email() {}
 
