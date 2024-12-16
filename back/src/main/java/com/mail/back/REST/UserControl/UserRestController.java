@@ -73,16 +73,16 @@ public class UserRestController implements IUserController {
     return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
   }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable int id,
+  @PutMapping
+  public ResponseEntity<User> updateUser(@RequestBody User user,
                                          HttpServletRequest request) {
-    user.setId(id);
+    user.setId(user.getId());
     return ResponseEntity.ok(userService.save(user));
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<String> deleteUser(@PathVariable int id, HttpServletRequest request) {
-    userService.deleteById(id);
-    return ResponseEntity.ok("Deleted user " + id);
+  @DeleteMapping
+  public ResponseEntity<String> deleteUser(@RequestBody User user, HttpServletRequest request) {
+    userService.deleteById(user.getId());
+    return ResponseEntity.ok("Deleted user " + user.getId());
   }
 }
