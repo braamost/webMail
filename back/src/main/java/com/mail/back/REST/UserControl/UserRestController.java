@@ -1,5 +1,6 @@
 package com.mail.back.REST.UserControl;
 
+import com.mail.back.GlobalHandle.NotFoundException;
 import com.mail.back.Service.UserService.UserService;
 import com.mail.back.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +28,29 @@ public class UserRestController implements IUserController {
 
   @GetMapping("/{id}")
   public ResponseEntity<User> findById(@PathVariable int id) {
-    return ResponseEntity.ok(userService.findById(id));
+    User user = userService.findById(id);
+    if (user == null) {
+      throw new NotFoundException("User with id " + id + " not found");
+    }
+    return ResponseEntity.ok(user);
+  }
+
+  @GetMapping("/username/{username}")
+  public ResponseEntity<User> findByUserName(@PathVariable String username) {
+    User user = userService.findByUserName(username);
+    if (user == null) {
+      throw new NotFoundException("User with username " + username + " not found");
+    }
+    return ResponseEntity.ok(user);
+  }
+
+  @GetMapping("/email/{email}")
+  public ResponseEntity<User> findByEmail(@PathVariable String email) {
+    User user = userService.findByEmail(email);
+    if (user == null) {
+      throw new NotFoundException("User with email " + email + " not found");
+    }
+    return ResponseEntity.ok(user);
   }
 
   @PostMapping("/login")

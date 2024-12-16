@@ -27,7 +27,7 @@ public class UserEmailRestController {
   public UserEmailRestController(UserEmailService userEmailService, UserService userService, EmailService emailService) {
     this.userService = userService;
     this.emailService = emailService;
-    this.userEmailService = userEmailService;;
+    this.userEmailService = userEmailService;
   }
   
 

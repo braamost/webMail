@@ -52,7 +52,7 @@ function MenuBar({user}) {
                 </li>
                 <li className="logOut">
                     <Link className="Link" to="/">
-                        <button className="logbutton" type="button" onClick={LogOut}>Log Out</button>
+                        <button className="logbutton" type="button" onClick={()=>LogOut(navigate)}>Log Out</button>
                     </Link>
                 </li>
             </ul>

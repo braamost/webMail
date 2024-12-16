@@ -8,6 +8,8 @@ import java.util.List;
 public interface IUserController {
     List<User> findAll();
     ResponseEntity<User> findById(int id);
+    ResponseEntity<User> findByUserName(String username);
+    ResponseEntity<User> findByEmail(String email);
     ResponseEntity<User> login(User loginRequest, HttpServletRequest request);
     ResponseEntity<String> logout(HttpServletRequest request);
     ResponseEntity<User> addUser(User user);

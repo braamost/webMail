@@ -39,12 +39,20 @@ public class UserControllerProxy implements IUserController {
 
     @Override
     public ResponseEntity<User> findById(int id) {
-        logger.info("Finding user: {}", id);
-        User user = userService.findById(id);
-        if (user == null) {
-            throw new NotFoundException("User " + id + " not found");
-        }
+        logger.info("Finding user by id: {}", id);
         return realController.findById(id);
+    }
+
+    @Override
+    public ResponseEntity<User> findByUserName(String username) {
+        logger.info("Finding user by username: {}", username);
+        return realController.findByUserName(username);
+    }
+
+    @Override
+    public ResponseEntity<User> findByEmail(String email) {
+        logger.info("Finding user by email: {}", email);
+        return realController.findByEmail(email);
     }
 
     @Override
