@@ -2,6 +2,7 @@ import "./MenuBar.css"
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import NewMail from "../NewMail/NewMail";
+import { LogOut } from "../LoginHandling/LogOut";
 
 function MenuBar({user}) {
     const [isNewMail ,setIsNewMail] = useState(false);
@@ -11,7 +12,7 @@ function MenuBar({user}) {
         setIsNewMail(!isNewMail);
     }
     return (
-        <div className="menu">
+        <div className="menu"  style={isNewMail?{}:{zIndex:"5"}}>
             <ul>
                 <li className="profile">
                 <Link className="Link" to="/Home/UserFolder">
@@ -51,10 +52,7 @@ function MenuBar({user}) {
                 </li>
                 <li className="logOut">
                     <Link className="Link" to="/">
-                        <button className="logbutton" type="button" onClick={() => {
-                            sessionStorage.clear();
-                            navigate("/");
-                        }}>Log Out</button>
+                        <button className="logbutton" type="button" onClick={LogOut}>Log Out</button>
                     </Link>
                 </li>
             </ul>

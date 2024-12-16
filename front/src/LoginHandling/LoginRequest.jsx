@@ -2,12 +2,19 @@ import axios from "axios";
 
 export async function Login(username, password, setError) {
   try {
-    const apiUrl = `http://localhost:8080/api/users/username/${username}/${password}`;
+    const apiUrl = `http://localhost:8080/api/users/login`;
 
-    const response = await axios.get(apiUrl, {
+    const userData = {
+      userName: username,
+      password: password,
+    };
+
+    const response = await axios.post(apiUrl, userData, {
+      withCredentials: true, // Important for session cookies
       headers: {
         "Content-Type": "application/json",
       },
+      
     });
     console.log(response.data);
     return response.data;

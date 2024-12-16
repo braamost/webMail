@@ -17,6 +17,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "session_id")
+    private String sessionId;
+
     @Column(name = "email", unique = true)
     private String email;
 
@@ -29,11 +32,12 @@ public class User {
     public User() {
     }
 
-    public User(String userName, String password, String email, String phoneNumber) {
+    public User(String userName, String password, String email, String phoneNumber, String sessionId) {
         this.userName = userName;
         this.password = password;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.sessionId = sessionId;
     }
 
     @PrePersist
@@ -65,6 +69,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public String getEmail() {

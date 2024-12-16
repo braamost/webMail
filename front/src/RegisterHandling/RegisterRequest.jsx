@@ -13,6 +13,7 @@ export async function Register(username, password, email, phoneNumber, setError)
     const apiUrl = `http://localhost:8080/api/users`;
 
     const response = await axios.post(apiUrl, userData, {
+      withCredentials: true, // Important for session cookies
       headers: { "Content-Type": "application/json" },
     });
 
