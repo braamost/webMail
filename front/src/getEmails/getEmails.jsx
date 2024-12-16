@@ -19,6 +19,7 @@ export async function getEmails({folder}){
             folder: `${folder}`
           }
         });
+        
         setEmails(response.data);
         return emails ;
       } catch (error) {

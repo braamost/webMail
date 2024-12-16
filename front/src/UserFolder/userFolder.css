@@ -1,0 +1,84 @@
+.userFolder{
+    display: flex;
+    flex-direction: column;
+    left :320px;
+    top: 20px;
+    min-height: 800px;
+    position: fixed;
+    min-width: 1460px;
+    margin: 50px auto; 
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9); /* Transparent background for readability */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+.userFolder h1{
+    text-align: center;
+    margin-bottom: 20px;
+}
+.info , .setPass {
+    display: flex;
+    column-gap: 15px ;
+    font-size: larger;
+    margin: 10px;
+    padding: 10px ;
+    padding-bottom: 15px;
+    border-Bottom: 1px solid #ddd;
+}
+.changePass{
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #007bff; 
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.theForm{
+    display: flex;
+    flex-direction: column;
+    column-gap: 15px ;
+    font-size: larger;
+    margin: 10px;
+    padding: 10px ;
+    padding-bottom: 15px;
+    border-Bottom: 1px solid #ddd;
+
+}
+.setPass{
+    display: flex;
+    flex-direction: row ;
+    justify-content: space-between;
+    column-gap: 15px ;
+    margin: 10px;
+    padding: 10px ;
+    padding-bottom: 15px;
+    border-Bottom: 1px solid #ddd;
+
+}
+.setPass input{
+    border: none;
+    width: 80%;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.9);;
+}
+.return{
+    position: fixed;
+    width: 10%;
+    height: 50px;
+    right: 60px;
+    bottom: 80px;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #007bff; 
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+

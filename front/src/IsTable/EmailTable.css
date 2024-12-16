@@ -1,0 +1,100 @@
+/* EmailTable.module.css */
+
+.tableContainer {
+    position: absolute; /* Position it independently of other elements */
+    top: 65px; /* Space from the top of the page */
+    left: 59.6%; /* Center horizontally */
+    transform: translateX(-50%); /* Ensure it's perfectly centered */
+    width: 75%; /* Full width */
+    max-width: 100%; /* Control the width of the search bar and results */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 200px;
+    padding: 0 15px;
+    overflow-x: hidden;
+    z-index: 10; /* Ensure it stays on top */
+  }
+  
+  .headCells {
+    background-color: #d1e0e0;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .tableCell {
+    font-size: 14px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+/* Container for the search bar and results */
+.search-bar-container {
+    position: absolute; /* Position it independently of other elements */
+    top: 20px; /* Space from the top of the page */
+    left: 38%; /* Center horizontally */
+    transform: translateX(-50%); /* Ensure it's perfectly centered */
+    width: 100%; /* Full width */
+    max-width: 30%; /* Control the width of the search bar and results */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 200px;
+    padding: 0 15px;
+    z-index: 100; /* Ensure it stays on top */
+  }
+  
+  /* Search bar wrapper */
+  .input-wrapper {
+    width: 100%;
+    height: 2.5rem;
+    max-width: 600px; /* Control the width of the search bar */
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0px 0px 8px #ddd;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    transition: box-shadow 0.3s ease; /* Smooth hover/focus transition */
+    margin-bottom: 1rem; /* Add space below the search bar */
+  }
+  
+  /* Focus effect on wrapper */
+  .input-wrapper:focus-within {
+    box-shadow: 0px 0px 12px #aaa; /* Enhanced shadow when input is focused */
+  }
+  
+  /* Input field style */
+  .inputStyle {
+    background-color: transparent;
+    border: none;
+    height: 100%;
+    font-size: 1.25rem;
+    width: 100%;
+    margin-left: 5px;
+    outline: none; /* Removes default outline */
+    color: #333; /* Ensures text visibility */
+  }
+  
+  /* Placeholder styling */
+  .inputStyle::placeholder {
+    color: #aaa; /* Subtle placeholder color */
+  }
+  
+  /* Search icon styling */
+  #search-icon {
+    color: royalblue;
+    font-size: 1.25rem; /* Consistent size for the icon */
+  }
+  
+  /* Hover effect on wrapper */
+  .input-wrapper:hover {
+    box-shadow: 0px 0px 10px #bbb; /* Slightly stronger shadow on hover */
+  }
+  
+  
+  

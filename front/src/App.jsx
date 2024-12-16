@@ -9,7 +9,9 @@ import SentMails from './SentMails/SentMails.jsx'
 import UserFolder from './UserFolder/UserFolder.jsx'
 import Register from './RegisterHandling/RegisterPage.jsx'
 import { useEffect, useState } from 'react'
-import LoginPage from './LoginHandling/Login.jsx'
+import LoginPage from './LoginHandling/Login.jsx'                       
+import { MocData } from './MocData.jsx'
+
 function App() {
   const [user , setUser] = useState("")
   const emails = [
@@ -51,7 +53,7 @@ function App() {
         <Route path="/Home/SentMails" element={ <SentMails emails={emails}/>} />
         <Route path="/Home/Trash" element={ <Trash emails={emails}/>} />
         <Route path="/Home/InboxFolder" element={ <InboxFolder emails={emails}/>} />
-        <Route path="/Home/UserFolder" element={ <UserFolder emails={emails}/>} />
+        <Route path="/Home/UserFolder" element={ <UserFolder  user={user} />} />
       </Routes>
       </BrowserRouter>
           

@@ -12,7 +12,7 @@ function MenuBar({user}) {
         setIsNewMail(!isNewMail);
     }
     return (
-        <div className="menu">
+        <div className="menu"  style={isNewMail?{}:{zIndex:"5"}}>
             <ul>
                 <li className="profile">
                 <Link className="Link" to="/Home/UserFolder">
