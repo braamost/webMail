@@ -2,7 +2,6 @@ import "./MenuBar.css"
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import NewMail from "../NewMail/NewMail";
-import EmailFetcher from "../getEmails/getEmails";
 function MenuBar({user}) {
     const [isNewMail ,setIsNewMail] = useState(false);
     const navigate = useNavigate();
@@ -49,7 +48,6 @@ function MenuBar({user}) {
                         <button type="button">Filter</button>
                     </Link>
                 </li>
-                <EmailFetcher></EmailFetcher>
                 <li className="logOut">
                     <button className="logbutton" type="button" onClick={()=>{
                         sessionStorage.removeItem("user");

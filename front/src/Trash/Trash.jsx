@@ -1,18 +1,28 @@
 import { Link } from "react-router-dom"
-import EmailTable from "../EmailTable/EmailTable"
+import { useState  , useEffect} from "react";
+import { getEmails } from "../getEmails/getEmails";
 import "../homePage/HomePage.css"
 import HomePage from "../homePage/homePage"
-function Trash ({emails, user}){
+function Trash ({user}){
+    const [emails, setEmails] = useState([]);
+    const [error, setError] = useState("");
+        
+useEffect(() => {
+    const fetchEmails = async () => {
+        try {
+          const fetchedEmails = await getEmails("TRASH");
+          setEmails(fetchedEmails);
+        } catch (err) {
+          setError(err.message);
+          console.error(err);
+        }
+      };
+      fetchEmails();
+}, []);
     return (
-    <>
-   
-
-    
+    <>   
     <HomePage emails={emails} user={user}/>
     <div className="menu-bar" >
-    <Link to="/Home">
-        <button type="button">Return Home</button>
-    </Link> 
     </div> 
     </>
     )

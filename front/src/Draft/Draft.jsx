@@ -1,7 +1,27 @@
 import { Link } from "react-router-dom"
+import { getEmails } from "../getEmails/getEmails";
+import { useState , useEffect } from "react";
 import HomePage from "../homePage/homePage"
 
-function Draft ({emails, user}){
+function Draft ({user}){
+    const [emails, setEmails] = useState([]);
+    const [error, setError] = useState("");
+    
+      useEffect(() => {
+        const fetchEmails = async () => {
+            try {
+              const fetchedEmails = await getEmails("DRAFTS");
+              setEmails(fetchedEmails);
+            } catch (err) {
+              setError(err.message);
+              console.error(err);
+            }
+          };
+      
+          fetchEmails();
+        
+        setEmails(getEmails());
+      }, []);
     return (
     <>
         <HomePage emails={emails} user={user}/>

@@ -1,12 +1,24 @@
 import { Link } from "react-router-dom"
-import { useEffect } from "react";
+import {getEmails} from "../getEmails/getEmails.jsx"
+import { useEffect  , useState} from "react";
 import HomePage from "../homePage/homePage"
-function InboxFolder ({emails, user}){
-  // Fetch emails when component mounts
+function InboxFolder ({ user}){
+     const [emails, setEmails] = useState([]);
+     const [error, setError] = useState("");
 
-  /*useEffect(() => {
-    emails=getEmails("INBOX");
-  }, []);*/
+  useEffect(() => {
+    const fetchEmails = async () => {
+      try {
+        const fetchedEmails = await getEmails("INBOX");
+        setEmails(fetchedEmails);
+      } catch (err) {
+        setError(err.message);
+        console.error(err);
+      }
+    };
+
+    fetchEmails();
+  }, []);
     
     return (
     <>

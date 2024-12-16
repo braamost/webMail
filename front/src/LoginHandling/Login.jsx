@@ -23,7 +23,7 @@ export default function LoginPage({setUser}) {
       setUser(response);
       sessionStorage.setItem("user", JSON.stringify(response));
       console.log(response);
-      navigate("/Home");
+      navigate("/InboxFolder");
     }
   };
 
