@@ -13,6 +13,6 @@ public interface IUserController {
     ResponseEntity<User> login(User loginRequest, HttpServletRequest request);
     ResponseEntity<String> logout(HttpServletRequest request);
     ResponseEntity<User> addUser(User user);
-    ResponseEntity<User> updateUser(User user, int id, HttpServletRequest request);
-    ResponseEntity<String> deleteUser(int id, HttpServletRequest request);
+    ResponseEntity<User> updateUser(User user, HttpServletRequest request);
+    ResponseEntity<String> deleteUser(User user, HttpServletRequest request);
 }

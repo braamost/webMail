@@ -87,22 +87,22 @@ public class UserControllerProxy implements IUserController {
     }
 
     @Override
-    public ResponseEntity<User> updateUser(User user, int id, HttpServletRequest request) {
-        logger.info("Updating user: {}", id);
-        validateSession(request, id);
-        if (userService.findById(id) == null) {
+    public ResponseEntity<User> updateUser(User user, HttpServletRequest request) {
+        logger.info("Updating user: {}", user.getUserName());
+        validateSession(request, user.getId());
+        if (userService.findById(user.getId()) == null) {
             throw new NotFoundException("User not found");
         }
-        return realController.updateUser(user, id, request);
+        return realController.updateUser(user, request);
     }
 
     @Override
-    public ResponseEntity<String> deleteUser(int id, HttpServletRequest request) {
-        logger.info("Deleting user: {}", id);
-        validateSession(request, id);
-        if (userService.findById(id) == null) {
+    public ResponseEntity<String> deleteUser(User user, HttpServletRequest request) {
+        logger.info("Deleting user: {}", user.getUserName());
+        validateSession(request, user.getId());
+        if (userService.findById(user.getId()) == null) {
             throw new NotFoundException("User not found");
         }
-        return realController.deleteUser(id, request);
+        return realController.deleteUser(user, request);
     }
 }

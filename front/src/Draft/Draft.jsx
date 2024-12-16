@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom"
 import HomePage from "../homePage/homePage"
-function Draft ({emails}){
+
+function Draft ({emails, user}){
     return (
     <>
-        <HomePage emails={emails}/>
+        <HomePage emails={emails} user={user}/>
     </>
     )
 }

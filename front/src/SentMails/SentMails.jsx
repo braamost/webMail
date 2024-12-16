@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom"
 import HomePage from "../homePage/homePage"
-function SentMails ({ emails }) {
+function SentMails ({ emails , user}) {
     return (
     <>
-        <HomePage emails={emails}/>
+        <HomePage emails={emails} user={user}/>
     </>
     )
 }
