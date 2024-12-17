@@ -62,6 +62,8 @@ public class UserEmailServiceImp implements UserEmailService{
             Email email = userEmail.getEmail();
             email.setEmailOfSender(userEmail.getSender().getEmail());
             email.setUserNameOfSender(userEmail.getSender().getUserName());
+            email.setEmailOfReceiver(userEmail.getReceiver().getEmail());
+            email.setUserNameOfReceiver(userEmail.getReceiver().getUserName());
             emails.add(email);  // Add associated Email entity, including attachments
         }
         return emails;
@@ -78,6 +80,8 @@ public class UserEmailServiceImp implements UserEmailService{
             Email email = userEmail.getEmail();
             email.setEmailOfReceiver(userEmail.getReceiver().getEmail());
             email.setUserNameOfReceiver(userEmail.getReceiver().getUserName());
+            email.setEmailOfSender(userEmail.getSender().getEmail());
+            email.setUserNameOfSender(userEmail.getSender().getUserName());
             emails.add(email);  // Add associated Email entity, including attachments
         }
         return emails;

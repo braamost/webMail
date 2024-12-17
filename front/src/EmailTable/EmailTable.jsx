@@ -3,6 +3,7 @@ import "./EmailTable.css";
 import DataTable from "react-data-table-component";
 import { FaSearch, FaTrash, FaStar } from "react-icons/fa";
 import { FaPaperclip } from "react-icons/fa";
+import { CreateStarredCopy } from "../Starred/MakeStarred"; 
 function EmailTable({ emails, callback, FuncEmailPage }) {
   const [inputSearch, setInputSearch] = useState("");
   const [filteredEmails, setFilteredEmails] = useState([]);
@@ -29,9 +30,14 @@ function EmailTable({ emails, callback, FuncEmailPage }) {
     // Add delete logic here
   };
 
-  const handleFavorite = (email) => {
+  const  handleFavorite = async(email) => {
     console.log("Favorite clicked for row:", email.emailOfSender);
-    // Add favorite logic here
+    try {
+      CreateStarredCopy(email.emailOfSender, email.emailOfReceiver, email.subject, email.body, false ,"STARRED", email.emailDirection);
+    } catch (error) {
+      // Handle error (show toast, alert, etc.)
+      console.error('Failed to star email', error);
+    }
   };
 
   const formatTimestamp = (timestamp) => {
