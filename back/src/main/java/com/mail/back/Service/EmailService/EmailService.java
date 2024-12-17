@@ -7,9 +7,9 @@ public interface EmailService {
 
     Email findById(Integer id);
 
-    Email save(Email employee);
+    Email save(Email email);
 
     void deleteById(Integer id);
 
-    public List<Attachment> getAttachmentsForEmail(Integer emailId);
+    List<Attachment> getAttachmentsForEmail(Integer emailId);
 }

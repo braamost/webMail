@@ -1,6 +1,8 @@
 package com.mail.back.REST;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.mail.back.GlobalHandle.NotFoundException;
 import com.mail.back.Service.AttachmentService.AttachmentService;
@@ -71,16 +73,35 @@ public class UserEmailRestController {
 
   @GetMapping("/emails")
   public List<Email> getEmails(@RequestParam(name = "folder") String folder) {
-    Email.Folder theFolder = Email.Folder.valueOf(folder);
-    System.out.println(folder);
+    // get the currently logged-in user
     LoggedInUser LOGGED_IN = LoggedInUser.getInstance();
     User user = LOGGED_IN.getUser();
-    List<Email> Temp =  userEmailService.getEmailsByReceiverAndFolder(user.getId(), theFolder);
-    for (Email email : Temp){
+
+    //determine the folder
+    List<Email> emails;
+
+    System.out.println(folder);
+    Email.Folder theFolder;
+    switch (folder){
+      case "INBOX":
+        theFolder = Email.Folder.GENERAL;
+        emails = userEmailService.getEmailsByReceiverAndFolder(user.getId(), theFolder);
+        break;
+      case "SENT":
+        theFolder = Email.Folder.GENERAL;
+        emails = userEmailService.getEmailsBySenderAndFolder(user.getId(), theFolder);
+        break;
+      default:
+        theFolder = Email.Folder.valueOf(folder);
+        emails = userEmailService.getEmailsByReceiverAndFolder(user.getId(), theFolder);
+        emails.addAll(userEmailService.getEmailsBySenderAndFolder(user.getId(), theFolder));
+        break;
+    }
+    //add the attachments
+    for (Email email : emails){
       List<Attachment> attachments = emailService.getAttachmentsForEmail(email.getId());
       email.setAttachments(attachments);
     }
-    return Temp ;
+    return emails ;
   }
-
 }

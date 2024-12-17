@@ -1,11 +1,12 @@
 import axios from "axios";
 
-export async function createEmail(subject, body, isRead, folder) {
+export async function createEmail(subject, body, isRead, folder,emailDirection) {
   const emailData = {
     subject: subject,
     body: body,
     isRead: isRead,
     folder: folder,
+    emailDirection: emailDirection
   };
   // Save the email and get its ID back
   const emailResponse = await axios.post(

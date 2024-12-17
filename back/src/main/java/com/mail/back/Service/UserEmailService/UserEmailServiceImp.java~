@@ -82,4 +82,31 @@ public class UserEmailServiceImp implements UserEmailService{
         }
         return emails;
     }
+
+    @Override
+    public List<Email> getStarredEmails(Integer id) {
+        // Fetch UserEmails by senderId and folder
+        List<UserEmail> userEmails = userEmailRepository.findByStarred(id);
+
+        // Extract the Email data (with ids and attachments) from UserEmail entries
+        List<Email> emails = new ArrayList<>();
+        for (UserEmail userEmail : userEmails) {
+            Email email = setUserInfo(id, userEmail);
+            emails.add(email);  // Add associated Email entity, including attachments
+        }
+        return emails;
+    }
+
+    private static Email setUserInfo(Integer id, UserEmail userEmail) {
+        Email email = userEmail.getEmail();
+        // get user details
+        if(userEmail.getUserEmailID().getReceiverId() == id){   // if it's a RECEIVED mail
+            email.setEmailOfSender(userEmail.getSender().getEmail());
+            email.setUserNameOfSender(userEmail.getSender().getUserName());
+        }else{     //if it's a SENT mail
+            email.setEmailOfReceiver(userEmail.getReceiver().getEmail());
+            email.setUserNameOfReceiver(userEmail.getReceiver().getUserName());
+        }
+        return email;
+    }
 }

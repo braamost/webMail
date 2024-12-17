@@ -9,12 +9,13 @@ export async function emailCreation(
   body,
   isRead,
   folder,
+  emailDirection,
   setError
 ) {
   try {
     const receiverId = await UserIsFound(receiverEmail);
 
-    const emailId = await createEmail(subject, body, isRead, folder);
+    const emailId = await createEmail(subject, body, isRead, folder,emailDirection);
 
     const userEmailData = await UserEmailCreation(senderId, receiverId, emailId);
 
