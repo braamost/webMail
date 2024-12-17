@@ -10,7 +10,7 @@ function HomePage({emails , user, error}){
     <>
     <div className="pagecontent">
         <SearchBar/>
-        <EmailTable emails={emails}  />
+        <EmailTable emails={MocData}  />
         <MenuBar user={user}/>   
     </div>
     </>

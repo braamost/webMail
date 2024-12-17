@@ -1,16 +1,17 @@
 import axios from "axios";
 
 export const getEmails = async (folder)=>{
-  
+      console.log(folder);
     try {
-      const receiverId = 1;  // Example receiverId
-      const response = await axios.get("http://localhost:8080/api/emails", {
+      const response = await axios.get(`http://localhost:8080/api/emails`, {
         params: {
-          receiverId: receiverId,  // Pass receiverId as query parameter
-          folder: folder,           // Pass folder as query parameter
+            folder: folder  // folder is "TRASH"
         },
-      });
-      
+        headers: {
+            "Content-Type": "application/json",
+        }
+    });
+    
       console.log(response.data); // Debugging: logs the fetched emails
       return response.data;
     } catch (error) {
