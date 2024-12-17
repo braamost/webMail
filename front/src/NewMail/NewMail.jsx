@@ -29,11 +29,12 @@ function NewMail({ user, setIsNewMail }) {
     let withAttachment = false;
     if(attachments.current != null){
       attachments.current.append("emailId", emailID);
-      const attachmentResponse = await uploadAttachments(attachments.current, setError);
+      attachmentResponse = await uploadAttachments(attachments.current, setError);
       withAttachment = true;
     }
     
-    if (emailID != null && (!withAttachment || (withAttachment && attachmentResponse != null))) {
+    if (emailID != null && (!withAttachment || attachmentResponse != null)) {
+      console.log("here");
       setError("");
       setIsNewMail(false);
       window.alert("Email sent successfully!");
@@ -44,6 +45,19 @@ function NewMail({ user, setIsNewMail }) {
   return (
     <>
       <div className="form-container">
+        <div>
+          <ion-icon name="mail-outline"></ion-icon>
+          <label htmlFor="FromMail">From:</label>
+          <input
+            type="email"
+            required
+            value={user.email}
+            onChange={(e) => setFromMail(e.target.value)}
+            placeholder={user.email}
+            style={{ color: "gray" , pointerEvents: "none" }}
+            readOnly
+          />
+        </div>
         <div >
           <ion-icon name="mail-outline"></ion-icon>
           <label htmlFor="toMail">TO:</label>
@@ -57,18 +71,6 @@ function NewMail({ user, setIsNewMail }) {
         </div>
         <div>
           <ion-icon name="mail-outline"></ion-icon>
-          <label htmlFor="FromMail">From:</label>
-          <input
-            type="email"
-            required
-            value={user.email}
-            onChange={(e) => setFromMail(e.target.value)}
-            placeholder={user.email}
-            readOnly
-          />
-        </div>
-        <div>
-          <ion-icon name="mail-outline"></ion-icon>
           <label htmlFor="subject">subject:</label>
           <input
             type="text"
@@ -77,6 +79,7 @@ function NewMail({ user, setIsNewMail }) {
             onChange={(e) => setSubject(e.target.value)}
             placeholder="subject: "
           />
+          <label htmlFor="body">body:</label>
           <textarea
             placeholder="Message..."
             rows={8}
