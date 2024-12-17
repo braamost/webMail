@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./EmailTable.css";
 import DataTable from "react-data-table-component";
 import { FaSearch, FaTrash, FaStar } from "react-icons/fa";
-
+import { FaPaperclip } from "react-icons/fa";
 function EmailTable({ emails, callback, FuncEmailPage }) {
-
   const [inputSearch, setInputSearch] = useState("");
   const [filteredEmails, setFilteredEmails] = useState([]);
   const [hoveredRowId, setHoveredRowId] = useState(null);
@@ -36,7 +35,7 @@ function EmailTable({ emails, callback, FuncEmailPage }) {
   };
 
   const formatTimestamp = (timestamp) => {
-    if (!timestamp) return '';
+    if (!timestamp) return "";
     const date = new Date(timestamp);
     return date.toLocaleString();
   };
@@ -44,14 +43,59 @@ function EmailTable({ emails, callback, FuncEmailPage }) {
   const columns = [
     {
       name: "Sender",
-      selector: (row) => row.emailOfSender || 'No Sender',
+      selector: (row) => row.emailOfSender || "No Sender",
       sortable: true,
       width: "300px",
     },
     {
       name: "Subject",
-      selector: (row) => row.subject || 'No Subject',
-      width: "650px",
+      selector: (row) => row.subject || "No Subject",
+      width: "400px",
+    },
+    {
+      name: "Attachments",
+      selector: (row) => row.processedAttachments || [],
+      width: "200px",
+      cell: (row) => {
+        // Check if processed attachments exist and have length
+        if (
+          !row.processedAttachments ||
+          row.processedAttachments.length === 0
+        ) {
+          return <span>No Attachments</span>;
+        }
+
+        return (
+          <div className="attachments-cell">
+            {/* Show attachment count */}
+            <span className="attachment-count">
+              {row.processedAttachments.length}
+              {row.processedAttachments.length === 1
+                ? " Attachment"
+                : " Attachments"}
+            </span>
+
+            {/* Attachment icons */}
+            <div className="attachment-icons">
+              {row.processedAttachments.map((file, index) => (
+                <FaPaperclip
+                  key={index}
+                  className="attachment-icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // Download the file
+                    const downloadLink = document.createElement("a");
+                    downloadLink.href = URL.createObjectURL(file);
+                    downloadLink.download = file.name;
+                    downloadLink.click();
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      },
+      sortable: false,
     },
     {
       name: "Timestamp",
@@ -62,19 +106,19 @@ function EmailTable({ emails, callback, FuncEmailPage }) {
           <span className="timestamp-text">{formatTimestamp(row.sentAt)}</span>
           {hoveredRowId === row.id && (
             <div className="timestamp-icons">
-              <FaStar 
-                className="icon" 
+              <FaStar
+                className="icon"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleFavorite(row);
-                }} 
+                }}
               />
-              <FaTrash 
-                className="icon" 
+              <FaTrash
+                className="icon"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleDelete(row);
-                }} 
+                }}
               />
             </div>
           )}
@@ -125,7 +169,7 @@ function EmailTable({ emails, callback, FuncEmailPage }) {
 
   const handleRowClick = (row, event) => {
     // Prevent row click when clicking icons
-    if (event.target.closest('.timestamp-icons')) {
+    if (event.target.closest(".timestamp-icons")) {
       return;
     }
     FuncEmailPage(row);
@@ -134,9 +178,7 @@ function EmailTable({ emails, callback, FuncEmailPage }) {
   };
 
   const NoDataComponent = () => (
-    <div style={{ padding: "24px" }}>
-      No emails found
-    </div>
+    <div style={{ padding: "24px" }}>No emails found</div>
   );
 
   return (
