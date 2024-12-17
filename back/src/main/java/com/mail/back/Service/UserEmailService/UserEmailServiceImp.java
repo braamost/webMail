@@ -59,7 +59,10 @@ public class UserEmailServiceImp implements UserEmailService{
         // Extract the Email data (with ids and attachments) from UserEmail entries
         List<Email> emails = new ArrayList<>();
         for (UserEmail userEmail : userEmails) {
-            emails.add(userEmail.getEmail());  // Add associated Email entity, including attachments
+            Email email = userEmail.getEmail();
+            email.setEmailOfSender(userEmail.getSender().getEmail());
+            email.setUserNameOfSender(userEmail.getSender().getUserName());
+            emails.add(email);  // Add associated Email entity, including attachments
         }
 
         return emails;

@@ -53,6 +53,10 @@ public class Email {
         this.attachments = attachments;
     }
 
+    @Transient
+    private String EmailOfSender ;
+    @Transient
+    private String UserNameOfSender ;
 
     public Email() {}
 
@@ -119,5 +123,19 @@ public class Email {
         this.folder = folder;
     }
 
+    public String getEmailOfSender() {
+        return EmailOfSender;
+    }
 
+    public void setEmailOfSender(String emailOfSender) {
+        EmailOfSender = emailOfSender;
+    }
+
+    public String getUserNameOfSender() {
+        return UserNameOfSender;
+    }
+
+    public void setUserNameOfSender(String userNameOfSender) {
+        UserNameOfSender = userNameOfSender;
+    }
 }

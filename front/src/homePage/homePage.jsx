@@ -4,16 +4,31 @@ import MenuBar from "../MenuBar/MenuBar";
 import SearchBar from "../SearchAndSort/SearchBar";
 import EmailTable from "../IsTable/EmailTable";
 import {MocData} from "../MocData.jsx"
+import { useState } from "react";
+import EmailPage from "../EmailPage/EmailPage.jsx";
+
 function HomePage({emails , user, error}){
-    
+    const [emailPage ,setEmailPage] = useState(false);
+    const [selectedEmail, setSelectedEmail] = useState({});
+
+
+      const StoringEmailSelected = (email) => {
+        setSelectedEmail(email);
+      }
     return (
-    <>
-    <div className="pagecontent">
-        <SearchBar/>
-        <EmailTable emails={emails}/>
-        <MenuBar user={user}/>   
-    </div>
-    </>
+        <>
+        <div className="pagecontent">
+          {emailPage ? (
+            <EmailPage email={selectedEmail} callback={setEmailPage} />
+          ) : (
+            <>
+              <SearchBar />
+              <EmailTable emails={MocData} callback={setEmailPage} FuncEmailPage={StoringEmailSelected}/>
+            </>
+          )}
+          <MenuBar user={user} />
+        </div>
+      </>
     )
 
 }

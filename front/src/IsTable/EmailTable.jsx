@@ -5,41 +5,41 @@ import SearchBar from '../SearchAndSort/SearchBar'
 import { FaSearch , FaTrash, FaStar} from 'react-icons/fa';
 import { useState } from 'react';
 
-function EmailTable({emails}) {
+function EmailTable({emails , callback ,FuncEmailPage}) {
 
     const [inputSearch , setInputSearch] = useState('');
     const [filteredEmails , setFilteredEmails] = useState(emails);
     const [hoveredRowId, setHoveredRowId] = useState(null);
 
     const handleDelete = (email) => {
-      console.log('Delete clicked for row:', email.sender);
+      console.log('Delete clicked for row:', email.emailOfSender);
       // Add delete logic here
     };
   
     const handleFavorite = (email) => {
-      console.log('Favorite clicked for row:', email.sender);
+      console.log('Favorite clicked for row:', email.emailOfSender);
       // Add favorite logic here
     };
 
     const columns = [
         {
             name  : 'Sender',
-            selector : row => row.sender,
+            selector : row => row.emailOfSender,
             sortable:true,
-            width : '30%',
+            width : '300px',
         },
         {
             name  : 'Subject',
             selector : row => row.subject,
-            width : '40%',
+            width : '650px',
         },
         {
             name  : 'Timestamp',
-            selector : row => row.timestamp,
-            width : '30%',
+            selector : row => row.sentAt,
+            width : '200px%',
             cell: (row) => (
               <div className="timestamp-cell">
-              <span className="timestamp-text">{row.timestamp}</span>
+              <span className="timestamp-text">{row.sentAt}</span>
               {hoveredRowId === row.id && (
                 <div className="timestamp-icons">
                   <FaStar className="icon" onClick={() => handleFavorite(row)} />
@@ -62,13 +62,16 @@ function EmailTable({emails}) {
           },
         headCells: {
             style: {
+              fontFamily: "Georgia, serif",
               backgroundColor: '#d1e0e0',
-              fontSize: '16px',
+              fontSize: '18px',
               fontWeight: 'bold',
             },
           },
         rows: {
         style: {
+            fontFamily: "Arial, sans-serif",  
+            fontSize: "14px",
             '&:hover': {
             backgroundColor: '#f0f0f0', // Light gray hover effect
             cursor: 'pointer', // Pointer cursor for interactivity
@@ -77,17 +80,19 @@ function EmailTable({emails}) {
          onMouseEnter: (row) => setHoveredRowId(row.id),
          onMouseLeave: () => setHoveredRowId(null),
         },
+        
     }
     
     const handleOnChange = (value) => {
         setInputSearch(value);
-        const filtereddata = emails.filter(email => email.sender.toLowerCase().includes(value.toLowerCase()));  
+        const filtereddata = emails.filter(email => email.emailOfSender.toLowerCase().includes(value.toLowerCase()));  
         setFilteredEmails(filtereddata);
       };
 
     const handleRowClick = (row) => {
-        alert(`You clicked on row: ${row.sender}`);
+        FuncEmailPage(row);      
         console.log('Row Data:', row); 
+        callback(true);
       };
 
   return (
