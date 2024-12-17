@@ -1,10 +1,10 @@
-import { Link } from "react-router-dom"
-import {getEmails} from "../getEmails/getEmails.jsx"
-import { useEffect  , useState} from "react";
-import HomePage from "../homePage/homePage"
-function InboxFolder ({ user}){
-     const [emails, setEmails] = useState([]);
-     const [error, setError] = useState("");
+import { Link } from "react-router-dom";
+import { getEmails } from "../getEmails/getEmails.jsx";
+import { useEffect, useState } from "react";
+import HomePage from "../homePage/homePage";
+function InboxFolder({ user }) {
+  const [emails, setEmails] = useState([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchEmails = async () => {
@@ -19,11 +19,11 @@ function InboxFolder ({ user}){
 
     fetchEmails();
   }, []);
-    
-    return (
+
+  return (
     <>
-        <HomePage emails={emails} user={user}/>
+      <HomePage emails={emails} user={user} error={error} />
     </>
-    )
+  );
 }
-export default InboxFolder
+export default InboxFolder;
