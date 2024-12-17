@@ -32,7 +32,7 @@ function NewMail({ user, setIsNewMail }) {
       setError("");
       setIsNewMail(false);
       window.alert("Email sent successfully!");
-      navigate("/Home");
+      navigate("/InboxFolder");
     }
   };
 

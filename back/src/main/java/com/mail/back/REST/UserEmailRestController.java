@@ -6,13 +6,11 @@ import com.mail.back.GlobalHandle.NotFoundException;
 import com.mail.back.Service.AttachmentService.AttachmentService;
 import com.mail.back.Service.EmailService.EmailService;
 import com.mail.back.Service.UserService.UserService;
-import com.mail.back.entity.Attachment;
-import com.mail.back.entity.Email;
-import com.mail.back.entity.UserEmailID;
+import com.mail.back.Singleton.LoggedInUser;
+import com.mail.back.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.mail.back.Service.UserEmailService.UserEmailService;
-import com.mail.back.entity.UserEmail;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -72,8 +70,11 @@ public class UserEmailRestController {
   }
 
   @GetMapping("/emails")
-  public List<Email> getEmails(@RequestParam Integer receiverId, @RequestParam Email.Folder folder) {
-    List<Email> Temp =  userEmailService.getEmailsByReceiverAndFolder(receiverId, folder);
+  public List<Email> getEmails(@RequestParam Email.Folder folder) {
+    System.out.println(folder);
+    LoggedInUser LOGGED_IN = LoggedInUser.getInstance();
+    User user = LOGGED_IN.getUser();
+    List<Email> Temp =  userEmailService.getEmailsByReceiverAndFolder(user.getId(), folder);
     for (Email email : Temp){
       List<Attachment> attachments = emailService.getAttachmentsForEmail(email.getId());
       email.setAttachments(attachments);
