@@ -15,14 +15,11 @@ export default function LoginPage({setUser}) {
   };
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Attempting login with:", { userName, password });
     const response = await Login(userName, password, setError);
-    console.log(response.id);
     if(response!=null){
       setUserName(userName);
       setUser(response);
       sessionStorage.setItem("user", JSON.stringify(response));
-      console.log(response);
       navigate("/InboxFolder");
     }
   };

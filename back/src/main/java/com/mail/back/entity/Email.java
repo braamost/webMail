@@ -29,9 +29,9 @@ public class Email {
     // Enum for folders
     public enum Folder {
         INBOX,
-        OUTBOX,
+        SENT,
         TRASH,
-        ARCHIVE,
+        DRAFT,
         STARRED
     }
 

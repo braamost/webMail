@@ -10,7 +10,7 @@ function NewMail({ user, setIsNewMail }) {
   const [subject, setSubject] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const attachments = useRef(new FormData());
+  const attachments = useRef(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -24,11 +24,16 @@ function NewMail({ user, setIsNewMail }) {
       "INBOX",
       setError
     );
-    attachments.current.append("emailId", emailID);
 
-    const attachmentResponse = await uploadAttachments(attachments.current, setError);
-
-    if (emailID != null && attachmentResponse != null) {
+    let attachmentResponse = null;
+    let withAttachment = false;
+    if(attachments.current != null){
+      attachments.current.append("emailId", emailID);
+      const attachmentResponse = await uploadAttachments(attachments.current, setError);
+      withAttachment = true;
+    }
+    
+    if (emailID != null && (!withAttachment || (withAttachment && attachmentResponse != null))) {
       setError("");
       setIsNewMail(false);
       window.alert("Email sent successfully!");

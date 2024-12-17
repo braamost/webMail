@@ -7,12 +7,12 @@ import com.mail.back.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@RestController
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
-@RequestMapping("/api/users")
+@Component
+
 public class UserRestController implements IUserController {
   private final UserService userService;
 
@@ -21,13 +21,14 @@ public class UserRestController implements IUserController {
     this.userService = userService;
   }
 
-  @GetMapping
+
+  @Override
   public List<User> findAll() {
     return userService.findAll();
   }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<User> findById(@PathVariable int id) {
+  @Override
+  public ResponseEntity<User> findById(int id) {
     User user = userService.findById(id);
     if (user == null) {
       throw new NotFoundException("User with id " + id + " not found");
@@ -35,8 +36,9 @@ public class UserRestController implements IUserController {
     return ResponseEntity.ok(user);
   }
 
-  @GetMapping("/username/{username}")
-  public ResponseEntity<User> findByUserName(@PathVariable String username) {
+
+  @Override
+  public ResponseEntity<User> findByUserName(String username) {
     User user = userService.findByUserName(username);
     if (user == null) {
       throw new NotFoundException("User with username " + username + " not found");
@@ -44,8 +46,8 @@ public class UserRestController implements IUserController {
     return ResponseEntity.ok(user);
   }
 
-  @GetMapping("/email/{email}")
-  public ResponseEntity<User> findByEmail(@PathVariable String email) {
+  @Override
+  public ResponseEntity<User> findByEmail(String email) {
     User user = userService.findByEmail(email);
     if (user == null) {
       throw new NotFoundException("User with email " + email + " not found");
@@ -53,31 +55,32 @@ public class UserRestController implements IUserController {
     return ResponseEntity.ok(user);
   }
 
-  @PostMapping("/login")
-  public ResponseEntity<User> login(@RequestBody User loginRequest) {
+  @Override
+  public ResponseEntity<User> login(User loginRequest) {
     User user = userService.findByUserName(loginRequest.getUserName());
     LoggedInUser LOGGED_IN = LoggedInUser.getInstance();
     LOGGED_IN.setUser(user);
     return ResponseEntity.ok(user);
   }
 
-  @PostMapping
-  public ResponseEntity<User> addUser(@RequestBody User user) {
+  @Override
+  public ResponseEntity<User> addUser(User user) {
     LoggedInUser LOGGED_IN = LoggedInUser.getInstance();
     LOGGED_IN.setUser(user);
     return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
   }
 
-  @PutMapping
-  public ResponseEntity<User> updateUser(@RequestBody User user) {
+
+  @Override
+  public ResponseEntity<User> updateUser(User user) {
     user.setId(user.getId());
     LoggedInUser LOGGED_IN = LoggedInUser.getInstance();
     LOGGED_IN.setUser(user);
     return ResponseEntity.ok(userService.save(user));
   }
 
-  @DeleteMapping
-  public ResponseEntity<String> deleteUser(@RequestBody User user) {
+  @Override
+  public ResponseEntity<String> deleteUser(User user) {
     userService.deleteById(user.getId());
     LoggedInUser LOGGED_IN = LoggedInUser.getInstance();
     LOGGED_IN.setUser(null);

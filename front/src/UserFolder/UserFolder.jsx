@@ -79,7 +79,6 @@ function UserFolder({ user }) {
           >return</button>
         </div>
         )}
-      <MenuBar user={user} />
     </>
   )
 }

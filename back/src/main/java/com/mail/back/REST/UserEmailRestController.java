@@ -70,11 +70,12 @@ public class UserEmailRestController {
   }
 
   @GetMapping("/emails")
-  public List<Email> getEmails(@RequestParam Email.Folder folder) {
+  public List<Email> getEmails(@RequestParam(name = "folder") String folder) {
+    Email.Folder theFolder = Email.Folder.valueOf(folder);
     System.out.println(folder);
     LoggedInUser LOGGED_IN = LoggedInUser.getInstance();
     User user = LOGGED_IN.getUser();
-    List<Email> Temp =  userEmailService.getEmailsByReceiverAndFolder(user.getId(), folder);
+    List<Email> Temp =  userEmailService.getEmailsByReceiverAndFolder(user.getId(), theFolder);
     for (Email email : Temp){
       List<Attachment> attachments = emailService.getAttachmentsForEmail(email.getId());
       email.setAttachments(attachments);

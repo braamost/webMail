@@ -1,35 +1,28 @@
 import axios from "axios";
 
-export const getEmails = async (folder)=>{
-      console.log(folder);
-    try {
-      const response = await axios.get(`http://localhost:8080/api/emails`, {
-        params: {
-            folder: folder  // folder is "TRASH"
-        },
-        headers: {
-            "Content-Type": "application/json",
-        }
+export const getEmails = async (folder) => {
+  console.log('API Request - folder parameter:', folder);
+  
+  try {
+    // Using URLSearchParams to properly encode the enum parameter
+    const params = new URLSearchParams();
+    params.append('folder', folder);
+    
+    const response = await axios.get(`http://localhost:8080/api/userEmails/emails?${params.toString()}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
     
-      console.log(response.data); // Debugging: logs the fetched emails
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          const { status, data } = error.response;
-          if (status === 404) {
-            throw new Error(data.message || "No emails found");
-          } else {
-            throw new Error(`Server error: ${data.message || data}`);
-          }
-        } else if (error.request) {
-          throw new Error("No response from server. Please check your connection.");
-        } else {
-          throw new Error(`Error: ${error.message}`);
-        }
-      } else {
-        throw new Error("An unexpected error occurred");
-      }
-    }
-}
+    console.log('API Response:', response.data);
+    console.log('API URL:', response.request.responseURL);
+    return response.data;
+  } catch (error) {
+    console.error('Error details:', {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+    });
+    throw error;
+  }
+};

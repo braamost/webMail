@@ -46,8 +46,8 @@ function MenuBar({ user }) {
           </Link>
         </li>
         <li>
-          <Link className="Link" to="/Filter">
-            <button type="button">Filter</button>
+          <Link className="Link" to="/Starred">
+            <button type="button">Starred</button>
           </Link>
         </li>
         <li className="logOut">
