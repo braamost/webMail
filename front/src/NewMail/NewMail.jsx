@@ -65,7 +65,7 @@ function NewMail({ user, setIsNewMail }) {
             value={user.email}
             onChange={(e) => setFromMail(e.target.value)}
             placeholder={user.email}
-            style={{ color: "gray" , pointerEvents: "none" }}
+            style={{ color: "gray"}}
             readOnly
           />
         </div>
