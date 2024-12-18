@@ -91,6 +91,9 @@ public class UserEmailRestController {
         theFolder = Email.Folder.GENERAL;
         emails = userEmailService.getEmailsBySenderAndFolder(user.getId(), theFolder);
         break;
+      case "STARRED":
+        emails = userEmailService.getEmailsByStarred(user.getId());
+        break;
       default:
         theFolder = Email.Folder.valueOf(folder);
         emails = userEmailService.getEmailsByReceiverAndFolder(user.getId(), theFolder);

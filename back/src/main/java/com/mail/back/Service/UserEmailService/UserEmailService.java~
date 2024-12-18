@@ -17,6 +17,4 @@ public interface UserEmailService {
 
   List<Email> getEmailsBySenderAndFolder(Integer senderId,  Email.Folder folder);
 
-  List<Email> getEmailsByStarred(Integer userId);
-
 }

@@ -3,8 +3,8 @@ import "./EmailTable.css";
 import DataTable from "react-data-table-component";
 import { FaSearch, FaTrash, FaStar } from "react-icons/fa";
 import { FaPaperclip } from "react-icons/fa";
-import { CreateStarredCopy } from "../Starred/MakeStarred"; 
-function EmailTable({ emails, callback, FuncEmailPage }) {
+import { MovetoFolder } from "./MoveToFolder";
+function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
   const [inputSearch, setInputSearch] = useState("");
   const [filteredEmails, setFilteredEmails] = useState([]);
   const [hoveredRowId, setHoveredRowId] = useState(null);
@@ -25,18 +25,11 @@ function EmailTable({ emails, callback, FuncEmailPage }) {
     }
   }, [emails, inputSearch]);
 
-  const handleDelete = (email) => {
-    console.log("Delete clicked for row:", email.emailOfSender);
-    // Add delete logic here
-  };
-
-  const  handleFavorite = async(email) => {
-    console.log("Favorite clicked for row:", email.emailOfSender);
+  const  handleIconClick = async(folder,email) => {
     try {
-      CreateStarredCopy(email.emailOfSender, email.emailOfReceiver, email.subject, email.body, false ,"STARRED", email.emailDirection);
+      await MovetoFolder(folder,email.id, setError);
     } catch (error) {
-      // Handle error (show toast, alert, etc.)
-      console.error('Failed to star email', error);
+      console.error('Failed to move email', error);
     }
   };
 
@@ -116,14 +109,14 @@ function EmailTable({ emails, callback, FuncEmailPage }) {
                 className="icon"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleFavorite(row);
+                  handleIconClick("starred", row);
                 }}
               />
               <FaTrash
                 className="icon"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleDelete(row);
+                  handleIconClick("trash", row);
                 }}
               />
             </div>

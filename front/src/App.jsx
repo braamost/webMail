@@ -30,6 +30,8 @@ function App() {
         <Route path="/Trash" element={<EmailFolderComponent user={user} emails={emails} setEmails={setEmails} folderName="TRASH"/>}/>
         <Route path="/SentMails" element={<EmailFolderComponent user={user} emails={emails} setEmails={setEmails} folderName="SENT"/>}/>
         <Route path="/Starred" element={<EmailFolderComponent user={user} emails={emails} setEmails={setEmails} folderName="STARRED"/>}/>
+        <Route path="/Archive" element={<EmailFolderComponent user={user} emails={emails} setEmails={setEmails} folderName="ARCHIVE"/>}/>
+        <Route path="/Spam" element={<EmailFolderComponent user={user} emails={emails} setEmails={setEmails} folderName="SPAM"/>}/>
         <Route path="/UserFolder" element={<UserFolder user={user}/>}/>
         {/* Similar pattern for other routes */}
       </Routes>

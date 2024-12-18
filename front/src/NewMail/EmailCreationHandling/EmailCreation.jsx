@@ -7,7 +7,6 @@ export async function emailCreation(
   receiverEmail,
   subject,
   body,
-  isRead,
   folder,
   emailDirection,
   setError
@@ -15,7 +14,7 @@ export async function emailCreation(
   try {
     const receiverId = await UserIsFound(receiverEmail);
 
-    const emailId = await createEmail(subject, body, isRead, folder,emailDirection);
+    const emailId = await createEmail(subject, body, folder,emailDirection);
 
     const userEmailData = await UserEmailCreation(senderId, receiverId, emailId);
 

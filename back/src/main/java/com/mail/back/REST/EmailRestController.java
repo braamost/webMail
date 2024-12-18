@@ -40,15 +40,47 @@ public class EmailRestController {
         return emailService.save(email);
     }
 
-    // Update an existing email
-    @PutMapping("/{id}")
-    public Email updateEmail(@RequestBody Email email, @PathVariable Integer id) {
-        Email existingEmail = emailService.findById(id);
-        if (existingEmail == null) {
+    // Update the starred status of an email
+    @PutMapping("/starred/{id}")
+    public Email updateStarred(@PathVariable Integer id) {
+        Email email = emailService.findById(id);
+        if (email == null) {
             throw new NotFoundException("Email with id " + id + " not found.");
         }
-        email.setId(id); // Ensure the ID matches the one in the URL
-        email.setSentAt(existingEmail.getSentAt());
+        email.setStarred(!email.isStarred());
+        return emailService.save(email);
+    }
+
+    // Move an email to the trash
+    @PutMapping("/trash/{id}")
+    public Email moveToTrash(@PathVariable Integer id) {
+        Email email = emailService.findById(id);
+        if (email == null) {
+            throw new NotFoundException("Email with id " + id + " not found.");
+        }
+        email.setFolder(Email.Folder.TRASH);
+        return emailService.save(email);
+    }
+
+    // Move an email to the archive
+    @PutMapping("/archive/{id}")
+    public Email moveToArchive(@PathVariable Integer id) {
+        Email email = emailService.findById(id);
+        if (email == null) {
+            throw new NotFoundException("Email with id " + id + " not found.");
+        }
+        email.setFolder(Email.Folder.ARCHIVE);
+        return emailService.save(email);
+    }
+
+    // Move an email to the spam
+    @PutMapping("/spam/{id}")
+    public Email moveToSpam(@PathVariable Integer id) {
+        Email email = emailService.findById(id);
+        if (email == null) {
+            throw new NotFoundException("Email with id " + id + " not found.");
+        }
+        email.setFolder(Email.Folder.SPAM);
         return emailService.save(email);
     }
 

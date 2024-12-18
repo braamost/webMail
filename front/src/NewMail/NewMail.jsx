@@ -20,7 +20,6 @@ function NewMail({ user, setIsNewMail }) {
       toMail,
       subject,
       message,
-      true,
       "GENERAL",
       "SENT",
       setError
@@ -30,22 +29,21 @@ function NewMail({ user, setIsNewMail }) {
       toMail,
       subject,
       message,
-      true,
       "GENERAL",
       "RECEIVED",
       setError
     );
-
     let attachmentResponse = null;
     let withAttachment = false;
     if(attachments.current != null){
-      attachmentResponse = await uploadAttachments(attachments.current.append("emailId", emailID1), setError);
-      attachmentResponse = await uploadAttachments(attachments.current.append("emailId", emailID2), setError);
+      attachments.current.append('emailId', emailID1);
+      attachmentResponse = await uploadAttachments(attachments.current, setError);
+      attachments.current.set('emailId', emailID2);
+      attachmentResponse = await uploadAttachments(attachments.current,setError);
       withAttachment = true;
     }
     
     if (emailID2 != null && (!withAttachment || attachmentResponse != null)) {
-      console.log("here");
       setError("");
       setIsNewMail(false);
       window.alert("Email sent successfully!");

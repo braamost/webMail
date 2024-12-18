@@ -4,9 +4,8 @@ export async function createEmail(subject, body, isRead, folder,emailDirection) 
   const emailData = {
     subject: subject,
     body: body,
-    isRead: isRead,
     folder: folder,
-    emailDirection: emailDirection
+    emailDirection: emailDirection,
   };
   console.log(emailData);
   // Save the email and get its ID back

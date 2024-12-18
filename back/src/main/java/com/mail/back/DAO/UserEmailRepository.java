@@ -17,4 +17,9 @@ public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailI
     @Query("SELECT ue FROM UserEmail ue WHERE ue.sender.id = :senderId AND ue.email.folder = :folder AND ue.email.emailDirection = 'SENT'")
     List<UserEmail> findBySenderIdAndFolder(@Param("senderId") Integer senderId, @Param("folder") Email.Folder folder);
 
+    @Query("SELECT ue FROM UserEmail ue WHERE   ((ue.sender.id = :userId AND ue.email.emailDirection = 'SENT')" +
+                                                "OR (ue.receiver.id = :userId AND ue.email.emailDirection = 'RECEIVED')) " +
+                                                "AND ue.email.isStarred = true")
+    List<UserEmail> findByStarred(@Param("userId") Integer userId);
+
 }

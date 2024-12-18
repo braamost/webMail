@@ -56,17 +56,8 @@ public class UserEmailServiceImp implements UserEmailService{
         // Fetch UserEmails by receiverId and folder
         List<UserEmail> userEmails = userEmailRepository.findByReceiverIdAndFolder(receiverId, folder);
 
-        // Extract the Email data (with ids and attachments) from UserEmail entries
-        List<Email> emails = new ArrayList<>();
-        for (UserEmail userEmail : userEmails) {
-            Email email = userEmail.getEmail();
-            email.setEmailOfSender(userEmail.getSender().getEmail());
-            email.setUserNameOfSender(userEmail.getSender().getUserName());
-            email.setEmailOfReceiver(userEmail.getReceiver().getEmail());
-            email.setUserNameOfReceiver(userEmail.getReceiver().getUserName());
-            emails.add(email);  // Add associated Email entity, including attachments
-        }
-        return emails;
+        // Extract the Email data from UserEmail entries
+        return getTheEmails(userEmails);
     }
 
     @Override
@@ -74,7 +65,20 @@ public class UserEmailServiceImp implements UserEmailService{
         // Fetch UserEmails by senderId and folder
         List<UserEmail> userEmails = userEmailRepository.findBySenderIdAndFolder(senderId, folder);
 
-        // Extract the Email data (with ids and attachments) from UserEmail entries
+        // Extract the Email data from UserEmail entries
+        return getTheEmails(userEmails);
+    }
+
+    @Override
+    public List<Email> getEmailsByStarred(Integer userId) {
+        // Fetch UserEmails by senderId and folder
+        List<UserEmail> userEmails = userEmailRepository.findByStarred(userId);
+
+        // Extract the Email data from UserEmail entries
+        return getTheEmails(userEmails);
+    }
+
+    private List<Email> getTheEmails(List<UserEmail> userEmails){
         List<Email> emails = new ArrayList<>();
         for (UserEmail userEmail : userEmails) {
             Email email = userEmail.getEmail();

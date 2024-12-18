@@ -50,6 +50,16 @@ function MenuBar({ user }) {
             <button type="button">Starred</button>
           </Link>
         </li>
+        <li>
+          <Link className="Link" to="/Archive">
+            <button type="button">Archive</button>
+          </Link>
+        </li>
+        <li>
+          <Link className="Link" to="/Spam">
+            <button type="button">Spam</button>
+          </Link>
+        </li>
         <li className="logOut">
           <button
             className="logbutton"

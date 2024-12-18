@@ -1,4 +1,4 @@
-package com.mail.back.Security;
+package com.mail.back.Configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

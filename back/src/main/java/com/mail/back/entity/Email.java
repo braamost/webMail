@@ -25,13 +25,16 @@ public class Email {
     private LocalDateTime sentAt;
 
     @Column(name = "is_read")
+    @JsonProperty("isRead")
     private boolean isRead;
 
+    @Column(name = "is_starred")
+    @JsonProperty("isStarred")
+    private boolean isStarred;
 
     // Enum for folders
     public enum Folder {
         GENERAL,
-        STARRED,
         SPAM,
         TRASH,
         DRAFT,
@@ -67,10 +70,11 @@ public class Email {
 
     public Email() {}
 
-    public Email(String subject, String body, boolean isRead, Folder folder, EmailDirection emailDirection) {
+    public Email(String subject, String body, boolean isRead, boolean isStarred, Folder folder, EmailDirection emailDirection) {
         this.subject = subject;
         this.body = body;
         this.isRead = isRead;
+        this.isStarred = isStarred;
         this.folder = folder;
         this.emailDirection = emailDirection;
     }
@@ -172,12 +176,20 @@ public class Email {
         UserNameOfReceiver = userNameOfReceiver;
     }
 
-    public EmailDirection getType() {
+    public EmailDirection getEmailDirection() {
         return emailDirection;
     }
 
-    public void setType(EmailDirection emailDirection) {
+    public void setEmailDirection(EmailDirection emailDirection) {
         this.emailDirection = emailDirection;
+    }
+
+    public boolean isStarred() {
+        return isStarred;
+    }
+
+    public void setStarred(boolean starred) {
+        isStarred = starred;
     }
 
     @Override

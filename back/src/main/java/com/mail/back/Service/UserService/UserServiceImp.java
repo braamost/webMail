@@ -1,7 +1,6 @@
 package com.mail.back.Service.UserService;
 
 import com.mail.back.GlobalHandle.NotFoundException;
-import com.mail.back.Security.SecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
