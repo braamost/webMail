@@ -230,3 +230,33 @@
   background-color: #d1e0e0; /* Darker gray when clicked */
   transform: scale(0.96); /* Slight shrinking effect */
 }
+.attachments-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  justify-content: center; /* Center content vertically */
+  text-align: center;
+}
+
+.attachment-icons {
+  display: flex; /* Align icons in a row */
+  flex-wrap: wrap; /* Allow icons to wrap to the next line if needed */
+  gap: 4px; /* Reduce spacing between icons */
+  margin-top: 4px;
+  max-width: 100%; /* Prevent overflow */
+  justify-content: center; /* Center icons within the cell */
+}
+
+.attachment-icon {
+  font-size: 16px; /* Decrease the size of the icon */
+  color: #555;
+  background-color: #b0b0b000;
+  cursor: pointer;
+  flex-shrink: 0; /* Prevent icons from shrinking further */
+  width: 20px; /* Set a fixed width */
+  height: 20px; /* Set a fixed height */
+}
+
+.attachment-icon:hover {
+  color: #007bff;
+}

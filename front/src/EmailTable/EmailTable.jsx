@@ -80,7 +80,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
       name: "Subject",
       selector: (row) => row.subject || "No Subject",
       sortable: true,
-      width: "311px",
+      width: "300px",
     },
     {
       name: "Attachments",
@@ -113,7 +113,6 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   className="attachment-icon"
                   onClick={(e) => {
                     e.stopPropagation();
-                    // Download the file
                     const downloadLink = document.createElement("a");
                     downloadLink.href = URL.createObjectURL(file);
                     downloadLink.download = file.name;
@@ -131,7 +130,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
       name: "Timestamp",
       selector: (row) => row.sentAt,
       sortable: true,
-      width: "400px",
+      width: "411px",
       cell: (row) => (
         <div className="timestamp-cell">
           <span className="timestamp-text">{formatTimestamp(row.sentAt)}</span>
@@ -159,7 +158,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
               )}
 
               {/* Trash Icon */}
-              {row.folder === "trash" ? (
+              {row.folder === "TRASH" ? (
                 <FaTrash
                   className="icon-trash-active"
                   onClick={(e) => {
@@ -180,7 +179,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
               )}
 
               {/* Spam Icon */}
-              {row.folder === "spam" ? (
+              {row.folder === "SPAM" ? (
                 <FaExclamationTriangle
                   className="icon-spam-active"
                   onClick={(e) => {
@@ -200,7 +199,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
               )}
 
               {/* Archive Icon */}
-              {row.folder === "archive" ? (
+              {row.folder === "ARCHIVE" ? (
                 <FaArchive
                   className="icon-archive-active"
                   onClick={(e) => {
