@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "./EmailTable.css";
 import DataTable from "react-data-table-component";
-import { FaSearch, FaTrash, FaStar } from "react-icons/fa";
+import { FaSearch, FaTrash, FaStar, FaSync } from "react-icons/fa";
 import { FaPaperclip } from "react-icons/fa";
 import { MovetoFolder } from "./MoveToFolder";
 function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
   const [inputSearch, setInputSearch] = useState("");
   const [filteredEmails, setFilteredEmails] = useState([]);
   const [hoveredRowId, setHoveredRowId] = useState(null);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   // Update filteredEmails when emails prop changes
   useEffect(() => {
@@ -24,6 +25,21 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
       setFilteredEmails([]);
     }
   }, [emails, inputSearch]);
+
+  const handleRefresh = () => {
+    window.location.reload(); // Refresh the page
+  };
+
+  // Button Handlers
+  const handleSelectedFavorite = () => {
+    console.log("Add to Favorites clicked for selected rows:", selectedRows);
+    // Add logic to add selected rows to favorites
+  };
+
+  const handleSelectedDelete = () => {
+    console.log("Add to Trash clicked for selected rows:", selectedRows);
+    // Add logic to move selected rows to trash
+  };
 
   const  handleIconClick = async(folder,email) => {
     try {
@@ -44,17 +60,17 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
       name: "Sender",
       selector: (row) => row.emailOfSender || "No Sender",
       sortable: true,
-      width: "300px",
+      width: "240px",
     },
     {
       name: "Subject",
       selector: (row) => row.subject || "No Subject",
-      width: "400px",
+      width: "311px",
     },
     {
       name: "Attachments",
       selector: (row) => row.processedAttachments || [],
-      width: "200px",
+      width: "300px",
       cell: (row) => {
         // Check if processed attachments exist and have length
         if (
@@ -99,7 +115,7 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
     {
       name: "Timestamp",
       selector: (row) => row.sentAt,
-      width: "200px",
+      width: "300px",
       cell: (row) => (
         <div className="timestamp-cell">
           <span className="timestamp-text">{formatTimestamp(row.sentAt)}</span>
@@ -180,8 +196,45 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
     <div style={{ padding: "24px" }}>No emails found</div>
   );
 
+  const handleSelectedRowsChange = (state) => {
+    setSelectedRows(state.selectedRows);
+    console.log("Selected Rows:", state.selectedRows);
+  };
+
   return (
     <div>
+      {selectedRows.length > 0 && (
+        <div className="button-container">
+          {/* Add to Favorites Button */}
+          <button
+            className="action-button favorite-button"
+            onClick={handleSelectedFavorite}
+          >
+            Add to Favorites
+          </button>
+
+          {/* Add to Trash Button */}
+          <button
+            className="action-button trash-button"
+            onClick={handleSelectedDelete}
+          >
+            Add to Trash
+          </button>
+        </div>
+      )}
+      <div className="refresh-container">
+        <FaSync
+          className="refresh-icon"
+          onClick={handleRefresh}
+          title="Refresh"
+          style={{
+            cursor: "pointer",
+            fontSize: "20px",
+            marginLeft: "10px",
+            color: "#007bff",
+          }}
+        />
+      </div>
       <div className="search-bar-container">
         <div className="input-wrapper">
           <FaSearch id="search-icon" />
@@ -194,6 +247,7 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
           />
         </div>
       </div>
+
       <div className="tableContainer">
         <DataTable
           columns={columns}
@@ -204,7 +258,8 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
           onRowMouseLeave={() => setHoveredRowId(null)}
           noDataComponent={<NoDataComponent />}
           fixedHeader
-          pagination
+          selectableRows
+          onSelectedRowsChange={handleSelectedRowsChange}
           persistTableHead
         />
       </div>

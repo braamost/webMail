@@ -11,7 +11,6 @@ function UserFolder({ user }) {
   };
   return (
     <>
-
       {(!changePass) && (
         <div className="userFolder">
           <h1>GENERAL INFORMATION</h1>
@@ -79,6 +78,7 @@ function UserFolder({ user }) {
           >return</button>
         </div>
         )}
+        <MenuBar user={user} />
     </>
   )
 }

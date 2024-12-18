@@ -26,7 +26,7 @@ function MenuBar({ user }) {
           </button>
         </li>
         <li>
-          <Link className="active" to="/InboxFolder">
+          <Link className="Link" to="/InboxFolder">
             <button type="button">InboxFolder</button>
           </Link>
         </li>
@@ -58,6 +58,11 @@ function MenuBar({ user }) {
         <li>
           <Link className="Link" to="/Spam">
             <button type="button">Spam</button>
+          </Link>
+        </li>
+        <li>
+          <Link className="Link" to="/MyContacts">
+            <button type="button">MyContacts</button>
           </Link>
         </li>
         <li className="logOut">

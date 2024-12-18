@@ -1,6 +1,6 @@
 import React from 'react';
 import { IoArrowBack, IoTrash, IoStar } from 'react-icons/io5'; // Back, Trash, and Favorite icons
-import './emailPage.css';
+import './EmailPage.css';
 
 const EmailPage = ({ email, callback }) => {
   const { emailOfSender, sentAt, subject, body } = email;

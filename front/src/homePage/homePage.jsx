@@ -1,7 +1,6 @@
 import "./HomePage.css";
 
 import MenuBar from "../MenuBar/MenuBar";
-import SearchBar from "../SearchAndSort/SearchBar";
 import EmailTable from "../EmailTable/EmailTable.jsx";
 import { MocData } from "../MocData.jsx";
 import { useState } from "react";
@@ -21,7 +20,6 @@ function HomePage({ emails, setEmails, user, error, setError}) {
           <EmailPage email={selectedEmail} callback={setEmailPage} />
         ) : (
           <>
-            <SearchBar />
             <EmailTable
               emails={emails}
               setEmails={setEmails}
