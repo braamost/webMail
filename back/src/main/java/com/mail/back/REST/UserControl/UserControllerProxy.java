@@ -192,7 +192,7 @@ public class UserControllerProxy implements IUserController {
                 user.setPhoto(photoBytes);
 
                 // Save the user with the updated photo
-                User updatedUser  = userService.save(user);
+                User updatedUser  = userService.update(user);
                 return updatedUser;
             }
 

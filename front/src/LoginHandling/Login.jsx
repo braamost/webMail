@@ -2,7 +2,7 @@ import "../style.css";
 import { Login } from "./LoginRequest";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { base64ToBlob } from "../UserFolder/DecodePhotos";
 export default function LoginPage({setUser}) {
   const navigate = useNavigate();
 
@@ -18,6 +18,8 @@ export default function LoginPage({setUser}) {
     const response = await Login(userName, password, setError);
     if(response!=null){
       setUserName(userName);
+      const blob = base64ToBlob(response.photo);
+      response.photo = URL.createObjectURL(blob);
       setUser(response);
       navigate("/InboxFolder");
     }

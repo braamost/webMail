@@ -15,4 +15,7 @@ public interface UserService {
   User findByEmail(String email);
 
   boolean checkPassword(User user, String password);
+
+
+  public User update(User theUser);
 }
