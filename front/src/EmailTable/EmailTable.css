@@ -1,13 +1,15 @@
 /* EmailTable.module.css */
 
+
 .tableContainer {
     position: absolute; /* Position it independently of other elements */
-    top: 65px; /* Space from the top of the page */
+    top: 96px; /* Space from the top of the page */
     left: 60%; /* Center horizontally */
     transform: translateX(-50%); /* Ensure it's perfectly centered */
-    width: 78%; /* Full width */
-    max-width: 100%; /* Control the width of the search bar and results */
+    width: 100%; /* Full width */
+    max-width: 1199px; /* Control the width of the search bar and results */
     display: flex;
+    border-radius: 10px;
     flex-direction: column;
     align-items: center;
     min-width: 200px;
@@ -34,25 +36,23 @@
 
 /* Container for the search bar and results */
 .search-bar-container {
-    position: absolute; /* Position it independently of other elements */
-    top: 20px; /* Space from the top of the page */
-    left: 37%; /* Center horizontally */
-    transform: translateX(-50%); /* Ensure it's perfectly centered */
-    width: 100%; /* Full width */
-    max-width: 30%; /* Control the width of the search bar and results */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 200px;
-    padding: 0 15px;
-    z-index: 100; /* Ensure it stays on top */
-  }
+  position: absolute; /* Existing position styling */
+  top: 50px;
+  left: 37.5%;
+  transform: translateX(-50%);
+  display: flex; /* Align children horizontally */
+  align-items: center; /* Vertically center items */
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 33%;
+  z-index: 100;
+}
   
   /* Search bar wrapper */
   .input-wrapper {
     width: 100%;
     height: 2.5rem;
-    max-width: 600px; /* Control the width of the search bar */
+    max-width: 600px;
     border: none;
     border-radius: 10px;
     box-shadow: 0px 0px 8px #ddd;
@@ -60,8 +60,7 @@
     display: flex;
     align-items: center;
     padding: 0 15px;
-    transition: box-shadow 0.3s ease; /* Smooth hover/focus transition */
-    margin-bottom: 1rem; /* Add space below the search bar */
+    margin-right: 10px; /* Add space between search bar and refresh icon */
   }
   
   /* Focus effect on wrapper */
@@ -134,4 +133,73 @@
 /* Show Icons When Row is Hovered */
 .rdt_TableRow:hover .timestamp-icons {
   visibility: visible;
+}
+
+
+.refresh-container {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  z-index : 150;
+}
+.refresh-icon {
+  top: 80px;
+  color: #007bff;
+  transition: transform 0.1s ease-in-out;
+}
+
+.refresh-icon:hover {
+  transform: rotate(180deg);
+  color: #0056b3;
+}
+.tableContainer .rdt_Table input[type="checkbox"] {
+  width: 15px; /* Set width */
+  height: 15px; /* Set height */
+  cursor: pointer;
+}
+/* Container for the buttons to ensure they are placed side by side */
+.button-container {
+  position: absolute;
+  display: flex;
+  justify-content: space-evenly; /* Distribute space evenly between buttons */
+  gap: 10px; /* Optional gap between buttons */
+  margin-top: 50px; /* Optional margin to separate from other elements */
+  left: 80%;
+}
+
+/* Individual button styling */
+.button-container .action-button {
+  padding: 5px 10px;
+  width: 140px; 
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  color: black; /* Text color */
+  outline: none;
+}
+
+/* Add to Favorites button */
+.button-container .favorite-button {
+  background-color: #e7e6e6; /* Very light gray background */
+}
+
+.button-container .favorite-button:hover {
+  background-color: #b0d6d6f2; /* Keep the same light gray on hover */
+}
+
+/* Add to Trash button */
+.button-container .trash-button {
+  background-color: #e7e6e6; /* Very light gray background */
+}
+
+.button-container .trash-button:hover {
+  background-color: #b0d6d6f2; /* Keep the same light gray on hover */
+}
+
+
+.button-container .action-button:active {
+  background-color: #d1e0e0; /* Darker gray when clicked */
+  transform: scale(0.96); /* Slight shrinking effect */
 }
