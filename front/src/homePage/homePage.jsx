@@ -2,7 +2,6 @@ import "./HomePage.css";
 
 import MenuBar from "../MenuBar/MenuBar";
 import EmailTable from "../EmailTable/EmailTable.jsx";
-import { MocData } from "../MocData.jsx";
 import { useState } from "react";
 import EmailPage from "../EmailPage/EmailPage.jsx";
 

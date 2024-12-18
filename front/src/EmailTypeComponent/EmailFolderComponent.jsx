@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import HomePage from "../homePage/homePage";
 import { getEmails } from "../getEmails/getEmails";
-import { getUserForTab } from "../SessionManager";
-const EmailFolderComponent = ({
-  user: propUser,
-  folderName,
-  handleLogout
-}) => {
+import { getUserForTab, getTabId } from "../SessionManager";
+const EmailFolderComponent = ({ user: propUser, folderName, handleLogout }) => {
   const [error, setError] = useState("");
+  const [emails, setEmails] = useState(() => {
+    // Initialize from sessionStorage if available
+    const savedEmails = sessionStorage.getItem(`emails_${getTabId()}`);
+    return savedEmails ? JSON.parse(savedEmails) : [];
+  });
+  
   const user = propUser || getUserForTab();
-  const [emails, setEmails] = useState([]);
 
   useEffect(() => {
     let mounted = true;
@@ -20,7 +21,8 @@ const EmailFolderComponent = ({
           if (mounted) {
             const fetchedEmails = await getEmails(folderName, user);
             setEmails(fetchedEmails);
-            sessionStorage.setItem("emails", JSON.stringify(fetchedEmails));
+            // Store emails with tab ID to keep them separate
+            sessionStorage.setItem(`emails_${getTabId()}`, JSON.stringify(fetchedEmails));
           }
         } catch (err) {
           if (mounted) {
@@ -36,7 +38,7 @@ const EmailFolderComponent = ({
     return () => {
       mounted = false;
     };
-  }, [folderName, user, setEmails]);
+  }, [folderName, user]);  // Remove setEmails from dependencies
 
   return (
     <HomePage
