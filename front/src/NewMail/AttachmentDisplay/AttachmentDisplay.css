@@ -1,0 +1,46 @@
+.attachment-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .attachment-icon {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    background-color: #e6f2ff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .attachment-file-type {
+    font-size: 0.8rem;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .attachment-delete-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1;
+  }
+  .attachment-delete-btn:hover{
+    background-color: rgb(199, 0, 0) !important;
+  }

@@ -143,7 +143,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   className="icon-starred"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("unstarred", row);
+                    handleIconClick("starred", row);
                   }}
                   title="Unstar"
                 />
