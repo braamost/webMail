@@ -10,8 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
-
+import java.util.Optional;
+import org.springframework.web.multipart.MultipartFile;
 @RestController
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RequestMapping("/api/users")
@@ -178,4 +180,20 @@ public class UserControllerProxy implements IUserController {
             throw new NotFoundException("User not found");
         }
     }
+
+    @PostMapping("/upload-photo/{email}")
+    public User uploadPhoto(@PathVariable  String email,
+                                              @RequestParam("photo") MultipartFile photo) throws IOException {
+            User user = userService.findByEmail(email);
+                // Convert the photo file to byte array
+                byte[] photoBytes = photo.getBytes();
+
+                // Set the photo for the user
+                user.setPhoto(photoBytes);
+
+                // Save the user with the updated photo
+                User updatedUser  = userService.save(user);
+                return updatedUser;
+            }
+
 }

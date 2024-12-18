@@ -26,14 +26,20 @@ public class User {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    @Lob
+    @Column(name = "photo")
+    private byte[] photo; // Added photo column for storing binary data
+
     public User() {
     }
 
-    public User(String userName, String password, String email, String phoneNumber) {
+
+    public User(String userName, String password, String email, String phoneNumber, byte[] photo) {
         this.userName = userName;
         this.password = password;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.photo = photo;
     }
 
     @PrePersist
@@ -90,5 +96,13 @@ public class User {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
     }
 }

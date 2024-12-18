@@ -4,7 +4,7 @@ import { useState } from "react";
 import NewMail from "../NewMail/NewMail";
 function MenuBar({ user , handleLogout}) {
   const [isNewMail, setIsNewMail] = useState(false);
-
+  
   const newMail = () => {
     setIsNewMail(!isNewMail);
   };
@@ -14,7 +14,7 @@ function MenuBar({ user , handleLogout}) {
         <li className="profile">
           <Link className="Link" to="/UserFolder">
             <div className="img-box">
-              <img src="man.jpg" alt="profile" />
+            <img src={user.photo || "man.jpg"} alt="profile" />
             </div>
             <h2>{user.userName}</h2>
           </Link>

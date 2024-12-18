@@ -137,7 +137,7 @@ function App() {
           path="/UserFolder"
           element={
             <ProtectedRoute user={user}>
-              <UserFolder user={user} handleLogout={handleLogout} />
+              <UserFolder user={user} setUser={handleSetUser} handleLogout={handleLogout} />
             </ProtectedRoute>
           }
         />
