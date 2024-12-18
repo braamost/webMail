@@ -18,24 +18,29 @@ function App() {
 
   useEffect(() => {
     const handleStorageChange = (e) => {
-      if (e.key === 'userSessions') {
+      if (e.key === "userSessions") {
+        // Only update if the current tab's user has changed
         const currentUser = getUserForTab();
-        setUser(currentUser);
+        if (JSON.stringify(currentUser) !== JSON.stringify(user)) {
+          setUser(currentUser);
+        }
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, [user]); // Add user as dependency
 
   const handleSetUser = (userData) => {
-    setUser(userData);
     setUserForTab(userData);
+    setUser(userData);
   };
 
   const handleLogout = () => {
     setUser(null);
     removeUserForTab();
+    // Clear tab-specific data
+    sessionStorage.removeItem(`emails_${getTabId()}`);
   };
 
   return (
