@@ -23,7 +23,7 @@ const EmailFolderComponent = ({ user, emails, setEmails, folderName }) => {
 
   return (
     <>
-      <HomePage emails={emails} setEmails={setEmails} user={user} error={error} setError={setError}/>
+      <HomePage emails={emails} user={user} error={error} setError={setError}/>
     </>
   );
 };

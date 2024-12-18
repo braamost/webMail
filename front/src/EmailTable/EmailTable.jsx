@@ -4,7 +4,7 @@ import DataTable from "react-data-table-component";
 import { FaSearch, FaTrash, FaStar, FaSync } from "react-icons/fa";
 import { FaPaperclip } from "react-icons/fa";
 import { MovetoFolder } from "./MoveToFolder";
-function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
+function EmailTable({ emails, setError, callback, FuncEmailPage }) {
   const [inputSearch, setInputSearch] = useState("");
   const [filteredEmails, setFilteredEmails] = useState([]);
   const [hoveredRowId, setHoveredRowId] = useState(null);
@@ -31,21 +31,20 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
   };
 
   // Button Handlers
-  const handleSelectedFavorite = () => {
-    console.log("Add to Favorites clicked for selected rows:", selectedRows);
-    // Add logic to add selected rows to favorites
-  };
 
-  const handleSelectedDelete = () => {
+  const handleSelectedOnClick = async (folder) => {
     console.log("Add to Trash clicked for selected rows:", selectedRows);
-    // Add logic to move selected rows to trash
+    // Add logic to move selected rows to selected folder
+    selectedRows.forEach(async (email) =>{
+      await handleIconClick(folder, email);
+    })
   };
 
-  const  handleIconClick = async(folder,email) => {
+  const handleIconClick = async (folder, email) => {
     try {
-      await MovetoFolder(folder,email.id, setError);
+      await MovetoFolder(folder, email.id, setError);
     } catch (error) {
-      console.error('Failed to move email', error);
+      console.error("Failed to move email", error);
     }
   };
 
@@ -208,7 +207,7 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
           {/* Add to Favorites Button */}
           <button
             className="action-button favorite-button"
-            onClick={handleSelectedFavorite}
+            onClick={() => handleSelectedOnClick("starred")}
           >
             Add to Favorites
           </button>
@@ -216,7 +215,7 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
           {/* Add to Trash Button */}
           <button
             className="action-button trash-button"
-            onClick={handleSelectedDelete}
+            onClick={() => handleSelectedOnClick("trash")}
           >
             Add to Trash
           </button>

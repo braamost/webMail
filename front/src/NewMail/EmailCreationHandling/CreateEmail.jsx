@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export async function createEmail(subject, body, isRead, folder,emailDirection) {
+export async function createEmail(subject, body, folder,emailDirection) {
   const emailData = {
     subject: subject,
     body: body,
