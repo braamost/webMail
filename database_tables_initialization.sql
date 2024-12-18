@@ -26,7 +26,8 @@ CREATE TABLE emails (
   body TEXT NOT NULL,
   sent_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
   is_read BOOLEAN DEFAULT FALSE, -- Tracks whether the email has been read
-  folder ENUM('INBOX', 'OUTBOX', 'TRASH', 'ARCHIVE', 'starred') DEFAULT 'INBOX' -- Organize emails into folders
+  email_direction ENUM ('SENT', 'RECEIVED') DEFAULT 'RECEIVED', -- email direction 
+  folder ENUM ('GENERAL', 'STARRED', 'SPAM', 'TRASH', 'DRAFT', 'ARCHIVE') DEFAULT 'GENERAL' -- Organize emails into folders
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 -- Create the user_emails table

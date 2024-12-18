@@ -35,7 +35,7 @@ public class EmailRestController {
     // Add a new email
     @PostMapping("/add")
     public Email addEmail(@RequestBody Email email) {
-        System.out.println(email.toString());
+        System.out.println(email);
         email.setId(null); // Ensure the ID is 0 for creating a new entity
         return emailService.save(email);
     }

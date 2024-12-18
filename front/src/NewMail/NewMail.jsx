@@ -15,25 +15,36 @@ function NewMail({ user, setIsNewMail }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const emailID = await emailCreation(
+    const emailID1 = await emailCreation(
       user.id,
       toMail,
       subject,
       message,
       true,
-      "INBOX",
+      "GENERAL",
+      "SENT",
+      setError
+    );
+    const emailID2 = await emailCreation(
+      user.id,
+      toMail,
+      subject,
+      message,
+      true,
+      "GENERAL",
+      "RECEIVED",
       setError
     );
 
     let attachmentResponse = null;
     let withAttachment = false;
     if(attachments.current != null){
-      attachments.current.append("emailId", emailID);
-      attachmentResponse = await uploadAttachments(attachments.current, setError);
+      attachmentResponse = await uploadAttachments(attachments.current.append("emailId", emailID1), setError);
+      attachmentResponse = await uploadAttachments(attachments.current.append("emailId", emailID2), setError);
       withAttachment = true;
     }
     
-    if (emailID != null && (!withAttachment || attachmentResponse != null)) {
+    if (emailID2 != null && (!withAttachment || attachmentResponse != null)) {
       console.log("here");
       setError("");
       setIsNewMail(false);
@@ -54,7 +65,7 @@ function NewMail({ user, setIsNewMail }) {
             value={user.email}
             onChange={(e) => setFromMail(e.target.value)}
             placeholder={user.email}
-            style={{ color: "gray" , pointerEvents: "none" }}
+            style={{ color: "gray"}}
             readOnly
           />
         </div>

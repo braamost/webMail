@@ -62,11 +62,28 @@ public class UserEmailServiceImp implements UserEmailService{
             Email email = userEmail.getEmail();
             email.setEmailOfSender(userEmail.getSender().getEmail());
             email.setUserNameOfSender(userEmail.getSender().getUserName());
+            email.setEmailOfReceiver(userEmail.getReceiver().getEmail());
+            email.setUserNameOfReceiver(userEmail.getReceiver().getUserName());
             emails.add(email);  // Add associated Email entity, including attachments
         }
-
         return emails;
     }
 
+    @Override
+    public List<Email> getEmailsBySenderAndFolder(Integer senderId, Email.Folder folder) {
+        // Fetch UserEmails by senderId and folder
+        List<UserEmail> userEmails = userEmailRepository.findBySenderIdAndFolder(senderId, folder);
 
+        // Extract the Email data (with ids and attachments) from UserEmail entries
+        List<Email> emails = new ArrayList<>();
+        for (UserEmail userEmail : userEmails) {
+            Email email = userEmail.getEmail();
+            email.setEmailOfReceiver(userEmail.getReceiver().getEmail());
+            email.setUserNameOfReceiver(userEmail.getReceiver().getUserName());
+            email.setEmailOfSender(userEmail.getSender().getEmail());
+            email.setUserNameOfSender(userEmail.getSender().getUserName());
+            emails.add(email);  // Add associated Email entity, including attachments
+        }
+        return emails;
+    }
 }

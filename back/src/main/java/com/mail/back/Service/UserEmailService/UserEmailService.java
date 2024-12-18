@@ -12,5 +12,9 @@ public interface UserEmailService {
   UserEmail save(UserEmail theUserEmail);
 
   void deleteById(UserEmailID theId);
-  public List<Email> getEmailsByReceiverAndFolder(Integer receiverId,  Email.Folder folder);
+
+  List<Email> getEmailsByReceiverAndFolder(Integer receiverId,  Email.Folder folder);
+
+  List<Email> getEmailsBySenderAndFolder(Integer senderId,  Email.Folder folder);
+
 }

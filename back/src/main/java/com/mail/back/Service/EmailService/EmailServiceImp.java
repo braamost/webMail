@@ -41,8 +41,8 @@ public class EmailServiceImp implements EmailService{
     }
 
     @Override
-    public Email save(Email theEmail) {
-        return emailRepository.save(theEmail);
+    public Email save(Email email) {
+        return emailRepository.save(email);
     }
 
     @Override
@@ -53,5 +53,4 @@ public class EmailServiceImp implements EmailService{
     public List<Attachment> getAttachmentsForEmail(Integer emailId) {
         return emailRepository.findAttachmentsByEmailId(emailId);
     }
-
 }

@@ -1,20 +1,21 @@
 
-import { UserIsFound } from "./CheckUserExistence";
-import { createEmail } from "./CreateEmail";
-import { UserEmailCreation } from "./addUserEmail";
-export async function emailCreation(
-  senderId,
+import { UserIsFound } from "../NewMail/EmailCreationHandling/CheckUserExistence";
+import { createEmail } from "../NewMail/EmailCreationHandling/CreateEmail";
+import { UserEmailCreation } from "../NewMail/EmailCreationHandling/addUserEmail";
+export async function CreateStarredCopy(
+  emailOfSender,
   receiverEmail,
   subject,
   body,
   isRead,
   folder,
   emailDirection,
-  setError
 ) {
   try {
     const receiverId = await UserIsFound(receiverEmail);
-
+    console.log(receiverId)
+    const senderId = await UserIsFound(emailOfSender);
+    console.log(senderId)
     const emailId = await createEmail(subject, body, isRead, folder,emailDirection);
 
     const userEmailData = await UserEmailCreation(senderId, receiverId, emailId);

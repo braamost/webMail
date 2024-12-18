@@ -11,7 +11,10 @@ import java.util.List;
 
 public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailID>{
     // In the repository, ensure the folder is handled as an enum
-    @Query("SELECT ue FROM UserEmail ue WHERE ue.receiver.id = :receiverId AND ue.email.folder = :folder")
+    @Query("SELECT ue FROM UserEmail ue WHERE ue.receiver.id = :receiverId AND ue.email.folder = :folder AND ue.email.emailDirection = 'RECEIVED'")
     List<UserEmail> findByReceiverIdAndFolder(@Param("receiverId") Integer receiverId, @Param("folder") Email.Folder folder);
+
+    @Query("SELECT ue FROM UserEmail ue WHERE ue.sender.id = :senderId AND ue.email.folder = :folder AND ue.email.emailDirection = 'SENT'")
+    List<UserEmail> findBySenderIdAndFolder(@Param("senderId") Integer senderId, @Param("folder") Email.Folder folder);
 
 }
