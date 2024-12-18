@@ -6,6 +6,7 @@ import { getEmails } from '../getEmails/getEmails';
 const EmailFolderComponent = ({ user, emails, setEmails, folderName }) => {
   const [error, setError] = useState("");
   const location = useLocation();
+  console.log(location.pathname);
 
   useEffect(() => {
     const fetchEmails = async () => {

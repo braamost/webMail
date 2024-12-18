@@ -12,7 +12,9 @@ import {
 } from "react-icons/fa";
 import { FaPaperclip } from "react-icons/fa";
 import { MovetoFolder } from "./MoveToFolder";
+import { useLocation } from "react-router-dom";
 function EmailTable({ emails, setError, callback, FuncEmailPage }) {
+  const location = useLocation();
   const [inputSearch, setInputSearch] = useState("");
   const [filteredEmails, setFilteredEmails] = useState([]);
   const [hoveredRowId, setHoveredRowId] = useState(null);
@@ -77,6 +79,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
     {
       name: "Subject",
       selector: (row) => row.subject || "No Subject",
+      sortable: true,
       width: "311px",
     },
     {
@@ -127,7 +130,8 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
     {
       name: "Timestamp",
       selector: (row) => row.sentAt,
-      width: "400px",
+      sortable: true,
+      width: "300px",
       cell: (row) => (
         <div className="timestamp-cell">
           <span className="timestamp-text">{formatTimestamp(row.sentAt)}</span>
@@ -273,20 +277,37 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
       {selectedRows.length > 0 && (
         <div className="button-container">
           {/* Add to Favorites Button */}
-          <button
-            className="action-button favorite-button"
-            onClick={() => handleSelectedOnClick("starred")}
-          >
-            Add to Favorites
-          </button>
-
+          {location.pathname === "/Starred" ? (
+            <button
+              className="action-button favorite-button"
+              onClick={() => handleSelectedOnClick("starred")}
+            >
+              Remove from Favorites
+            </button>
+          ) : (
+            <button
+              className="action-button favorite-button"
+              onClick={() => handleSelectedOnClick("starred")}
+            >
+              Add to Favorites
+            </button>
+          )}
           {/* Add to Trash Button */}
-          <button
-            className="action-button trash-button"
-            onClick={() => handleSelectedOnClick("trash")}
-          >
-            Add to Trash
-          </button>
+          {location.pathname === "/Trash" ? (
+            <button
+              className="action-button trash-button"
+              onClick={() => handleSelectedOnClick("trash")}
+            >
+              Remove from Trash
+            </button>
+          ) : (
+            <button
+              className="action-button trash-button"
+              onClick={() => handleSelectedOnClick("trash")}
+            >
+              Add to Trash
+            </button>
+          )}
         </div>
       )}
       <div className="refresh-container">
