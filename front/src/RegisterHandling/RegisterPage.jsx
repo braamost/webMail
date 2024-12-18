@@ -26,9 +26,7 @@ export default function RegisterPage({setUser}) {
     if (response !== null) {
       console.log(response);
       window.alert("Account created successfully!");
-      setUsername(username);
-      setUser(response);
-      navigate("/InboxFolder");
+      navigate("/");
     }
   };
 
