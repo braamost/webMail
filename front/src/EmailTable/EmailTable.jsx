@@ -131,7 +131,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
       name: "Timestamp",
       selector: (row) => row.sentAt,
       sortable: true,
-      width: "300px",
+      width: "400px",
       cell: (row) => (
         <div className="timestamp-cell">
           <span className="timestamp-text">{formatTimestamp(row.sentAt)}</span>
