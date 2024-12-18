@@ -1,5 +1,7 @@
 
-export const handleFileSelection = (e, props) => {
+export const handleFileSelection = (e,attachments , setAttachedFiles ) => {
+  console.log("handleFileSelection")
+  console.log(attachments.current)
   e.preventDefault();
   const input = document.createElement("input");
   input.type = "file";
@@ -10,12 +12,14 @@ export const handleFileSelection = (e, props) => {
 
     if (files.length > 0) {
       const formData = new FormData();
+      const fileArray = Array.from(files);
+      setAttachedFiles(prevFiles => [...prevFiles, ...fileArray]);
 
       // Append selected files to FormData
       for (let i = 0; i < files.length; i++) {
-        formData.append("files", files[i]);
+        formData.append("files", fileArray[i]);
       }
-      props.attachments.current = formData;
+      attachments.current = formData;
     }
   };
   input.click();
