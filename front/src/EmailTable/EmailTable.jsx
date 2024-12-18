@@ -36,13 +36,19 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
     console.log("Add to Trash clicked for selected rows:", selectedRows);
     // Add logic to move selected rows to selected folder
     selectedRows.forEach(async (email) =>{
-      await handleIconClick(folder, email);
+      try {
+        await MovetoFolder(folder, email.id, setError);
+      } catch (error) {
+        console.error("Failed to move email", error);
+      }
     })
+    handleRefresh();
   };
 
   const handleIconClick = async (folder, email) => {
     try {
       await MovetoFolder(folder, email.id, setError);
+      handleRefresh();
     } catch (error) {
       console.error("Failed to move email", error);
     }
