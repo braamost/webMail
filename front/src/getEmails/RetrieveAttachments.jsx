@@ -1,5 +1,4 @@
 
-
 const retrieveAttachment = (attachment) => {
   // Decode the base64 encoded file content
   const byteCharacters = atob(attachment.fileContent);
@@ -23,29 +22,14 @@ const retrieveAttachment = (attachment) => {
   });
 };
 
-// Usage example:
+// Process attachments for a single email
 export const processEmailAttachments = (email) => {
   // If there are attachments, convert them
   if (email.attachments && email.attachments.length > 0) {
-    const processedAttachments = email.attachments.map(attachment => 
+    // Convert attachments to processed file objects
+    email.processedAttachments = email.attachments.map(attachment => 
       retrieveAttachment(attachment)
     );
-    
-    return processedAttachments;
   }
-  
-  return [];
+  return email;
 };
-
-// Example of how to use it
-const email = [] ;/* your email object */
-const attachmentFiles = processEmailAttachments(email);
-
-// If you want to download the file
-if (attachmentFiles.length > 0) {
-  const file = attachmentFiles[0];
-  const downloadLink = document.createElement('a');
-  downloadLink.href = URL.createObjectURL(file);
-  downloadLink.download = file.name;
-  downloadLink.click();
-}

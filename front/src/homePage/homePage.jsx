@@ -6,7 +6,7 @@ import { MocData } from "../MocData.jsx";
 import { useState } from "react";
 import EmailPage from "../EmailPage/EmailPage.jsx";
 
-function HomePage({ emails, user, error, setError}) {
+function HomePage({ emails, user, error, setError, handleLogout }) {
   const [emailPage, setEmailPage] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState({});
 
@@ -28,7 +28,7 @@ function HomePage({ emails, user, error, setError}) {
             />
           </>
         )}
-        <MenuBar user={user} />
+        <MenuBar user={user} handleLogout={handleLogout} />
       </div>
     </>
   );

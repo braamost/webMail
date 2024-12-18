@@ -1,11 +1,10 @@
 import "./MenuBar.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import NewMail from "../NewMail/NewMail";
-function MenuBar({ user }) {
+function MenuBar({ user , handleLogout}) {
   const [isNewMail, setIsNewMail] = useState(false);
-  const navigate = useNavigate();
-  /*{username}*/
+
   const newMail = () => {
     setIsNewMail(!isNewMail);
   };
@@ -69,10 +68,7 @@ function MenuBar({ user }) {
           <button
             className="logbutton"
             type="button"
-            onClick={() => {
-              sessionStorage.removeItem("user");
-              navigate("/");
-            }}
+            onClick={() => handleLogout()}
           >
             Log Out
           </button>

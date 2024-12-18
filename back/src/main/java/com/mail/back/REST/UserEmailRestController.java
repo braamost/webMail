@@ -71,11 +71,9 @@ public class UserEmailRestController {
     return "Deleted UserEmail with senderId " + senderId + ", receiverId " + receiverId + " and emailId " + emailId;
   }
 
-  @GetMapping("/emails")
-  public List<Email> getEmails(@RequestParam(name = "folder") String folder) {
+  @GetMapping("/emails/{id}/{folder}")
+  public List<Email> getEmails(@PathVariable String folder, @PathVariable int id) {
     // get the currently logged-in user
-    LoggedInUser LOGGED_IN = LoggedInUser.getInstance();
-    User user = LOGGED_IN.getUser();
 
     //determine the folder
     List<Email> emails;
@@ -85,19 +83,19 @@ public class UserEmailRestController {
     switch (folder){
       case "INBOX":
         theFolder = Email.Folder.GENERAL;
-        emails = userEmailService.getEmailsByReceiverAndFolder(user.getId(), theFolder);
+        emails = userEmailService.getEmailsByReceiverAndFolder(id, theFolder);
         break;
       case "SENT":
         theFolder = Email.Folder.GENERAL;
-        emails = userEmailService.getEmailsBySenderAndFolder(user.getId(), theFolder);
+        emails = userEmailService.getEmailsBySenderAndFolder(id, theFolder);
         break;
       case "STARRED":
-        emails = userEmailService.getEmailsByStarred(user.getId());
+        emails = userEmailService.getEmailsByStarred(id);
         break;
       default:
         theFolder = Email.Folder.valueOf(folder);
-        emails = userEmailService.getEmailsByReceiverAndFolder(user.getId(), theFolder);
-        emails.addAll(userEmailService.getEmailsBySenderAndFolder(user.getId(), theFolder));
+        emails = userEmailService.getEmailsByReceiverAndFolder(id, theFolder);
+        emails.addAll(userEmailService.getEmailsBySenderAndFolder(id, theFolder));
         break;
     }
     //add the attachments

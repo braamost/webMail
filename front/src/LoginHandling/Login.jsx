@@ -19,7 +19,6 @@ export default function LoginPage({setUser}) {
     if(response!=null){
       setUserName(userName);
       setUser(response);
-      sessionStorage.setItem("user", JSON.stringify(response));
       navigate("/InboxFolder");
     }
   };

@@ -16,7 +16,6 @@ export async function Login(username, password, setError) {
       },
       
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     if (error.response) {
