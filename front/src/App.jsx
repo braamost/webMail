@@ -4,7 +4,8 @@ import UserFolder from './UserFolder/UserFolder.jsx'
 import EmailFolderComponent from './EmailTypeComponent/EmailFolderComponent.jsx'
 import Register from './RegisterHandling/RegisterPage.jsx'
 import { useEffect, useState } from 'react'
-import LoginPage from './LoginHandling/Login.jsx'                       
+import LoginPage from './LoginHandling/Login.jsx'    
+import MyContacts from './MyContacts/MyContacts.jsx'                   
 import { MocData } from './MocData.jsx'
 
 
@@ -13,6 +14,7 @@ import { MocData } from './MocData.jsx'
 function App() {
   const [user , setUser] = useState("")
   const [emails, setEmails] = useState([]);
+  const [contacts, setContacts] = useState([]);
   useEffect(() => {
     const storedUser = sessionStorage.getItem('user');
     if (storedUser) {
@@ -31,6 +33,7 @@ function App() {
         <Route path="/SentMails" element={<EmailFolderComponent user={user} emails={emails} setEmails={setEmails} folderName="SENT"/>}/>
         <Route path="/Starred" element={<EmailFolderComponent user={user} emails={emails} setEmails={setEmails} folderName="STARRED"/>}/>
         <Route path="/UserFolder" element={<UserFolder user={user}/>}/>
+        <Route path="/MyContacts" element={<MyContacts user={user} contacts={contacts}/>}/>
         {/* Similar pattern for other routes */}
       </Routes>
     </BrowserRouter>
