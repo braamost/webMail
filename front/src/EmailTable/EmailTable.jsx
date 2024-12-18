@@ -159,16 +159,28 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
               )}
 
               {/* Trash Icon */}
-              <FaTrash
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleIconClick("trash", row);
-                }}
-                title="Trash"
-              />
+              {row.folder === "trash" ? (
+                <FaTrash
+                  className="icon-trash-active"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleIconClick("trash", row);
+                  }}
+                  title="Remove from Trash"
+                />
+              ) : (
+                <FaTrash
+                  className="icon-trash"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleIconClick("trash", row);
+                  }}
+                  title="Trash"
+                />
+              )}
 
               {/* Spam Icon */}
-              {row.isSpam ? (
+              {row.folder === "spam" ? (
                 <FaExclamationTriangle
                   className="icon-spam-active"
                   onClick={(e) => {
@@ -188,7 +200,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
               )}
 
               {/* Archive Icon */}
-              {row.isArchived ? (
+              {row.folder === "archive" ? (
                 <FaArchive
                   className="icon-archive-active"
                   onClick={(e) => {
