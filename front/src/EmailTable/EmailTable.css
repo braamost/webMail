@@ -128,16 +128,21 @@
 
 .icon-starred {
   color: gold; /* Starred */
+  font-size: 20px;
 }
 
 .icon-unstarred {
   color: #b0b0b0; /* Empty star */
 }
 
-.icon-trash {
+.icon-trash-active {
   color: #ff4d4d; /* Trash icon in red */
+  margin-top: 1px;
 }
 
+.icon-trash{
+  margin-top: 1px;
+}
 
 .icon-spam-active {
   color: #ffa500; /* Active Spam icon */

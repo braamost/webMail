@@ -1,14 +1,10 @@
 package com.mail.back.REST;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import com.mail.back.GlobalHandle.NotFoundException;
-import com.mail.back.Service.AttachmentService.AttachmentService;
 import com.mail.back.Service.EmailService.EmailService;
 import com.mail.back.Service.UserService.UserService;
-import com.mail.back.Singleton.LoggedInUser;
 import com.mail.back.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -73,9 +69,8 @@ public class UserEmailRestController {
 
   @GetMapping("/emails/{id}/{folder}")
   public List<Email> getEmails(@PathVariable String folder, @PathVariable int id) {
-    // get the currently logged-in user
 
-    //determine the folder
+    //determine the folder and get the emails
     List<Email> emails;
 
     System.out.println(folder);

@@ -41,46 +41,36 @@ public class EmailRestController {
     }
 
     // Update the starred status of an email
-    @PutMapping("/starred/{id}")
-    public Email updateStarred(@PathVariable Integer id) {
+    @PutMapping("/{folder}/{id}")
+    public Email updateStarred(@PathVariable String folder, @PathVariable Integer id) {
         Email email = emailService.findById(id);
         if (email == null) {
             throw new NotFoundException("Email with id " + id + " not found.");
         }
-        email.setStarred(!email.isStarred());
-        return emailService.save(email);
-    }
+        Email.Folder activeFolder = email.getFolder();
+        switch (folder) {
+            case "starred":
+                email.setStarred(!email.isStarred());
+                break;
+            case "read":
+                email.setRead(!email.isRead());
+                break;
+            case "spam":
+                if(activeFolder.equals(Email.Folder.SPAM)) email.setFolder(Email.Folder.GENERAL);
+                else email.setFolder(Email.Folder.SPAM);
+                break;
+            case "trash":
+                if(activeFolder.equals(Email.Folder.TRASH)) email.setFolder(Email.Folder.GENERAL);
+                else email.setFolder(Email.Folder.TRASH);
+                break;
+            case "archive":
+                if(activeFolder.equals(Email.Folder.ARCHIVE)) email.setFolder(Email.Folder.GENERAL);
+                else email.setFolder(Email.Folder.ARCHIVE);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid folder: " + folder);
+        }
 
-    // Move an email to the trash
-    @PutMapping("/trash/{id}")
-    public Email moveToTrash(@PathVariable Integer id) {
-        Email email = emailService.findById(id);
-        if (email == null) {
-            throw new NotFoundException("Email with id " + id + " not found.");
-        }
-        email.setFolder(Email.Folder.TRASH);
-        return emailService.save(email);
-    }
-
-    // Move an email to the archive
-    @PutMapping("/archive/{id}")
-    public Email moveToArchive(@PathVariable Integer id) {
-        Email email = emailService.findById(id);
-        if (email == null) {
-            throw new NotFoundException("Email with id " + id + " not found.");
-        }
-        email.setFolder(Email.Folder.ARCHIVE);
-        return emailService.save(email);
-    }
-
-    // Move an email to the spam
-    @PutMapping("/spam/{id}")
-    public Email moveToSpam(@PathVariable Integer id) {
-        Email email = emailService.findById(id);
-        if (email == null) {
-            throw new NotFoundException("Email with id " + id + " not found.");
-        }
-        email.setFolder(Email.Folder.SPAM);
         return emailService.save(email);
     }
 
