@@ -114,20 +114,42 @@
 /* Icons Container */
 .timestamp-icons {
   display: flex;
-  gap: 10px;
+  gap: 20px;
   visibility: hidden; /* Initially hidden */
 }
 
-/* Icons Styling */
-.timestamp-icons .icon {
-  color: gray;
+.icon {
   cursor: pointer;
+  margin-left: 10px;
+  font-size: 18px;
+  color: #b0b0b0; /* Default gray color */
   transition: color 0.2s ease;
-  font-size: 15px;
 }
 
-.timestamp-icons .icon:hover {
-  color: black;
+.icon-starred {
+  color: gold; /* Starred */
+}
+
+.icon-unstarred {
+  color: #b0b0b0; /* Empty star */
+}
+
+.icon-trash {
+  color: #ff4d4d; /* Trash icon in red */
+}
+
+
+.icon-spam-active {
+  color: #ffa500; /* Active Spam icon */
+}
+
+
+.icon-archive-active {
+  color: #2f8fdf; /* Active Archive icon (green) */
+}
+
+.icon:hover {
+  color: #007bff; /* Hover effect for all icons */
 }
 
 /* Show Icons When Row is Hovered */

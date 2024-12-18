@@ -1,6 +1,7 @@
-import React from 'react';
-import { IoArrowBack, IoTrash, IoStar } from 'react-icons/io5'; // Back, Trash, and Favorite icons
-import './EmailPage.css';
+import React from "react";
+import { IoArrowBack, IoTrash, IoStar } from "react-icons/io5"; // Back, Trash, and Favorite icons
+import "./EmailPage.css";
+import AttachmentCard from "./AttachmentCard.jsx";
 
 const EmailPage = ({ email, callback }) => {
   const { emailOfSender, sentAt, subject, body } = email;
@@ -11,11 +12,11 @@ const EmailPage = ({ email, callback }) => {
 
   // Handlers for icons
   const handleTrashClick = () => {
-    alert('Email has been deleted.');
+    alert("Email has been deleted.");
   };
 
   const handleFavoriteClick = () => {
-    alert('Email has been marked as favorite.');
+    alert("Email has been marked as favorite.");
   };
 
   return (
@@ -33,16 +34,12 @@ const EmailPage = ({ email, callback }) => {
 
         <div className="email-sender-info">
           <span className="send-at">{sentAt}</span>
-          <IoStar 
-            className="icon" 
-            title="Favorite" 
+          <IoStar
+            className="icon"
+            title="Favorite"
             onClick={handleFavoriteClick}
           />
-          <IoTrash 
-            className="icon" 
-            title="Delete" 
-            onClick={handleTrashClick}
-          />
+          <IoTrash className="icon" title="Delete" onClick={handleTrashClick} />
         </div>
       </div>
 
@@ -55,6 +52,7 @@ const EmailPage = ({ email, callback }) => {
           <p>{body}</p>
         </div>
       </div>
+      <AttachmentCard attachments={email.processedAttachments} />
     </div>
   );
 };

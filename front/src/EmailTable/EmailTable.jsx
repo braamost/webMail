@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "./EmailTable.css";
 import DataTable from "react-data-table-component";
-import { FaSearch, FaTrash, FaStar, FaSync } from "react-icons/fa";
+import {
+  FaSearch,
+  FaTrash,
+  FaStar,
+  FaRegStar,
+  FaSync,
+  FaArchive,
+  FaExclamationTriangle,
+} from "react-icons/fa";
 import { FaPaperclip } from "react-icons/fa";
 import { MovetoFolder } from "./MoveToFolder";
 function EmailTable({ emails, setError, callback, FuncEmailPage }) {
@@ -9,7 +17,6 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
   const [filteredEmails, setFilteredEmails] = useState([]);
   const [hoveredRowId, setHoveredRowId] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
-
   // Update filteredEmails when emails prop changes
   useEffect(() => {
     if (emails && Array.isArray(emails)) {
@@ -35,13 +42,13 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
   const handleSelectedOnClick = async (folder) => {
     console.log("Add to Trash clicked for selected rows:", selectedRows);
     // Add logic to move selected rows to selected folder
-    selectedRows.forEach(async (email) =>{
+    selectedRows.forEach(async (email) => {
       try {
         await MovetoFolder(folder, email.id, setError);
       } catch (error) {
         console.error("Failed to move email", error);
       }
-    })
+    });
     handleRefresh();
   };
 
@@ -75,7 +82,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
     {
       name: "Attachments",
       selector: (row) => row.processedAttachments || [],
-      width: "300px",
+      width: "200px",
       cell: (row) => {
         // Check if processed attachments exist and have length
         if (
@@ -120,26 +127,81 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
     {
       name: "Timestamp",
       selector: (row) => row.sentAt,
-      width: "300px",
+      width: "400px",
       cell: (row) => (
         <div className="timestamp-cell">
           <span className="timestamp-text">{formatTimestamp(row.sentAt)}</span>
           {hoveredRowId === row.id && (
             <div className="timestamp-icons">
-              <FaStar
-                className="icon"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleIconClick("starred", row);
-                }}
-              />
+              {/* Star Icon */}
+              {row.isStarred ? (
+                <FaStar
+                  className="icon-starred"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleIconClick("unstarred", row);
+                  }}
+                  title="Unstar"
+                />
+              ) : (
+                <FaRegStar
+                  className="icon-unstarred"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleIconClick("starred", row);
+                  }}
+                  title="Star"
+                />
+              )}
+
+              {/* Trash Icon */}
               <FaTrash
-                className="icon"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleIconClick("trash", row);
                 }}
+                title="Trash"
               />
+
+              {/* Spam Icon */}
+              {row.isSpam ? (
+                <FaExclamationTriangle
+                  className="icon-spam-active"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleIconClick("unspam", row);
+                  }}
+                  title="Unmark Spam"
+                />
+              ) : (
+                <FaExclamationTriangle
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleIconClick("spam", row);
+                  }}
+                  title="Mark as Spam"
+                />
+              )}
+
+              {/* Archive Icon */}
+              {row.isArchived ? (
+                <FaArchive
+                  className="icon-archive-active"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleIconClick("unarchive", row);
+                  }}
+                  title="Unarchive"
+                />
+              ) : (
+                <FaArchive
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleIconClick("archive", row);
+                  }}
+                  title="Archive"
+                />
+              )}
             </div>
           )}
         </div>
