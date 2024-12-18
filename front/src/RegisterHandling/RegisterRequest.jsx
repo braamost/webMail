@@ -2,10 +2,11 @@ import axios from "axios";
 
 export async function Register(username, password, email, phoneNumber, setError) {
   const userData = {
-    "userName": username, 
-    "password": password, 
+    "userName": username,
+    "password": password,
     "email": email,
-    "phoneNumber": phoneNumber 
+    "phoneNumber": phoneNumber,
+ 
   };
   const jsonData = JSON.stringify(userData);
   console.log(jsonData);

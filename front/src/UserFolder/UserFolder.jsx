@@ -2,7 +2,8 @@ import { Link } from "react-router-dom"
 import { useState } from "react";
 import "./userFolder.css"
 import MenuBar from "../MenuBar/MenuBar"
-function UserFolder({ user }) {
+import UploadPhotoForm from "./Photo";
+function UserFolder({ user , setUser , handleLogout}) {
   const [changePass, setChangePass] = useState(false)
   const handleChangePassword = () => {
     setChangePass(true)
@@ -29,7 +30,7 @@ function UserFolder({ user }) {
               <strong>{user.phoneNumber}</strong>
             </div>
           </div>
-
+        <UploadPhotoForm email={user.email} setUser={setUser}>alooo</UploadPhotoForm>
           <button
             className="changePass"
             onClick={handleChangePassword}
@@ -78,7 +79,7 @@ function UserFolder({ user }) {
           >return</button>
         </div>
         )}
-        <MenuBar user={user} />
+        <MenuBar user={user} handleLogout={handleLogout}/>
     </>
   )
 }
