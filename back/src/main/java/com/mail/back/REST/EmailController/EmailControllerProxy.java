@@ -53,7 +53,7 @@ public class EmailControllerProxy implements IEmailController {
     @Override
     @PostMapping("/add")
     public Email addEmail(@RequestBody Email email) {
-        logger.info("Proxy: Adding new email from: {}", email.getUserNameOfSender());
+        logger.info("Proxy: Adding new email");
         try {
             validateNewEmail(email);
             return realController.addEmail(email);
