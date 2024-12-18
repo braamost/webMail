@@ -78,3 +78,6 @@ ul{
     text-align: center;
     
 }
+.newmail:hover{
+    background-color: blue;
+}

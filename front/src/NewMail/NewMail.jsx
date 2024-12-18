@@ -1,9 +1,10 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./newMail.css";
 import { emailCreation } from "./EmailCreationHandling/EmailCreation";
 import { useNavigate } from "react-router-dom";
 import { handleFileSelection } from "./AttachmentHandling/HandleFileSelection";
 import { uploadAttachments } from "./AttachmentHandling/upload";
+import AttachmentDisplay from './AttachmentDisplay/AttachmentDisplay.jsx'; 
 function NewMail({ user, setIsNewMail }) {
   const [toMail, setToMail] = useState("");
   const [fromMail, setFromMail] = useState("");
@@ -12,6 +13,25 @@ function NewMail({ user, setIsNewMail }) {
   const [message, setMessage] = useState("");
   const attachments = useRef(null);
   const navigate = useNavigate();
+  const [attachedFiles, setAttachedFiles] = useState([]);
+  
+
+  const handleDeleteAttachment = (indexToRemove) => {
+    setAttachedFiles(prevFiles => 
+      prevFiles.filter((_, index) => index !== indexToRemove)
+    );
+    if (attachments.current) {
+      const files = Array.from(attachments.current.getAll('files'));
+      files.splice(indexToRemove, 1);
+
+      // Recreate FormData with remaining files
+      const newFormData = new FormData();
+      files.forEach(file => newFormData.append('files', file));
+
+      // Update the ref
+      attachments.current = newFormData;
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,6 +74,7 @@ function NewMail({ user, setIsNewMail }) {
   return (
     <>
       <div className="form-container">
+        <button className="exitButton" onClick={()=>setIsNewMail(false)}>✕</button>
         <div>
           <ion-icon name="mail-outline"></ion-icon>
           <label htmlFor="FromMail">From:</label>
@@ -96,7 +117,11 @@ function NewMail({ user, setIsNewMail }) {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           ></textarea>
-          <button onClick={(e) => handleFileSelection(e, { attachments })} className="newMailButton">Upload Files</button>
+          <AttachmentDisplay 
+          attachments={attachedFiles} 
+          onDeleteAttachment={handleDeleteAttachment} 
+          />
+          <button onClick={(e) => handleFileSelection(e,  attachments , setAttachedFiles )} className="newMailButton">Upload Files</button>
           <button onClick={handleSubmit} type="submit" className="newMailButton">Send</button>
           {error && <div className="error-message">{error}</div>}
         </div>
