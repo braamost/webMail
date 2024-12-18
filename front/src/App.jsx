@@ -48,7 +48,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage setUser={handleSetUser} />} />
-        <Route path="/Register" element={<Register />} />
+        <Route path="/Register" element={<Register setUser={setUser} />} />
         <Route
           path="/InboxFolder"
           element={
