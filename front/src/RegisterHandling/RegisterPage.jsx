@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Register } from "./RegisterRequest";
 
-export default function RegisterPage() {
+export default function RegisterPage({setUser}) {
   const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const [password, setPassword] = useState("");
@@ -26,7 +26,9 @@ export default function RegisterPage() {
     if (response !== null) {
       console.log(response);
       window.alert("Account created successfully!");
-      navigate("/");
+      setUsername(username);
+      setUser(response);
+      navigate("/InboxFolder");
     }
   };
 
