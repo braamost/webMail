@@ -10,6 +10,7 @@ import {
   getUserForTab,
   setUserForTab,
   removeUserForTab,
+  getTabId,
 } from "./SessionManager";
 
 function App() {

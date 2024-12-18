@@ -16,7 +16,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RequestMapping("/api/users")
 public class UserControllerProxy implements IUserController {
-    private final UserRestController realController;
+    private final IUserController realController;
     private final UserService userService;
     private final Logger logger = LoggerFactory.getLogger(UserControllerProxy.class);
 
@@ -25,34 +25,109 @@ public class UserControllerProxy implements IUserController {
         this.userService = userService;
     }
 
+    @Override
     @GetMapping
     public List<User> findAll() {
-        logger.info("Retrieving all users");
-        return realController.findAll();
+        logger.info("Proxy: Retrieving all users");
+        try {
+            return realController.findAll();
+        } catch (Exception e) {
+            logger.error("Error retrieving all users", e);
+            throw e;
+        }
     }
 
-
+    @Override
     @GetMapping("/{id}")
     public ResponseEntity<User> findById(@PathVariable int id) {
-        logger.info("Finding user by id: {}", id);
+        logger.info("Proxy: Finding user by id: {}", id);
+        validateId(id);
         return realController.findById(id);
     }
 
+    @Override
     @GetMapping("/username/{username}")
     public ResponseEntity<User> findByUserName(@PathVariable String username) {
-        logger.info("Finding user by username: {}", username);
+        logger.info("Proxy: Finding user by username: {}", username);
+        validateUsername(username);
         return realController.findByUserName(username);
     }
 
+    @Override
     @GetMapping("/email/{email}")
     public ResponseEntity<User> findByEmail(@PathVariable String email) {
-        logger.info("Finding user by email: {}", email);
+        logger.info("Proxy: Finding user by email: {}", email);
+        validateEmail(email);
         return realController.findByEmail(email);
     }
 
+    @Override
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody User loginRequest) {
-        logger.info("Login attempt: {}", loginRequest.getUserName());
+        logger.info("Proxy: Login attempt for user: {}", loginRequest.getUserName());
+        validateLoginRequest(loginRequest);
+        return realController.login(loginRequest);
+    }
+
+    @Override
+    @PostMapping
+    public ResponseEntity<User> addUser(@RequestBody User user) {
+        logger.info("Proxy: Adding new user: {}", user.getUserName());
+        validateNewUser(user);
+        return realController.addUser(user);
+    }
+
+    @Override
+    @PutMapping
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
+        logger.info("Proxy: Updating user: {}", user.getUserName());
+        validateUpdateUser(user);
+        return realController.updateUser(user);
+    }
+
+    @Override
+    @DeleteMapping
+    public ResponseEntity<String> deleteUser(@RequestBody User user) {
+        logger.info("Proxy: Deleting user: {}", user.getUserName());
+        validateDeleteUser(user);
+        return realController.deleteUser(user);
+    }
+
+    // Private validation methods
+    private void validateId(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("Invalid user ID");
+        }
+        if (userService.findById(id) == null) {
+            throw new NotFoundException("User not found");
+        }
+    }
+
+    private void validateUsername(String username) {
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty");
+        }
+        if (userService.findByUserName(username) == null) {
+            throw new NotFoundException("User not found");
+        }
+    }
+
+    private void validateEmail(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("Email cannot be empty");
+        }
+        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            throw new IllegalArgumentException("Invalid email format");
+        }
+        if (userService.findByEmail(email) == null) {
+            throw new NotFoundException("User not found");
+        }
+    }
+
+    private void validateLoginRequest(User loginRequest) {
+        if (loginRequest.getUserName() == null || loginRequest.getPassword() == null) {
+            throw new IllegalArgumentException("Username and password are required");
+        }
         User user = userService.findByUserName(loginRequest.getUserName());
         if (user == null) {
             throw new NotFoundException("User not found");
@@ -60,36 +135,47 @@ public class UserControllerProxy implements IUserController {
         if (!userService.checkPassword(user, loginRequest.getPassword())) {
             throw new UnauthorizedException("Invalid password");
         }
-        return realController.login(loginRequest);
     }
 
-    @PostMapping
-    public ResponseEntity<User> addUser(@RequestBody User user) {
-        logger.info("Adding new user: {}", user.getUserName());
+    private void validateNewUser(User user) {
+        if (user.getUserName() == null || user.getEmail() == null || user.getPassword() == null) {
+            throw new IllegalArgumentException("Username, email, and password are required");
+        }
         if (userService.findByUserName(user.getUserName()) != null) {
             throw new UserAlreadyExistsException("Username taken");
         }
         if (userService.findByEmail(user.getEmail()) != null) {
             throw new UserAlreadyExistsException("Email taken");
         }
-        return realController.addUser(user);
     }
 
-    @PutMapping
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
-        logger.info("Updating user: {}", user.getUserName());
-        if (userService.findById(user.getId()) == null) {
+    private void validateUpdateUser(User user) {
+        if (user.getId() <= 0) {
+            throw new IllegalArgumentException("Invalid user ID");
+        }
+        User existingUser = userService.findById(user.getId());
+        if (existingUser == null) {
             throw new NotFoundException("User not found");
         }
-        return realController.updateUser(user);
+        // Check if new username is taken by another user
+        User userWithUsername = userService.findByUserName(user.getUserName());
+        if (userWithUsername != null && userWithUsername.getId() != user.getId()) {
+            throw new UserAlreadyExistsException("Username taken");
+        }
+        // Check if new email is taken by another user
+        User userWithEmail = userService.findByEmail(user.getEmail());
+        if (userWithEmail != null && userWithEmail.getId() != user.getId()) {
+            throw new UserAlreadyExistsException("Email taken");
+        }
     }
 
-    @DeleteMapping
-    public ResponseEntity<String> deleteUser(@RequestBody User user) {
-        logger.info("Deleting user: {}", user.getUserName());
-        if (userService.findById(user.getId()) == null) {
+    private void validateDeleteUser(User user) {
+        if (user.getId() <= 0) {
+            throw new IllegalArgumentException("Invalid user ID");
+        }
+        User existingUser = userService.findById(user.getId());
+        if (existingUser == null) {
             throw new NotFoundException("User not found");
         }
-        return realController.deleteUser(user);
     }
 }
