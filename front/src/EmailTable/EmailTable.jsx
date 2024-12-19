@@ -9,6 +9,8 @@ import {
   FaSync,
   FaArchive,
   FaExclamationTriangle,
+  FaEnvelope,
+  FaEnvelopeOpen,
 } from "react-icons/fa";
 import { FaPaperclip } from "react-icons/fa";
 import { MovetoFolder } from "./MoveToFolder";
@@ -184,7 +186,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   className="icon-spam-active"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("unspam", row);
+                    handleIconClick("spam", row);
                   }}
                   title="Unmark Spam"
                 />
@@ -204,7 +206,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   className="icon-archive-active"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("unarchive", row);
+                    handleIconClick("archive", row);
                   }}
                   title="Unarchive"
                 />
@@ -216,6 +218,11 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   }}
                   title="Archive"
                 />
+              )}
+              {row.read ? (
+                <FaEnvelopeOpen className="icon-read" title="Read" />
+              ) : (
+                <FaEnvelope className="icon-unread" title="Unread" />
               )}
             </div>
           )}
