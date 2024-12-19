@@ -13,10 +13,56 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
 }
+.infophoto{
+    display: flex;
+    align-items: stretch;
+}
+.updatePhoto{
+    position: absolute;
+    right: 80px;
+    top: 70px;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: Transparent; 
+    color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+
+}
+.updatePhoto h2{
+    color: black;
+    text-align: center;
+    margin-bottom: 10px;
+
+}
+.updatePhoto input{
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: Transparent; 
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.updatePhoto button{
+    padding: 10px;
+    text-align:inherit;
+    border: solid 2px rgb(0, 0, 0);
+    cursor: pointer;
+    font-size: 16px;  
+}
+.selectPre{
+    display: flex;
+}
 .userFolder h1{
     text-align: center;
     margin-bottom: 20px;
 }
+
 .info , .setPass {
     display: flex;
     column-gap: 15px ;
@@ -25,6 +71,10 @@
     padding: 10px ;
     padding-bottom: 15px;
     border-Bottom: 1px solid #ddd;
+}
+.info{
+    width: 100%;
+    min-width: 600px;
 }
 .changePass{
     display: block;
@@ -79,6 +129,24 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 18px;
+}
+.delAcc{
+    display: block;
+    position: absolute;
+    bottom: 10px ;
+    right: 10px;
+    width: 20%;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: red; 
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.delAcc:hover{
+    background-color: #c70000;
 }
 
 

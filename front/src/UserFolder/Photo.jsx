@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./userFolder.css"
 import axios from "axios";
 
 function UploadPhotoForm({ email, setUser }) {
@@ -72,22 +73,11 @@ function UploadPhotoForm({ email, setUser }) {
   
 
   return (
-    <div>
+    <div className="updatePhoto">
       <h2>Upload Photo</h2>
       <form onSubmit={handleSubmit}>
+        <div className="selectPre">
         <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            readOnly // Make email read-only if it’s passed as a prop
-          />
-        </div>
-
-        <div>
-          <label htmlFor="photo">Select a Photo:</label>
           <input
             type="file"
             id="photo"
@@ -100,12 +90,12 @@ function UploadPhotoForm({ email, setUser }) {
 
         {/* Display the selected photo preview */}
         {preview && (
-          <div>
+          <div className="preview">
             <h3>Photo Preview:</h3>
             <img src={preview} alt="Preview" style={{ width: 100, height: 100 }} />
           </div>
         )}
-   
+      </div>
         <button type="submit">Upload Photo</button>
       </form>
     </div>

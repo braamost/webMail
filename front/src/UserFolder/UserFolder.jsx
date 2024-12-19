@@ -3,6 +3,7 @@ import { useState } from "react";
 import "./userFolder.css"
 import MenuBar from "../MenuBar/MenuBar"
 import UploadPhotoForm from "./Photo";
+import axios from "axios";
 function UserFolder({ user , setUser , handleLogout}) {
   const [changePass, setChangePass] = useState(false)
   const handleChangePassword = () => {
@@ -10,11 +11,41 @@ function UserFolder({ user , setUser , handleLogout}) {
     // alert("Redirecting to change password...");
     // You can navigate to a password reset page here.
   };
+  const deleteUser = async (e) => {
+    e.preventDefault();
+    try {
+        const response = await axios.delete('http://localhost:8080/api/users', {
+            data: {
+                id: user.id,
+                userName: user.userName,
+                email: user.email,
+                password: user.password  
+            }
+        });
+        
+        if (response.status === 200) {
+            alert('User deleted successfully');
+            handleLogout();
+        }
+    } catch (error) {
+        console.error('Delete error:', error.response?.data);
+        alert(`Failed to delete user: ${error.response?.data?.message || error.message}`);
+    }
+};
+const handleDeleteUser = async (e) => {
+  console.log('User object:', user);
+  e.preventDefault();
+  const confirmed = window.confirm('Are you sure you want to delete your account? This action cannot be undone.');
+  if (confirmed) {
+      await deleteUser(e);
+  }
+};
   return (
     <>
       {(!changePass) && (
         <div className="userFolder">
           <h1>GENERAL INFORMATION</h1>
+          <div className="infophoto">
           <div style={{ marginTop: "20px" }}>
             <div className="info">
               <strong>Username:</strong>
@@ -30,12 +61,19 @@ function UserFolder({ user , setUser , handleLogout}) {
               <strong>{user.phoneNumber}</strong>
             </div>
           </div>
-        <UploadPhotoForm email={user.email} setUser={setUser}>alooo</UploadPhotoForm>
+          <UploadPhotoForm email={user.email} setUser={setUser}/>
+          </div>
           <button
             className="changePass"
             onClick={handleChangePassword}
           >
             Change Password
+          </button>
+          <button
+            className="delAcc"
+            onClick={handleDeleteUser}
+          >
+            Delete Account
           </button>
         </div>)}
 
@@ -52,7 +90,6 @@ function UserFolder({ user , setUser , handleLogout}) {
               />
             </div>
             <div className="setPass">
-
               <label htmlFor="toMail"><strong>New Password:</strong></label>
               <input
                 type="password"
