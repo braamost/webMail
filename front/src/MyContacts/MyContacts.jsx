@@ -4,8 +4,15 @@ import DataTable from "react-data-table-component";
 import "./Contact.css";
 import { CreateContact, FetchContacts} from "./FetchContacts";
 import "../style.css";
-
+import {
+  FaTrash,
+} from "react-icons/fa";
+import {handleDeleteContact} from "./FetchContacts";
 function MyContacts({ user, contacts , handleLogout}) {
+
+    const deleteContact = async (contactId) =>{
+        const response = await handleDeleteContact(contactId);
+    }
     const columns = [
         {
             name: "Contact Name",
@@ -30,7 +37,18 @@ function MyContacts({ user, contacts , handleLogout}) {
                 });
             },
             sortable: true,
-        }
+        },
+        {
+          name: "",
+          cell: (row) => (
+              <button
+                  className="delete-button"
+                  onClick={() => deleteContact(row.id)}
+              >
+                  <FaTrash />
+              </button>
+          ),
+      }
     ];
 
     const [filteredContacts, setFilteredContacts] = useState(contacts || []);
@@ -87,15 +105,15 @@ function MyContacts({ user, contacts , handleLogout}) {
 
                 {/* Contact form for adding a new contact */}
                 <div className="addContactForm">
-                    <h3>Add New Contact</h3>
+                    <h3 className="addContact">Add New Contact</h3>
                     {error && <p className="error-message">{error}</p>}
                     <form onSubmit={handleAddContact}>
                         <input
                             type="text"
-                            value={contactName}
                             onChange={(e) => setContactName(e.target.value)}
                             placeholder="Contact Name"
                             required
+                            className="ContactName"
                         />
                         <input
                             type="email"
@@ -103,8 +121,9 @@ function MyContacts({ user, contacts , handleLogout}) {
                             onChange={(e) => setContactEmail(e.target.value)}
                             placeholder="Contact Email"
                             required
+                            className="ContactEmail"
                         />
-                        <button type="submit">Add Contact</button>
+                        <button type="submit" className="">Add Contact</button>
                     </form>
                 </div>
 
