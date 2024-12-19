@@ -6,8 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
+
 @Component
 public class UserRestController implements IUserController {
   private final UserService userService;
@@ -53,12 +57,20 @@ public class UserRestController implements IUserController {
 
   @Override
   public ResponseEntity<User> updateUser(User user) {
-    return ResponseEntity.ok(userService.save(user));
+    return ResponseEntity.ok(userService.update(user));
   }
 
   @Override
   public ResponseEntity<String> deleteUser(User user) {
     userService.deleteById(user.getId());
     return ResponseEntity.ok("Deleted user " + user.getId());
+  }
+
+  @Override
+  public User uploadPhoto(String email, MultipartFile photo) throws IOException {
+    User user = userService.findByEmail(email);
+    byte[] photoBytes = photo.getBytes();
+    user.setPhoto(photoBytes);
+    return userService.update(user);
   }
 }

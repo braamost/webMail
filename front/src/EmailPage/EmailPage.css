@@ -74,6 +74,15 @@
   cursor: pointer;
   transition: color 0.2s ease-in-out;
 }
+.iconstarred {
+  color: gold; /* Starred */
+  font-size: 20px;
+}
+
+.iconstarred:hover {
+  color: #0056b3;
+  font-size: 20px;
+}
 
 .icon:hover {
   color: #007bff; /* Highlight color on hover */
@@ -96,6 +105,8 @@
 }
 
 .email-body {
+  white-space-collapse: preserve;
+  text-wrap: wrap;
   margin-top: 20px;
   font-size: 16px;
   line-height: 1.6;

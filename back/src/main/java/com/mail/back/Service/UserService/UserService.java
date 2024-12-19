@@ -8,6 +8,8 @@ public interface UserService {
 
   User save(User theUser);
 
+  User update(User theUser);
+
   void deleteById(Integer theId);
 
   User findByUserName(String Username);
@@ -15,7 +17,4 @@ public interface UserService {
   User findByEmail(String email);
 
   boolean checkPassword(User user, String password);
-
-
-  public User update(User theUser);
 }

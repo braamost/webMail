@@ -2,10 +2,10 @@ import MenuBar from "../MenuBar/MenuBar";
 import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import "./Contact.css";
-import { CreateContact, FetchContacts } from "./FetchContacts";
+import { CreateContact, FetchContacts} from "./FetchContacts";
 import "../style.css";
 
-function MyContacts({ user, contacts }) {
+function MyContacts({ user, contacts , handleLogout}) {
     const columns = [
         {
             name: "Contact Name",
@@ -130,7 +130,7 @@ function MyContacts({ user, contacts }) {
                     defaultSortFieldId={1}
                 />
             </div>
-            <MenuBar user={user} />
+            <MenuBar user={user} handleLogout={handleLogout}/>
         </div>
     );
 }

@@ -43,6 +43,9 @@ public class EmailRestController implements IEmailController {
             case "read":
                 email.setRead(!email.isRead());
                 break;
+            case "open":
+                email.setRead(true);
+                break;
             case "spam":
                 email.setFolder(email.getFolder().equals(Email.Folder.SPAM) ?
                         Email.Folder.GENERAL : Email.Folder.SPAM);

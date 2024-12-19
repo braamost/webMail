@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./EmailTable.css";
 import DataTable from "react-data-table-component";
 import {
@@ -9,70 +9,70 @@ import {
   FaSync,
   FaArchive,
   FaExclamationTriangle,
+  FaEnvelope,
+  FaEnvelopeOpen,
 } from "react-icons/fa";
 import { FaPaperclip } from "react-icons/fa";
-import { MovetoFolder } from "./MoveToFolder";
 import { useLocation } from "react-router-dom";
-function EmailTable({ emails, setError, callback, FuncEmailPage }) {
+import {
+  handleRefresh,
+  formatTimestamp,
+  handleIconClick,
+  handleSelectedOnClick,
+} from "./TableHandlers";
+function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
   const location = useLocation();
   const [inputSearch, setInputSearch] = useState("");
   const [filteredEmails, setFilteredEmails] = useState([]);
   const [hoveredRowId, setHoveredRowId] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [searchKey, setSearchKey] = useState("sender");
+  const [showButtons, setShowButtons] = useState(false);
+  const searchBarRef = useRef(null);
+
+  const handleSearchKeyChange = (key) => {
+    setSearchKey(key);
+    if (searchBarRef.current) {
+      searchBarRef.current.focus();
+    }
+  };
   // Update filteredEmails when emails prop changes
   useEffect(() => {
     if (emails && Array.isArray(emails)) {
       if (inputSearch) {
-        const filtered = emails.filter((email) =>
-          email.emailOfSender.toLowerCase().includes(inputSearch.toLowerCase())
-        );
-        setFilteredEmails(filtered);
+        if (searchKey === "sender") {
+          const filtered = emails.filter((email) =>
+            email.emailOfSender
+              .toLowerCase()
+              .includes(inputSearch.toLowerCase())
+          );
+          setFilteredEmails(filtered);
+        } else if (searchKey === "subject") {
+          const filtered = emails.filter((email) =>
+            email.subject.toLowerCase().includes(inputSearch.toLowerCase())
+          );
+          setFilteredEmails(filtered);
+        } else if (searchKey === "timestamp") {
+          const filtered = emails.filter((email) =>
+            email.sentAt.toLowerCase().includes(inputSearch.toLowerCase())
+          );
+          setFilteredEmails(filtered);
+        }
       } else {
         setFilteredEmails(emails);
       }
     } else {
       setFilteredEmails([]);
     }
-  }, [emails, inputSearch]);
-
-  const handleRefresh = () => {
-    window.location.reload(); // Refresh the page
-  };
-
-  // Button Handlers
-
-  const handleSelectedOnClick = async (folder) => {
-    console.log("Add to Trash clicked for selected rows:", selectedRows);
-    // Add logic to move selected rows to selected folder
-    selectedRows.forEach(async (email) => {
-      try {
-        await MovetoFolder(folder, email.id, setError);
-      } catch (error) {
-        console.error("Failed to move email", error);
-      }
-    });
-    handleRefresh();
-  };
-
-  const handleIconClick = async (folder, email) => {
-    try {
-      await MovetoFolder(folder, email.id, setError);
-      handleRefresh();
-    } catch (error) {
-      console.error("Failed to move email", error);
-    }
-  };
-
-  const formatTimestamp = (timestamp) => {
-    if (!timestamp) return "";
-    const date = new Date(timestamp);
-    return date.toLocaleString();
-  };
+  }, [emails, inputSearch, searchKey]);
 
   const columns = [
     {
-      name: "Sender",
-      selector: (row) => row.emailOfSender || "No Sender",
+      name: location.pathname === "/SentMails" ? "Reciever" : "Sender",
+      selector: (row) =>
+        location.pathname === "/SentMails"
+          ? row.emailOfReceiver || "No Reciever"
+          : row.emailOfSender || "No Sender",
       sortable: true,
       width: "240px",
     },
@@ -80,12 +80,12 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
       name: "Subject",
       selector: (row) => row.subject || "No Subject",
       sortable: true,
-      width: "300px",
+      width: "290px",
     },
     {
       name: "Attachments",
       selector: (row) => row.processedAttachments || [],
-      width: "200px",
+      width: "201px",
       cell: (row) => {
         // Check if processed attachments exist and have length
         if (
@@ -130,7 +130,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
       name: "Timestamp",
       selector: (row) => row.sentAt,
       sortable: true,
-      width: "411px",
+      width: "420px",
       cell: (row) => (
         <div className="timestamp-cell">
           <span className="timestamp-text">{formatTimestamp(row.sentAt)}</span>
@@ -142,7 +142,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   className="icon-starred"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("starred", row);
+                    handleIconClick("starred", row, setError, setEmails);
                   }}
                   title="Unstar"
                 />
@@ -151,7 +151,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   className="icon-unstarred"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("starred", row);
+                    handleIconClick("starred", row, setError, setEmails);
                   }}
                   title="Star"
                 />
@@ -163,7 +163,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   className="icon-trash-active"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("trash", row);
+                    handleIconClick("trash", row, setError, setEmails);
                   }}
                   title="Remove from Trash"
                 />
@@ -172,7 +172,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   className="icon-trash"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("trash", row);
+                    handleIconClick("trash", row, setError, setEmails);
                   }}
                   title="Trash"
                 />
@@ -184,7 +184,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   className="icon-spam-active"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("unspam", row);
+                    handleIconClick("spam", row, setError, setEmails);
                   }}
                   title="Unmark Spam"
                 />
@@ -192,7 +192,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                 <FaExclamationTriangle
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("spam", row);
+                    handleIconClick("spam", row, setError, setEmails);
                   }}
                   title="Mark as Spam"
                 />
@@ -204,7 +204,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   className="icon-archive-active"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("unarchive", row);
+                    handleIconClick("archive", row, setError, setEmails);
                   }}
                   title="Unarchive"
                 />
@@ -212,10 +212,23 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                 <FaArchive
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("archive", row);
+                    handleIconClick("archive", row, setError, setEmails);
                   }}
                   title="Archive"
                 />
+              )}
+              {row.isRead ? (
+                <FaEnvelopeOpen className="icon-read" title="Read" 
+                  onClick={(e) => {
+                  e.stopPropagation();
+                  handleIconClick("read", row, setError, setEmails);
+                  }}/>
+              ) : (
+                <FaEnvelope className="icon-unread" title="Unread" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleIconClick("read", row, setError, setEmails);
+                }}/>
               )}
             </div>
           )}
@@ -272,6 +285,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
     FuncEmailPage(row);
     console.log("Row Data:", row);
     callback(true);
+    handleIconClick("open", row, setError, setEmails);
   };
 
   const NoDataComponent = () => (
@@ -291,30 +305,74 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
           {location.pathname === "/Starred" ? (
             <button
               className="action-button favorite-button"
-              onClick={() => handleSelectedOnClick("starred")}
+              onClick={() =>
+                handleSelectedOnClick(
+                  "starred",
+                  selectedRows,
+                  setError,
+                  setEmails
+                )
+              }
             >
               Remove from Favorites
             </button>
           ) : (
             <button
               className="action-button favorite-button"
-              onClick={() => handleSelectedOnClick("starred")}
+              onClick={() =>
+                handleSelectedOnClick(
+                  "starred",
+                  selectedRows,
+                  setError,
+                  setEmails
+                )
+              }
             >
               Add to Favorites
             </button>
           )}
           {/* Add to Trash Button */}
           {location.pathname === "/Trash" ? (
-            <button
-              className="action-button trash-button"
-              onClick={() => handleSelectedOnClick("trash")}
-            >
-              Remove from Trash
-            </button>
+            <>
+              <button
+                className="action-button trash-button"
+                onClick={() =>
+                  handleSelectedOnClick(
+                    "trash",
+                    selectedRows,
+                    setError,
+                    setEmails
+                  )
+                }
+              >
+                Remove from Trash
+              </button>
+              <button
+                className="removeAll"
+                onClick={() => {
+                  handleSelectedOnClick(
+                    "permanent-delete",
+                    selectedRows,
+                    setError,
+                    setEmails
+                  );
+                  setSelectedRows([]);
+                }}
+              >
+                Delete permanently
+              </button>
+            </>
           ) : (
             <button
               className="action-button trash-button"
-              onClick={() => handleSelectedOnClick("trash")}
+              onClick={() =>
+                handleSelectedOnClick(
+                  "trash",
+                  selectedRows,
+                  setError,
+                  setEmails
+                )
+              }
             >
               Add to Trash
             </button>
@@ -334,17 +392,55 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
           }}
         />
       </div>
+
       <div className="search-bar-container">
         <div className="input-wrapper">
           <FaSearch id="search-icon" />
           <input
             className="inputStyle"
+            ref={searchBarRef}
             type="text"
             placeholder="Search mail ..."
+            onFocus={() => setShowButtons(true)}
+            onBlur={(e) => {
+              if (!e.target.value) setShowButtons(false);
+            }}
             onChange={(e) => handleOnChange(e.target.value)}
             value={inputSearch}
           />
         </div>
+
+        {showButtons && (
+          <div
+            onMouseDown={(e) => e.preventDefault()} // Prevents losing focus on click
+            className="search-buttons-container"
+          >
+            <button
+              className={`action-button search-button ${
+                searchKey === "sender" ? "selected" : ""
+              }`}
+              onClick={() => handleSearchKeyChange("sender")}
+            >
+              {location.pathname === "/SentMails" ? "Reciever" : "Sender"}
+            </button>
+            <button
+              className={`action-button search-button ${
+                searchKey === "subject" ? "selected" : ""
+              }`}
+              onClick={() => handleSearchKeyChange("subject")}
+            >
+              Subject
+            </button>
+            <button
+              className={`action-button search-button ${
+                searchKey === "timestamp" ? "selected" : ""
+              }`}
+              onClick={() => handleSearchKeyChange("timestamp")}
+            >
+              Timestamp
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="tableContainer">

@@ -5,25 +5,28 @@ import EmailTable from "../EmailTable/EmailTable.jsx";
 import { useState } from "react";
 import EmailPage from "../EmailPage/EmailPage.jsx";
 
-function HomePage({ emails, user, error, setError, handleLogout }) {
+function HomePage({ emails, setEmails, user, error, setError, handleLogout }) {
   const [emailPage, setEmailPage] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState({});
 
-  const StoringEmailSelected = (email) => {
-    setSelectedEmail(email);
-  };
   return (
     <>
       <div className="pagecontent">
         {emailPage ? (
-          <EmailPage email={selectedEmail} callback={setEmailPage} />
+          <EmailPage
+            email={selectedEmail}
+            callback={setEmailPage}
+            setEmails={setEmails}
+            setError={setError}
+          />
         ) : (
           <>
             <EmailTable
               emails={emails}
+              setEmails={setEmails}
               setError={setError}
               callback={setEmailPage}
-              FuncEmailPage={StoringEmailSelected}
+              FuncEmailPage={setSelectedEmail}
             />
           </>
         )}

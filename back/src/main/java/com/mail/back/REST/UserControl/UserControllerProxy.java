@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.web.multipart.MultipartFile;
 @RestController
@@ -95,6 +96,15 @@ public class UserControllerProxy implements IUserController {
         return realController.deleteUser(user);
     }
 
+    @PostMapping("/upload-photo/{email}")
+    public User uploadPhoto(@PathVariable  String email,
+                            @RequestParam("photo") MultipartFile photo) throws IOException {
+        logger.info("Proxy: Uploading photo for user: {}", email);
+        logger.info("Proxy: the photo before: {}", photo);
+        validateEmail (email);
+        return realController.uploadPhoto(email, photo);
+    }
+
     // Private validation methods
     private void validateId(int id) {
         if (id <= 0) {
@@ -161,12 +171,12 @@ public class UserControllerProxy implements IUserController {
         }
         // Check if new username is taken by another user
         User userWithUsername = userService.findByUserName(user.getUserName());
-        if (userWithUsername != null && userWithUsername.getId() != user.getId()) {
+        if (userWithUsername != null && !Objects.equals(userWithUsername.getId(), user.getId())) {
             throw new UserAlreadyExistsException("Username taken");
         }
         // Check if new email is taken by another user
         User userWithEmail = userService.findByEmail(user.getEmail());
-        if (userWithEmail != null && userWithEmail.getId() != user.getId()) {
+        if (userWithEmail != null && !Objects.equals(userWithEmail.getId(), user.getId())) {
             throw new UserAlreadyExistsException("Email taken");
         }
     }
@@ -181,19 +191,5 @@ public class UserControllerProxy implements IUserController {
         }
     }
 
-    @PostMapping("/upload-photo/{email}")
-    public User uploadPhoto(@PathVariable  String email,
-                                              @RequestParam("photo") MultipartFile photo) throws IOException {
-            User user = userService.findByEmail(email);
-                // Convert the photo file to byte array
-                byte[] photoBytes = photo.getBytes();
-
-                // Set the photo for the user
-                user.setPhoto(photoBytes);
-
-                // Save the user with the updated photo
-                User updatedUser  = userService.update(user);
-                return updatedUser;
-            }
-
 }
+

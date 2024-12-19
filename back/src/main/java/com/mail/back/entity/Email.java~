@@ -37,6 +37,7 @@ public class Email {
         GENERAL,
         SPAM,
         TRASH,
+        DRAFT,
         ARCHIVE
     }
 

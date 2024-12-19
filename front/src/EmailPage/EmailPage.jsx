@@ -2,21 +2,15 @@ import React from "react";
 import { IoArrowBack, IoTrash, IoStar } from "react-icons/io5"; // Back, Trash, and Favorite icons
 import "./EmailPage.css";
 import AttachmentCard from "./AttachmentCard.jsx";
+import { handleIconClick, MovetoFolder } from "../EmailTable/TableHandlers.jsx";
+import { useState } from "react";
 
-const EmailPage = ({ email, callback }) => {
+const EmailPage = ({ email, callback, setEmails, setError }) => {
   const { emailOfSender, sentAt, subject, body } = email;
+  const [starred, setStarred] = useState(email.isStarred);
 
   const onBackClick = () => {
     callback(false);
-  };
-
-  // Handlers for icons
-  const handleTrashClick = () => {
-    alert("Email has been deleted.");
-  };
-
-  const handleFavoriteClick = () => {
-    alert("Email has been marked as favorite.");
   };
 
   return (
@@ -35,11 +29,21 @@ const EmailPage = ({ email, callback }) => {
         <div className="email-sender-info">
           <span className="send-at">{sentAt}</span>
           <IoStar
-            className="icon"
+            className={`icon${starred ? "starred" : ""}`}
             title="Favorite"
-            onClick={handleFavoriteClick}
+            onClick={() => {
+              handleIconClick("starred", email, setError, setEmails);
+              setStarred(!starred);
+            }}
           />
-          <IoTrash className="icon" title="Delete" onClick={handleTrashClick} />
+          <IoTrash
+            className="icon"
+            title="Delete"
+            onClick={() => {
+              handleIconClick("trash", email, setError, setEmails);
+              callback(false);
+            }}
+          />
         </div>
       </div>
 

@@ -62,18 +62,6 @@ function App() {
           }
         />
         <Route
-          path="/Draft"
-          element={
-            <ProtectedRoute user={user}>
-              <EmailFolderComponent
-                user={user}
-                folderName="DRAFT"
-                handleLogout={handleLogout}
-              />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/Trash"
           element={
             <ProtectedRoute user={user}>
