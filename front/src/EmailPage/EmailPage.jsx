@@ -3,9 +3,12 @@ import { IoArrowBack, IoTrash, IoStar } from "react-icons/io5"; // Back, Trash, 
 import "./EmailPage.css";
 import AttachmentCard from "./AttachmentCard.jsx";
 import { handleIconClick } from "../EmailTable/TableHandlers.jsx";
+import { useNavigate } from "react-router-dom";
 
-const EmailPage = ({ email, callback }) => {
+const EmailPage = ({ email, callback, setEmails}) => {
+  console.log("Email in email page: ",email);
   const { emailOfSender, sentAt, subject, body } = email;
+  const navigate = useNavigate();
 
   const onBackClick = () => {
     callback(false);
@@ -29,9 +32,11 @@ const EmailPage = ({ email, callback }) => {
           <IoStar
             className="icon"
             title="Favorite"
-            onClick={() => handleIconClick("starred", email, callback)}
+            onClick={() => handleIconClick("starred", email, callback, setEmails)}
           />
-          <IoTrash className="icon" title="Delete" onClick={() => handleIconClick("trash", email, callback)} />
+          <IoTrash className="icon" title="Delete" onClick={() => {
+            handleIconClick("trash", email, callback, setEmails);
+          }} />
         </div>
       </div>
 
