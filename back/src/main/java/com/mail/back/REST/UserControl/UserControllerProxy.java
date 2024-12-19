@@ -190,4 +190,6 @@ public class UserControllerProxy implements IUserController {
             throw new NotFoundException("User not found");
         }
     }
+
 }
+
