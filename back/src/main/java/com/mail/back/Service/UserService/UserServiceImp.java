@@ -47,6 +47,10 @@ public class UserServiceImp implements UserService {
         theUser.setPassword(passwordEncoder.encode(theUser.getPassword()));
         return userRepository.save(theUser);
     }
+    @Override
+    public User update(User theUser) {
+        return userRepository.save(theUser);
+    }
 
     @Override
     public void deleteById(Integer theId) {

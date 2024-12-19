@@ -2,9 +2,6 @@ package com.mail.back.REST.UserControl;
 
 import com.mail.back.entity.User;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
 
 public interface IUserController {
@@ -16,5 +13,4 @@ public interface IUserController {
     ResponseEntity<User> addUser(User user);
     ResponseEntity<User> updateUser(User user);
     ResponseEntity<String> deleteUser(User user);
-    User uploadPhoto(String email, MultipartFile photo) throws IOException;
 }

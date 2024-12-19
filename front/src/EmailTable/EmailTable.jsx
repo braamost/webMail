@@ -13,9 +13,14 @@ import {
   FaEnvelopeOpen,
 } from "react-icons/fa";
 import { FaPaperclip } from "react-icons/fa";
-import { MovetoFolder } from "./MoveToFolder";
 import { useLocation } from "react-router-dom";
-function EmailTable({ emails, setError, callback, FuncEmailPage }) {
+import {
+  handleRefresh,
+  formatTimestamp,
+  handleIconClick,
+  handleSelectedOnClick,
+} from "./TableHandlers";
+function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
   const location = useLocation();
   const [inputSearch, setInputSearch] = useState("");
   const [filteredEmails, setFilteredEmails] = useState([]);
@@ -36,40 +41,6 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
       setFilteredEmails([]);
     }
   }, [emails, inputSearch]);
-
-  const handleRefresh = () => {
-    window.location.reload(); // Refresh the page
-  };
-
-  // Button Handlers
-
-  const handleSelectedOnClick = async (folder) => {
-    console.log("Add to Trash clicked for selected rows:", selectedRows);
-    // Add logic to move selected rows to selected folder
-    selectedRows.forEach(async (email) => {
-      try {
-        await MovetoFolder(folder, email.id, setError);
-      } catch (error) {
-        console.error("Failed to move email", error);
-      }
-    });
-    handleRefresh();
-  };
-
-  const handleIconClick = async (folder, email) => {
-    try {
-      await MovetoFolder(folder, email.id, setError);
-      handleRefresh();
-    } catch (error) {
-      console.error("Failed to move email", error);
-    }
-  };
-
-  const formatTimestamp = (timestamp) => {
-    if (!timestamp) return "";
-    const date = new Date(timestamp);
-    return date.toLocaleString();
-  };
 
   const columns = [
     {
@@ -144,7 +115,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   className="icon-starred"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("starred", row);
+                    handleIconClick("starred", row, setError, setEmails);
                   }}
                   title="Unstar"
                 />
@@ -153,7 +124,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   className="icon-unstarred"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("starred", row);
+                    handleIconClick("starred", row, setError, setEmails);
                   }}
                   title="Star"
                 />
@@ -165,7 +136,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   className="icon-trash-active"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("trash", row);
+                    handleIconClick("trash", row, setError, setEmails);
                   }}
                   title="Remove from Trash"
                 />
@@ -174,7 +145,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   className="icon-trash"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("trash", row);
+                    handleIconClick("trash", row, setError, setEmails);
                   }}
                   title="Trash"
                 />
@@ -186,7 +157,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   className="icon-spam-active"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("spam", row);
+                    handleIconClick("spam", row, setError, setEmails);
                   }}
                   title="Unmark Spam"
                 />
@@ -194,7 +165,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                 <FaExclamationTriangle
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("spam", row);
+                    handleIconClick("spam", row, setError, setEmails);
                   }}
                   title="Mark as Spam"
                 />
@@ -206,7 +177,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                   className="icon-archive-active"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("archive", row);
+                    handleIconClick("archive", row, setError, setEmails);
                   }}
                   title="Unarchive"
                 />
@@ -214,7 +185,7 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
                 <FaArchive
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleIconClick("archive", row);
+                    handleIconClick("archive", row, setError, setEmails);
                   }}
                   title="Archive"
                 />
@@ -298,14 +269,28 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
           {location.pathname === "/Starred" ? (
             <button
               className="action-button favorite-button"
-              onClick={() => handleSelectedOnClick("starred")}
+              onClick={() =>
+                handleSelectedOnClick(
+                  "starred",
+                  selectedRows,
+                  setError,
+                  setEmails
+                )
+              }
             >
               Remove from Favorites
             </button>
           ) : (
             <button
               className="action-button favorite-button"
-              onClick={() => handleSelectedOnClick("starred")}
+              onClick={() =>
+                handleSelectedOnClick(
+                  "starred",
+                  selectedRows,
+                  setError,
+                  setEmails
+                )
+              }
             >
               Add to Favorites
             </button>
@@ -314,14 +299,28 @@ function EmailTable({ emails, setError, callback, FuncEmailPage }) {
           {location.pathname === "/Trash" ? (
             <button
               className="action-button trash-button"
-              onClick={() => handleSelectedOnClick("trash")}
+              onClick={() =>
+                handleSelectedOnClick(
+                  "trash",
+                  selectedRows,
+                  setError,
+                  setEmails
+                )
+              }
             >
               Remove from Trash
             </button>
           ) : (
             <button
               className="action-button trash-button"
-              onClick={() => handleSelectedOnClick("trash")}
+              onClick={() =>
+                handleSelectedOnClick(
+                  "trash",
+                  selectedRows,
+                  setError,
+                  setEmails
+                )
+              }
             >
               Add to Trash
             </button>
