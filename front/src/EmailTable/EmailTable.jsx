@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./EmailTable.css";
 import DataTable from "react-data-table-component";
 import {
@@ -26,26 +26,53 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
   const [filteredEmails, setFilteredEmails] = useState([]);
   const [hoveredRowId, setHoveredRowId] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [searchKey, setSearchKey] = useState("sender");
+  const [showButtons, setShowButtons] = useState(false);
+  const searchBarRef = useRef(null);
+
+  const handleSearchKeyChange = (key) => {
+    setSearchKey(key);
+    if (searchBarRef.current) {
+      searchBarRef.current.focus();
+    }
+  };
   // Update filteredEmails when emails prop changes
   useEffect(() => {
     if (emails && Array.isArray(emails)) {
       if (inputSearch) {
-        const filtered = emails.filter((email) =>
-          email.emailOfSender.toLowerCase().includes(inputSearch.toLowerCase())
-        );
-        setFilteredEmails(filtered);
+        if (searchKey === "sender") {
+          const filtered = emails.filter((email) =>
+            email.emailOfSender
+              .toLowerCase()
+              .includes(inputSearch.toLowerCase())
+          );
+          setFilteredEmails(filtered);
+        } else if (searchKey === "subject") {
+          const filtered = emails.filter((email) =>
+            email.subject.toLowerCase().includes(inputSearch.toLowerCase())
+          );
+          setFilteredEmails(filtered);
+        } else if (searchKey === "timestamp") {
+          const filtered = emails.filter((email) =>
+            email.sentAt.toLowerCase().includes(inputSearch.toLowerCase())
+          );
+          setFilteredEmails(filtered);
+        }
       } else {
         setFilteredEmails(emails);
       }
     } else {
       setFilteredEmails([]);
     }
-  }, [emails, inputSearch]);
+  }, [emails, inputSearch, searchKey]);
 
   const columns = [
     {
-      name: "Sender",
-      selector: (row) => row.emailOfSender || "No Sender",
+      name: location.pathname === "/SentMails" ? "Reciever" : "Sender",
+      selector: (row) =>
+        location.pathname === "/SentMails"
+          ? row.emailOfReceiver || "No Reciever"
+          : row.emailOfSender || "No Sender",
       sortable: true,
       width: "240px",
     },
@@ -53,12 +80,12 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
       name: "Subject",
       selector: (row) => row.subject || "No Subject",
       sortable: true,
-      width: "300px",
+      width: "290px",
     },
     {
       name: "Attachments",
       selector: (row) => row.processedAttachments || [],
-      width: "200px",
+      width: "201px",
       cell: (row) => {
         // Check if processed attachments exist and have length
         if (
@@ -103,7 +130,7 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
       name: "Timestamp",
       selector: (row) => row.sentAt,
       sortable: true,
-      width: "411px",
+      width: "420px",
       cell: (row) => (
         <div className="timestamp-cell">
           <span className="timestamp-text">{formatTimestamp(row.sentAt)}</span>
@@ -190,7 +217,7 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
                   title="Archive"
                 />
               )}
-              {row.read ? (
+              {row.isRead ? (
                 <FaEnvelopeOpen className="icon-read" title="Read" />
               ) : (
                 <FaEnvelope className="icon-unread" title="Unread" />
@@ -250,6 +277,7 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
     FuncEmailPage(row);
     console.log("Row Data:", row);
     callback(true);
+    handleIconClick("read", row, setError, setEmails);
   };
 
   const NoDataComponent = () => (
@@ -340,17 +368,55 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
           }}
         />
       </div>
+
       <div className="search-bar-container">
         <div className="input-wrapper">
           <FaSearch id="search-icon" />
           <input
             className="inputStyle"
+            ref={searchBarRef}
             type="text"
             placeholder="Search mail ..."
+            onFocus={() => setShowButtons(true)}
+            onBlur={(e) => {
+              if (!e.target.value) setShowButtons(false);
+            }}
             onChange={(e) => handleOnChange(e.target.value)}
             value={inputSearch}
           />
         </div>
+
+        {showButtons && (
+          <div
+            onMouseDown={(e) => e.preventDefault()} // Prevents losing focus on click
+            className="search-buttons-container"
+          >
+            <button
+              className={`action-button search-button ${
+                searchKey === "sender" ? "selected" : ""
+              }`}
+              onClick={() => handleSearchKeyChange("sender")}
+            >
+              Sender
+            </button>
+            <button
+              className={`action-button search-button ${
+                searchKey === "subject" ? "selected" : ""
+              }`}
+              onClick={() => handleSearchKeyChange("subject")}
+            >
+              Subject
+            </button>
+            <button
+              className={`action-button search-button ${
+                searchKey === "timestamp" ? "selected" : ""
+              }`}
+              onClick={() => handleSearchKeyChange("timestamp")}
+            >
+              Timestamp
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="tableContainer">
