@@ -118,7 +118,7 @@ public class EmailControllerProxy implements IEmailController {
         validateId(id);
 
         Set<String> validFolders = new HashSet<>(Arrays.asList(
-                "starred", "read", "spam", "trash", "archive"
+                "starred", "read", "spam", "trash", "archive", "open"
         ));
 
         if (!validFolders.contains(folder.toLowerCase())) {

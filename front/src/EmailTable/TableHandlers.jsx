@@ -1,11 +1,11 @@
 import axios from "axios";
 
-async function MovetoFolder(folder,id,setError) {
+export async function MovetoFolder(folder, id, setError) {
   try {
-    console.log("folder and id ",folder,id);
+    console.log("folder and id ", folder, id);
     const response = await axios.put(
-      `http://localhost:8080/api/emails/${folder}/${id}`,
-    )
+      `http://localhost:8080/api/emails/${folder}/${id}`
+    );
   } catch (error) {
     if (error.response) {
       const { status, data } = error.response;
@@ -29,46 +29,74 @@ export const handleRefresh = () => {
 
 // Button Handlers
 
-export const handleSelectedOnClick = async (folder, selectedRows, setError, setEmails) => {
-  const shouldKeepInView = folder === 'read' || folder === 'starred';
+export const handleSelectedOnClick = async (
+  folder,
+  selectedRows,
+  setError,
+  setEmails
+) => {
+  const shouldKeepInView = folder === "read" || folder === "starred" ;
   const currentPath = window.location.pathname;
-  const isStarredRoute = currentPath.includes('/Starred');
+  const isStarredRoute = currentPath.includes("/Starred");
 
   try {
-    // Optimistically update UI
-    setEmails(prevEmails => {
-      if (shouldKeepInView) {
-        return prevEmails.map(email => {
-          const isSelected = selectedRows.find(selected => selected.id === email.id);
-          if (isSelected) {
-            const newValue = !email[folder === 'starred' ? 'isStarred' : 'isRead'];
-            
-            // If we're in Starred route and unstarring, filter out the email
-            if (isStarredRoute && folder === 'starred' && !newValue) {
-              return null;
-            }
-            
-            return { 
-              ...email, 
-              [folder === 'starred' ? 'isStarred' : 'isRead']: newValue
-            };
-          }
-          return email;
-        }).filter(Boolean); // Remove null entries
-      } else {
-        // Remove emails that are being moved to other folders
-        return prevEmails.filter(email => 
-          !selectedRows.find(selected => selected.id === email.id)
+    if (folder === "permanent-delete") {
+      console.log(folder);
+      console.log(selectedRows);
+      const response = selectedRows.map((email) =>
+        axios.delete(`http://localhost:8080/api/emails/${email.id}`)
+      );
+      await Promise.all(response);
+
+      setEmails((prevEmails) => {
+        const selectedIds = selectedRows.map((email) => email.id);
+
+        const updatedEmails = prevEmails.filter(
+          (email) => !selectedIds.includes(email.id)
         );
-      }
-    });
+        return updatedEmails;
+      });
 
-    // Perform API calls
-    await Promise.all(selectedRows.map(email => 
-      MovetoFolder(folder, email.id, setError)
-    ));
+      alert("Emails permanently deleted");
+    } else {
+      setEmails((prevEmails) => {
+        if (shouldKeepInView) {
+          return prevEmails
+            .map((email) => {
+              const isSelected = selectedRows.find(
+                (selected) => selected.id === email.id
+              );
+              if (isSelected) {
+                const newValue =
+                  !email[folder === "starred" ? "isStarred" : "isRead"];
 
-    toast.success(`Updated ${selectedRows.length} emails`);
+                // If we're in Starred route and unstarring, filter out the email
+                if (isStarredRoute && folder === "starred" && !newValue) {
+                  return null;
+                }
+
+                return {
+                  ...email,
+                  [folder === "starred" ? "isStarred" : "isRead"]: newValue,
+                };
+              }
+              return email;
+            })
+            .filter(Boolean); // Remove null entries
+        } else {
+          // Remove emails that are being moved to other folders
+          return prevEmails.filter(
+            (email) =>
+              !selectedRows.find((selected) => selected.id === email.id)
+          );
+        }
+      });
+
+      // Perform API calls
+      await Promise.all(
+        selectedRows.map((email) => MovetoFolder(folder, email.id, setError))
+      );
+    }
   } catch (error) {
     console.error("Failed to update emails", error);
     setError(`Failed to update emails`);
@@ -76,37 +104,39 @@ export const handleSelectedOnClick = async (folder, selectedRows, setError, setE
 };
 
 export const handleIconClick = async (folder, email, setError, setEmails) => {
-  const shouldKeepInView = folder === 'read' || folder === 'starred';
+  const shouldKeepInView = folder === "read" || folder === "starred" || folder === "open";
   const currentPath = window.location.pathname;
-  const isStarredRoute = currentPath.includes('/Starred');
+  const isStarredRoute = currentPath.includes("/Starred");
 
   try {
     await MovetoFolder(folder, email.id, setError);
-    
-    setEmails(prevEmails => {
+
+    setEmails((prevEmails) => {
       if (shouldKeepInView) {
-        return prevEmails.map(e => {
-          if (e.id === email.id) {
-            const newValue = !e[folder === 'starred' ? 'isStarred' : 'isRead'];
-            
-            // If we're in Starred route and unstarring, filter out the email
-            if (isStarredRoute && folder === 'starred' && !newValue) {
-              return null;
+        return prevEmails
+          .map((e) => {
+            if (e.id === email.id) {
+              const newValue =
+                folder === "open" ? true :!e[folder === "starred" ? "isStarred" : "isRead"];
+
+              // If we're in Starred route and unstarring, filter out the email
+              if (isStarredRoute && folder === "starred" && !newValue) {
+                return null;
+              }
+
+              return {
+                ...e,
+                [folder === "starred" ? "isStarred" : "isRead"]: newValue,
+              };
             }
-            
-            return { 
-              ...e, 
-              [folder === 'starred' ? 'isStarred' : 'isRead']: newValue
-            };
-          }
-          return e;
-        }).filter(Boolean); // Remove null entries
+            return e;
+          })
+          .filter(Boolean); // Remove null entries
       } else {
         // Remove email for other folder moves
-        return prevEmails.filter(e => e.id !== email.id);
+        return prevEmails.filter((e) => e.id !== email.id);
       }
     });
-
   } catch (error) {
     console.error("Failed to update email", error);
     setError(`Failed to update email`);

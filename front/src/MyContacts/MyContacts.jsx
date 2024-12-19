@@ -2,7 +2,7 @@ import MenuBar from "../MenuBar/MenuBar"
 import { useState } from "react";
 import DataTable from "react-data-table-component";
 import "./Contact.css"
-function MyContacts({ user , contacts }) {
+function MyContacts({ user , contacts, handleLogout }) {
     
     const columns =[
         {
@@ -87,7 +87,7 @@ function MyContacts({ user , contacts }) {
                 paginationPerPage={12}  // Set default rows per page
                 ></DataTable>
             </div>
-            <MenuBar user={user}/>  
+            <MenuBar user={user} handleLogout={handleLogout}/>  
         </div>
     )
 }

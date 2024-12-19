@@ -9,14 +9,16 @@ function HomePage({ emails, setEmails, user, error, setError, handleLogout }) {
   const [emailPage, setEmailPage] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState({});
 
-  const StoringEmailSelected = (email) => {
-    setSelectedEmail(email);
-  };
   return (
     <>
       <div className="pagecontent">
         {emailPage ? (
-          <EmailPage email={selectedEmail} callback={setEmailPage} setEmails={setEmails}/>
+          <EmailPage
+            email={selectedEmail}
+            callback={setEmailPage}
+            setEmails={setEmails}
+            setError={setError}
+          />
         ) : (
           <>
             <EmailTable
@@ -24,7 +26,7 @@ function HomePage({ emails, setEmails, user, error, setError, handleLogout }) {
               setEmails={setEmails}
               setError={setError}
               callback={setEmailPage}
-              FuncEmailPage={StoringEmailSelected}
+              FuncEmailPage={setSelectedEmail}
             />
           </>
         )}
