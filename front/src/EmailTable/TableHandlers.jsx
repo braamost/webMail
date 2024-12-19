@@ -41,60 +41,62 @@ export const handleSelectedOnClick = async (
 
   try {
     if (folder === "permanent-delete") {
-        console.log(folder)
-        console.log(selectedRows)
-      const response  = selectedRows.map(email => 
+      console.log(folder);
+      console.log(selectedRows);
+      const response = selectedRows.map((email) =>
         axios.delete(`http://localhost:8080/api/emails/${email.id}`)
       );
       await Promise.all(response);
-      
-      setEmails(prevEmails => {
-        const selectedIds = selectedRows.map(email => email.id);
-    
-        const updatedEmails = prevEmails.filter(email => !selectedIds.includes(email.id));
+
+      setEmails((prevEmails) => {
+        const selectedIds = selectedRows.map((email) => email.id);
+
+        const updatedEmails = prevEmails.filter(
+          (email) => !selectedIds.includes(email.id)
+        );
         return updatedEmails;
       });
-      
-      alert('Emails permanently deleted');
 
-    }
-    else{
-    setEmails(prevEmails => {
-      if (shouldKeepInView) {
-        return prevEmails
-          .map((email) => {
-            const isSelected = selectedRows.find(
-              (selected) => selected.id === email.id
-            );
-            if (isSelected) {
-              const newValue =
-                !email[folder === "starred" ? "isStarred" : "isRead"];
+      alert("Emails permanently deleted");
+    } else {
+      setEmails((prevEmails) => {
+        if (shouldKeepInView) {
+          return prevEmails
+            .map((email) => {
+              const isSelected = selectedRows.find(
+                (selected) => selected.id === email.id
+              );
+              if (isSelected) {
+                const newValue =
+                  !email[folder === "starred" ? "isStarred" : "isRead"];
 
-              // If we're in Starred route and unstarring, filter out the email
-              if (isStarredRoute && folder === "starred" && !newValue) {
-                return null;
+                // If we're in Starred route and unstarring, filter out the email
+                if (isStarredRoute && folder === "starred" && !newValue) {
+                  return null;
+                }
+
+                return {
+                  ...email,
+                  [folder === "starred" ? "isStarred" : "isRead"]: newValue,
+                };
               }
+              return email;
+            })
+            .filter(Boolean); // Remove null entries
+        } else {
+          // Remove emails that are being moved to other folders
+          return prevEmails.filter(
+            (email) =>
+              !selectedRows.find((selected) => selected.id === email.id)
+          );
+        }
+      });
 
-              return {
-                ...email,
-                [folder === "starred" ? "isStarred" : "isRead"]: newValue,
-              };
-            }
-            return email;
-          })
-          .filter(Boolean); // Remove null entries
-      } else {
-        // Remove emails that are being moved to other folders
-        return prevEmails.filter(
-          (email) => !selectedRows.find((selected) => selected.id === email.id)
-        );
-      }
-    });
-
-    // Perform API calls
-    await Promise.all(
-      selectedRows.map((email) => MovetoFolder(folder, email.id, setError))
-    );
+      // Perform API calls
+      await Promise.all(
+        selectedRows.map((email) => MovetoFolder(folder, email.id, setError))
+      );
+    }
   } catch (error) {
     console.error("Failed to update emails", error);
     setError(`Failed to update emails`);
