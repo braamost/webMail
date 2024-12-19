@@ -55,3 +55,26 @@ export async function CreateContact(userId, userName, email , setError) {
       throw error;
   }
 }
+
+
+
+ export async function handleDeleteContact (contactId) {
+  try {
+      const response = await fetch("http://localhost:8080/api/contacts", {
+          method: "DELETE",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: contactId }), // Send only the ID
+      });
+
+      if (!response.ok) {
+          throw new Error(`Failed to delete contact with ID: ${contactId}`);
+      }
+
+      console.log(`Contact with ID ${contactId} successfully deleted.`);
+  } catch (error) {
+      console.error("Error deleting contact:", error);
+  }
+};
+

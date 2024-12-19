@@ -4,8 +4,15 @@ import DataTable from "react-data-table-component";
 import "./Contact.css";
 import { CreateContact, FetchContacts} from "./FetchContacts";
 import "../style.css";
-
+import {
+  FaTrash,
+} from "react-icons/fa";
+import {handleDeleteContact} from "./FetchContacts";
 function MyContacts({ user, contacts , handleLogout}) {
+
+    const deleteContact = async (contactId) =>{
+        const response = await handleDeleteContact(contactId);
+    }
     const columns = [
         {
             name: "Contact Name",
@@ -30,7 +37,18 @@ function MyContacts({ user, contacts , handleLogout}) {
                 });
             },
             sortable: true,
-        }
+        },
+        {
+          name: "",
+          cell: (row) => (
+              <button
+                  className="delete-button"
+                  onClick={() => deleteContact(row.id)}
+              >
+                  <FaTrash />
+              </button>
+          ),
+      }
     ];
 
     const [filteredContacts, setFilteredContacts] = useState(contacts || []);
