@@ -43,6 +43,7 @@ const EmailFolderComponent = ({ user: propUser, folderName, handleLogout }) => {
   return (
     <HomePage
       emails={emails}
+      setEmails={setEmails}
       user={user}
       error={error}
       setError={setError}

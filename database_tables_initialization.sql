@@ -7,7 +7,6 @@ DROP TABLE IF EXISTS attachments;
 DROP TABLE IF EXISTS emails;
 DROP TABLE IF EXISTS users;
 
-
 -- Create the users table
 CREATE TABLE users (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -15,8 +14,8 @@ CREATE TABLE users (
   password VARCHAR(255) COLLATE utf8mb4_bin DEFAULT NULL, -- Case-sensitive collation
   email VARCHAR(320) COLLATE utf8mb4_bin DEFAULT NULL,
   phone_number VARCHAR(20) DEFAULT NULL,
+  photo LONGBLOB DEFAULT NULL, -- Added photo column
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
-  
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 -- Create the emails table
@@ -26,8 +25,8 @@ CREATE TABLE emails (
   body TEXT NOT NULL,
   sent_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
   is_read BOOLEAN DEFAULT FALSE, -- Tracks whether the email has been read
-  is_starred BOOLEAN DEFAULT FALSE,
-  email_direction ENUM ('SENT', 'RECEIVED') DEFAULT 'RECEIVED', -- email direction 
+  is_starred BOOLEAN DEFAULT FALSE, -- Tracks starred
+  email_direction ENUM ('SENT', 'RECEIVED') DEFAULT 'RECEIVED', -- email types 
   folder ENUM ('GENERAL', 'SPAM', 'TRASH', 'DRAFT', 'ARCHIVE') DEFAULT 'GENERAL' -- Organize emails into folders
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
