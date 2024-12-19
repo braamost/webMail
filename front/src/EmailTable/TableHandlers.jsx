@@ -35,7 +35,25 @@ export const handleSelectedOnClick = async (folder, selectedRows, setError, setE
   const isStarredRoute = currentPath.includes('/Starred');
 
   try {
-    // Optimistically update UI
+    if (folder === "permanent-delete") {
+        console.log(folder)
+        console.log(selectedRows)
+      const response  = selectedRows.map(email => 
+        axios.delete(`http://localhost:8080/api/emails/${email.id}`)
+      );
+      await Promise.all(response);
+      
+      setEmails(prevEmails => {
+        const selectedIds = selectedRows.map(email => email.id);
+    
+        const updatedEmails = prevEmails.filter(email => !selectedIds.includes(email.id));
+        return updatedEmails;
+      });
+      
+      alert('Emails permanently deleted');
+
+    }
+    else{
     setEmails(prevEmails => {
       if (shouldKeepInView) {
         return prevEmails.map(email => {
@@ -68,7 +86,8 @@ export const handleSelectedOnClick = async (folder, selectedRows, setError, setE
       MovetoFolder(folder, email.id, setError)
     ));
 
-    toast.success(`Updated ${selectedRows.length} emails`);
+    alert(`Updated ${selectedRows.length} emails`);
+  }
   } catch (error) {
     console.error("Failed to update emails", error);
     setError(`Failed to update emails`);
