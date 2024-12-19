@@ -107,7 +107,6 @@ export const handleIconClick = async (folder, email, setError, setEmails) => {
       }
     });
 
-    toast.success(`Updated email`);
   } catch (error) {
     console.error("Failed to update email", error);
     setError(`Failed to update email`);
