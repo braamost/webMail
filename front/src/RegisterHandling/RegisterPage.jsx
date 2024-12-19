@@ -66,6 +66,7 @@ export default function RegisterPage({setUser}) {
           <input
             type="password" // Password input should have type="password" for security
             required
+            minLength={5}
             value={password} // Bind the input to the password state
             onChange={(e) => setPassword(e.target.value)} // Update password state on change
           />
