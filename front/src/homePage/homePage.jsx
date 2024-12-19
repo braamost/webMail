@@ -16,7 +16,7 @@ function HomePage({ emails, setEmails, user, error, setError, handleLogout }) {
     <>
       <div className="pagecontent">
         {emailPage ? (
-          <EmailPage email={selectedEmail} callback={setEmailPage} />
+          <EmailPage email={selectedEmail} callback={setEmailPage} setEmails={setEmails}/>
         ) : (
           <>
             <EmailTable
