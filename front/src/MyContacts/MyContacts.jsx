@@ -77,10 +77,9 @@ function MyContacts({ user, contacts , handleLogout}) {
 
     const handleSearch = (e) => {
         const searchValue = e.target.value.toLowerCase();
-        const filtered = contacts.filter(row => 
-            row.contactName.toLowerCase().includes(searchValue) ||
-            row.contactEmail.toLowerCase().includes(searchValue)
-        );
+        const filtered = contacts.filter(row => {
+            return row.contactName.toLowerCase().includes(searchValue) || row.contactEmail.toLowerCase().includes(searchValue)
+        });
         setFilteredContacts(filtered);
     };
 
@@ -123,7 +122,7 @@ function MyContacts({ user, contacts , handleLogout}) {
                             required
                             className="ContactEmail"
                         />
-                        <button type="submit" className="">Add Contact</button>
+                        <button type="submit" className="submit">Add Contact</button>
                     </form>
                 </div>
 
