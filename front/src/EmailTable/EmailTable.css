@@ -38,7 +38,7 @@
 .search-bar-container {
   position: absolute; /* Existing position styling */
   top: 50px;
-  left: 37.5%;
+  left: 40.9%;
   transform: translateX(-50%);
   display: flex; /* Align children horizontally */
   align-items: center; /* Vertically center items */
@@ -166,7 +166,7 @@
 .refresh-container {
   position: absolute;
   top: 60px;
-  left: 51%;
+  left: 54%;
   z-index : 150;
 }
 .refresh-icon {
@@ -191,7 +191,7 @@
   justify-content: space-evenly; /* Distribute space evenly between buttons */
   gap: 10px; /* Optional gap between buttons */
   margin-top: 50px; /* Optional margin to separate from other elements */
-  left: 70%;
+  left: 69.5%;
 }
 
 /* Individual button styling */
@@ -295,3 +295,18 @@
   margin-left: auto;
 }
 
+.removeAll{
+  padding: 5px 10px;
+  width: 140px; 
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: #e7e6e6;
+  transition: background-color 0.3s ease;
+  color: rgb(255, 0, 0); 
+  outline: none;
+}
+.removeAll:hover{
+  background-color: #b0d6d6f2; 
+}
