@@ -325,6 +325,7 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
           )}
           {/* Add to Trash Button */}
           {location.pathname === "/Trash" ? (
+            <>
             <button
               className="action-button trash-button"
               onClick={() =>
@@ -338,6 +339,17 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
             >
               Remove from Trash
             </button>
+            <button
+              className="removeAll"
+              onClick={() => {
+                handleSelectedOnClick("permanent-delete", selectedRows, setError, setEmails)
+                setSelectedRows([]);
+              }}
+            >
+              Delete permanently
+            </button>
+            </>
+            
           ) : (
             <button
               className="action-button trash-button"

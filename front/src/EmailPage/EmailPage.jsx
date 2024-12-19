@@ -3,10 +3,12 @@ import { IoArrowBack, IoTrash, IoStar } from "react-icons/io5"; // Back, Trash, 
 import "./EmailPage.css";
 import AttachmentCard from "./AttachmentCard.jsx";
 import { handleIconClick, MovetoFolder } from "../EmailTable/TableHandlers.jsx";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const EmailPage = ({ email, callback, setEmails, setError }) => {
   const { emailOfSender, sentAt, subject, body } = email;
+  const navigate = useNavigate();
   const [starred, setStarred] = useState(email.isStarred);
 
   const onBackClick = () => {

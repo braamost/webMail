@@ -40,8 +40,26 @@ export const handleSelectedOnClick = async (
   const isStarredRoute = currentPath.includes("/Starred");
 
   try {
-    // Optimistically update UI
-    setEmails((prevEmails) => {
+    if (folder === "permanent-delete") {
+        console.log(folder)
+        console.log(selectedRows)
+      const response  = selectedRows.map(email => 
+        axios.delete(`http://localhost:8080/api/emails/${email.id}`)
+      );
+      await Promise.all(response);
+      
+      setEmails(prevEmails => {
+        const selectedIds = selectedRows.map(email => email.id);
+    
+        const updatedEmails = prevEmails.filter(email => !selectedIds.includes(email.id));
+        return updatedEmails;
+      });
+      
+      alert('Emails permanently deleted');
+
+    }
+    else{
+    setEmails(prevEmails => {
       if (shouldKeepInView) {
         return prevEmails
           .map((email) => {

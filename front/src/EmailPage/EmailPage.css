@@ -105,6 +105,8 @@
 }
 
 .email-body {
+  white-space-collapse: preserve;
+  text-wrap: wrap;
   margin-top: 20px;
   font-size: 16px;
   line-height: 1.6;
