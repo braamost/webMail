@@ -1,94 +1,144 @@
-import MenuBar from "../MenuBar/MenuBar"
-import { useState } from "react";
+import MenuBar from "../MenuBar/MenuBar";
+import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
-import "./Contact.css"
-function MyContacts({ user , contacts }) {
-    
-    const columns =[
-        {
-            name:"Contact",
-            selector: row => row.userName,
-            sortable: true,
+import "./Contact.css";
+import { CreateContact, FetchContacts } from "./FetchContacts";
+import "../style.css";
 
-        },
+function MyContacts({ user, contacts }) {
+    const columns = [
         {
-            name: "Email",
-            selector: row => row.email,
+            name: "Contact Name",
+            selector: row => row.contactName,
             sortable: true,
         },
+        {
+            name: "Contact Email",
+            selector: row => row.contactEmail,
+            sortable: true,
+        },
+        {
+            name: "Created At",
+            selector: row => {
+                const date = new Date(row.createdAt);
+                return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            },
+            sortable: true,
+        }
     ];
-    const data = [
-        {
-            id :1,
-            userName: "John Doe",
-            email: "johndoe@example.com",
-        },
-        {
-            id :2,
-            userName: "Ahmed",
-            email: "Ahmed@example.com",
-        },{
-            id :3,
-            userName: "Abdallah",
-            email: "Ahmed@example.com",
-        },{
-            id :4,
-            userName: "Abdo",
-            email: "Ahmed@example.com",
-        },{
-            id :5,
-            userName: "sameh",
-            email: "Ahmed@example.com",
-        },{
-            id :6,
-            userName: "malak",
-            email: "Ahmed@example.com",
-        },{
-            id :7,
-            userName: "hana",
-            email: "Ahmed@example.com",
-        },{
-            id :8,
-            userName: "ali",
-            email: "Ahmed@example.com",
-        },{
-            id :9,
-            userName: "mohamed",
-            email: "Ahmed@example.com",
-        },
-        {
-            id :10,
-            userName: "king",
-            email: "king@example.com",
-        },
+
+    const [filteredContacts, setFilteredContacts] = useState(contacts || []);
+    const [contactName, setContactName] = useState("");  // State for new contact name
+    const [contactEmail, setContactEmail] = useState("");  // State for new contact email
+    const [error,setError] = useState("");
+
+    useEffect(() => {
+        const fetchContacts = async () => {
+            try {
+                const data = await FetchContacts(user.id); // Assuming FetchContacts is a function that fetches data
+                console.log(data);
+                setFilteredContacts(data); // Setting the fetched data to state
+            } catch (error) {
+                console.error("Error fetching contacts:", error);
+            }
+        };
         
-    ];
-    const [searchTerm, setSearchTerm] = useState(data);
+        fetchContacts(); // Call the async function to fetch contacts
+    }, [user.id]);
+
+    // Initialize state with contacts prop
+    useEffect(() => {
+        setFilteredContacts(contacts || []);
+    }, [contacts]);
+
     const handleSearch = (e) => {
-        console.log(e.target.value);
-        const keyWord= data.filter(row => {
-            return row.userName.toLowerCase().includes(e.target.value.toLowerCase())
-        })
-        setSearchTerm(keyWord)
-    }
-    return(
+        const searchValue = e.target.value.toLowerCase();
+        const filtered = contacts.filter(row => 
+            row.contactName.toLowerCase().includes(searchValue) ||
+            row.contactEmail.toLowerCase().includes(searchValue)
+        );
+        setFilteredContacts(filtered);
+    };
+
+    const handleAddContact = async(e) => {
+      e.preventDefault(); // Prevent the form from reloading the page
+      if (contactName && contactEmail) {
+          const newContact = await CreateContact(user.id, contactName, contactEmail , setError); // Assuming CreateContact returns the full contact including ID
+          console.log(newContact);
+  
+          setFilteredContacts([...filteredContacts, newContact]); // Ensure newContact has a unique ID
+          setContactName(""); // Reset the form fields
+          setContactEmail("");
+      } else {
+          alert("Please fill in both fields.");
+      }
+  };
+  
+    return (
         <div className="pageContent">
             <div className="container">
                 <h1>My Contacts</h1>
-                <div >
-                    <input className="search" type="text" onChange={handleSearch} placeholder="Search..."/>
+
+                {/* Contact form for adding a new contact */}
+                <div className="addContactForm">
+                    <h3>Add New Contact</h3>
+                    {error && <p className="error-message">{error}</p>}
+                    <form onSubmit={handleAddContact}>
+                        <input
+                            type="text"
+                            value={contactName}
+                            onChange={(e) => setContactName(e.target.value)}
+                            placeholder="Contact Name"
+                            required
+                        />
+                        <input
+                            type="email"
+                            value={contactEmail}
+                            onChange={(e) => setContactEmail(e.target.value)}
+                            placeholder="Contact Email"
+                            required
+                        />
+                        <button type="submit">Add Contact</button>
+                    </form>
                 </div>
-                <DataTable 
-                columns={columns} 
-                data={searchTerm}
-                selectableRows
-                fixedHeader
-                pagination
-                paginationPerPage={12}  // Set default rows per page
-                ></DataTable>
+
+                {/* Search input */}
+                <div>
+                    <input
+                        className="search"
+                        type="text"
+                        onChange={handleSearch}
+                        placeholder="Search by name or email..."
+                    />
+                </div>
+
+                {/* DataTable to display contacts */}
+                <DataTable
+                    columns={columns}
+                    data={filteredContacts}
+                    selectableRows
+                    fixedHeader
+                    pagination
+                    paginationPerPage={12}
+                    noDataComponent="No contacts found"
+                    defaultSortFieldId={1}
+                />
             </div>
-            <MenuBar user={user}/>  
+            <MenuBar user={user} />
         </div>
-    )
+    );
 }
-export default MyContacts
+
+export default MyContacts;
+
+
+// const keyWord= data.filter(row => {
+//   return row.userName.toLowerCase().includes(e.target.value.toLowerCase())
+// })
+// setSearchTerm(keyWord)

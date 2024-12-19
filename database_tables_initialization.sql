@@ -5,6 +5,7 @@ USE web_mail;
 DROP TABLE IF EXISTS user_emails;
 DROP TABLE IF EXISTS attachments;
 DROP TABLE IF EXISTS emails;
+DROP TABLE IF EXISTS contacts;
 DROP TABLE IF EXISTS users;
 
 -- Create the users table
@@ -26,7 +27,7 @@ CREATE TABLE emails (
   sent_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
   is_read BOOLEAN DEFAULT FALSE, -- Tracks whether the email has been read
   is_starred BOOLEAN DEFAULT FALSE, -- Tracks starred
-  email_direction ENUM ('SENT', 'RECEIVED') DEFAULT 'RECEIVED', -- email types 
+  email_direction ENUM ('SENT', 'RECEIVED') DEFAULT 'RECEIVED', -- Email types 
   folder ENUM ('GENERAL', 'SPAM', 'TRASH', 'DRAFT', 'ARCHIVE') DEFAULT 'GENERAL' -- Organize emails into folders
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
@@ -51,9 +52,20 @@ CREATE TABLE attachments (
   FOREIGN KEY (email_id) REFERENCES emails(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
+-- Create the contacts table
+CREATE TABLE contacts (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL, -- Foreign key to the users table
+  contact_name VARCHAR(255) NOT NULL, -- Contact's name
+  contact_email VARCHAR(320) NOT NULL, -- Contact's email
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, -- Timestamp when the contact is added
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE -- Relationship with users
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
 -- Indexes for performance
 CREATE INDEX idx_users_username ON users (user_name);
 CREATE INDEX idx_users_email ON users (email);
 CREATE INDEX idx_user_emails_user_id ON user_emails (sender_id, receiver_id);
 CREATE INDEX idx_user_emails_email_id ON user_emails (email_id);
 CREATE INDEX idx_attachments_email_id ON attachments (email_id);
+CREATE INDEX idx_contacts_user_id ON contacts (user_id);

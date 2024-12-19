@@ -4,7 +4,7 @@ import com.mail.back.entity.Contact;
 
 import java.util.List;
 
-public interface IContactControl {
+public interface IContactController {
     List<Contact> getContactsByUserId(int userId);
     Contact getContactById(int contactId);
     Contact addContact(Contact contact);
