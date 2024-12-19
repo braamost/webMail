@@ -61,8 +61,7 @@ public class UserRestController implements IUserController {
 
   @Override
   public ResponseEntity<User> updatePassword(String oldPassword, String newPassword, User user) {
-    user.setPassword(newPassword);
-    return ResponseEntity.ok(userService.save(user));
+    user.setPassword();
   }
 
   @Override

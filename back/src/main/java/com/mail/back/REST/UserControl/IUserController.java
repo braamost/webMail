@@ -15,6 +15,7 @@ public interface IUserController {
     ResponseEntity<User> login(User loginRequest);
     ResponseEntity<User> addUser(User user);
     ResponseEntity<User> updateUser(User user);
+    ResponseEntity<User> updatePassword(String oldPassword, String newPassword, User user);
     ResponseEntity<String> deleteUser(User user);
     User uploadPhoto(String email, MultipartFile photo) throws IOException;
 }

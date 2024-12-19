@@ -67,6 +67,6 @@ public class UserServiceImp implements UserService {
     }
     @Override
     public boolean checkPassword(User user, String password) {
-        return passwordEncoder.matches(password, user.getPassword());
+        return !passwordEncoder.matches(password, user.getPassword());
     }
 }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+
 import org.springframework.web.multipart.MultipartFile;
 @RestController
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
@@ -77,6 +77,7 @@ public class UserControllerProxy implements IUserController {
     public ResponseEntity<User> addUser(@RequestBody User user) {
         logger.info("Proxy: Adding new user: {}", user.getUserName());
         validateNewUser(user);
+        validateNewPassword(user.getPassword());
         return realController.addUser(user);
     }
 
@@ -86,6 +87,15 @@ public class UserControllerProxy implements IUserController {
         logger.info("Proxy: Updating user: {}", user.getUserName());
         validateUpdateUser(user);
         return realController.updateUser(user);
+    }
+
+    @Override
+    @PutMapping("/update-password/{oldPassword}/{newPassword}")
+    public ResponseEntity<User> updatePassword(@PathVariable String oldPassword, @PathVariable String newPassword, @RequestBody User user) {
+        logger.info("Proxy: Updating password: {}", user);
+        validateOldPassword(user, oldPassword);
+        validateNewPassword(newPassword);
+        return realController.updatePassword(oldPassword, newPassword, user);
     }
 
     @Override
@@ -144,7 +154,7 @@ public class UserControllerProxy implements IUserController {
         if (user == null) {
             throw new NotFoundException("User not found");
         }
-        if (!userService.checkPassword(user, loginRequest.getPassword())) {
+        if (userService.checkPassword(user, loginRequest.getPassword())) {
             throw new UnauthorizedException("Invalid password");
         }
     }
@@ -188,6 +198,19 @@ public class UserControllerProxy implements IUserController {
         User existingUser = userService.findById(user.getId());
         if (existingUser == null) {
             throw new NotFoundException("User not found");
+        }
+    }
+
+    private void validateOldPassword(User user, String oldPassword) {
+        if(userService.checkPassword(user, oldPassword)){
+            logger.error("Invalid oldPassword");
+            throw new UnauthorizedException("Invalid oldPassword");
+        }
+    }
+    private void validateNewPassword( String newPassword) {
+        if (newPassword == null || newPassword.trim().isEmpty()) {
+            logger.error("New password cannot be empty");
+            throw new IllegalArgumentException("New password cannot be empty");
         }
     }
 

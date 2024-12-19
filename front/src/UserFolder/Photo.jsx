@@ -74,7 +74,7 @@ function UploadPhotoForm({ email, setUser }) {
 
   return (
     <div className="updatePhoto">
-      <h2>Upload Photo</h2>
+      <h2>update profile Photo</h2>
       <form onSubmit={handleSubmit}>
         <div className="selectPre">
         <div>
@@ -96,7 +96,7 @@ function UploadPhotoForm({ email, setUser }) {
           </div>
         )}
       </div>
-        <button type="submit">Upload Photo</button>
+        <button type="submit">update profile Photo</button>
       </form>
     </div>
   );
