@@ -8,39 +8,39 @@ import java.util.Objects;
 
 @Embeddable
 public class UserEmailID implements Serializable {
-    private int senderId;
-    private int receiverId;
-    private int emailId;
+    private Integer senderId;
+    private Integer receiverId;
+    private Integer emailId;
 
     public UserEmailID() {}
 
-    public UserEmailID(int senderId, int receiverId, int emailId) {
+    public UserEmailID(Integer senderId, Integer receiverId, Integer emailId) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.emailId = emailId;
     }
 
-    public int getSenderId() {
+    public Integer getSenderId() {
         return senderId;
     }
 
-    public void setSenderId(int senderId) {
+    public void setSenderId(Integer senderId) {
         this.senderId = senderId;
     }
 
-    public int getReceiverId() {
+    public Integer getReceiverId() {
         return receiverId;
     }
 
-    public void setReceiverId(int receiverId) {
+    public void setReceiverId(Integer receiverId) {
         this.receiverId = receiverId;
     }
 
-    public int getEmailId() {
+    public Integer getEmailId() {
         return emailId;
     }
 
-    public void setEmailId(int emailId) {
+    public void setEmailId(Integer emailId) {
         this.emailId = emailId;
     }
 
@@ -49,7 +49,7 @@ public class UserEmailID implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEmailID that = (UserEmailID) o;
-        return senderId == that.senderId && receiverId == that.receiverId && emailId == that.emailId;
+        return Objects.equals(senderId, that.senderId) && Objects.equals(receiverId, that.receiverId) && Objects.equals(emailId, that.emailId);
     }
 
     @Override

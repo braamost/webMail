@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import './AttachmentDisplay.css'; 
 
 const AttachmentDisplay = ({ attachments, onDeleteAttachment }) => {
-    console.log("AttachmentDisplaly")
-  // Convert attachments FormData to an array of files
-  
 
   return (
     <div className="attachment-container">
