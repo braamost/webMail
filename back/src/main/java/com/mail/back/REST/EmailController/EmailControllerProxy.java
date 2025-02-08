@@ -3,8 +3,11 @@ package com.mail.back.REST.EmailController;
 import com.mail.back.GlobalHandle.NotFoundException;
 import com.mail.back.Service.EmailService.EmailService;
 import com.mail.back.entity.Email;
+import com.mail.back.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -124,5 +127,17 @@ public class EmailControllerProxy implements IEmailController {
         if (!validFolders.contains(folder.toLowerCase())) {
             throw new IllegalArgumentException("Invalid folder: " + folder);
         }
+    }
+    // Save or Update Draft
+    @PostMapping("/drafts/save")
+    public ResponseEntity<Email> saveDraft(@RequestBody Email email) {
+        Email savedDraft = emailService.saveDraft(email);
+        return ResponseEntity.ok(savedDraft);
+    }
+
+    @DeleteMapping("/drafts/delete/{id}")
+    public ResponseEntity<String> deleteDraft(@PathVariable Integer id) {
+        emailService.deleteDraft(id);
+        return ResponseEntity.ok("Draft deleted successfully.");
     }
 }

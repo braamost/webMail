@@ -12,4 +12,8 @@ public interface EmailService {
     void deleteById(Integer id);
 
     List<Attachment> getAttachmentsForEmail(Integer emailId);
+    public Email saveDraft(Email email);
+
+    public void deleteDraft(Integer id);
+
 }

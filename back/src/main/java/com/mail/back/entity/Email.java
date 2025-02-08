@@ -37,7 +37,8 @@ public class Email {
         GENERAL,
         SPAM,
         TRASH,
-        ARCHIVE
+        ARCHIVE,
+        DRAFT
     }
 
     public enum EmailDirection {
@@ -80,8 +81,10 @@ public class Email {
 
     @PrePersist
     public void prePersist() {
-        if (sentAt == null) {
-            this.sentAt = LocalDateTime.now(); // Set the sent time automatically if not provided
+        if (folder == Folder.DRAFT) {
+            this.sentAt = null;  // Don't set sent time for drafts
+        } else if (sentAt == null) {
+            this.sentAt = LocalDateTime.now();
         }
     }
 

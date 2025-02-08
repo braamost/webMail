@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import LoginPage from "./LoginHandling/Login.jsx";
 import MyContacts from "./MyContacts/MyContacts.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
+import Drafts from "./Draft/Drafts.jsx";
 import {
   getUserForTab,
   setUserForTab,
@@ -136,6 +137,19 @@ function App() {
               <MyContacts
                 user={user}
                 contacts={contacts}
+                handleLogout={handleLogout}
+              />
+
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Draft"
+          element={
+            <ProtectedRoute user={user}>
+              <EmailFolderComponent
+                user={user}
+                folderName="DRAFT"
                 handleLogout={handleLogout}
               />
             </ProtectedRoute>

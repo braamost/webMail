@@ -59,6 +59,11 @@ function MenuBar({ user, handleLogout }) {
             <button type="button">MyContacts</button>
           </Link>
         </li>
+        <li>
+          <Link className="Link" to="/Draft">
+            <button type="button">Draft</button>
+          </Link>
+        </li>
         <li className="logOut">
           <button
             className="logbutton"

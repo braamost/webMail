@@ -53,4 +53,22 @@ public class EmailServiceImp implements EmailService{
     public List<Attachment> getAttachmentsForEmail(Integer emailId) {
         return emailRepository.findAttachmentsByEmailId(emailId);
     }
+
+    public Email saveDraft(Email email) {
+        if ((email.getSubject() == null || email.getSubject().trim().isEmpty()) &&
+                (email.getBody() == null || email.getBody().trim().isEmpty())) {
+            if (email.getId() != null) { // If it exists in DB, delete it
+                emailRepository.deleteById(email.getId());
+            }
+            return null; // Return null to indicate deletion
+        }
+
+        email.setFolder(Email.Folder.DRAFT);
+        return emailRepository.save(email);
+    }
+
+
+    public void deleteDraft(Integer id) {
+        emailRepository.deleteById(id);
+    }
 }

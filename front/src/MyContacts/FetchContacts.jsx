@@ -7,7 +7,11 @@ export async function FetchContacts(userId) {
                 'Content-Type': 'application/json',
             }
         });
-        console.log(response.data , "gggg");
+        console.log(response.data , "zz");
+
+
+
+        console.log("how are you");
         return response.data;
     } catch (error) {
         if (error.response) {
