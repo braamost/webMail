@@ -24,6 +24,10 @@ public class UserEmailControllerProxy implements IUserEmailController {
     private final UserEmailService userEmailService;
     private final UserService userService;
     private final EmailService emailService;
+    // Validate folder name
+    private final Set<String> validFolders = new HashSet<>(Arrays.asList(
+            "INBOX", "SENT", "STARRED", "SPAM", "TRASH", "ARCHIVE", "DRAFT"
+    ));
     private final Logger logger = LoggerFactory.getLogger(UserEmailControllerProxy.class);
 
     public UserEmailControllerProxy(
@@ -162,11 +166,6 @@ public class UserEmailControllerProxy implements IUserEmailController {
         if (userService.findById(id) == null) {
             throw new NotFoundException("User not found with ID: " + id);
         }
-
-        // Validate folder name
-        Set<String> validFolders = new HashSet<>(Arrays.asList(
-                "INBOX", "SENT", "STARRED", "SPAM", "TRASH", "ARCHIVE", "DRAFT"
-        ));
 
         if (!validFolders.contains(folder.toUpperCase())) {
             throw new IllegalArgumentException("Invalid folder: " + folder);

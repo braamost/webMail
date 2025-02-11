@@ -43,7 +43,8 @@ public class Email {
 
     public enum EmailDirection {
         SENT,
-        RECEIVED
+        RECEIVED,
+        DRAFT
     }
 
     @Enumerated(EnumType.STRING)

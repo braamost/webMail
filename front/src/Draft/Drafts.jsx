@@ -23,7 +23,7 @@ function Drafts({ user, handleLogout }) {
 
     const handleDeleteDraft = async (draftId) => {
         try {
-            await deleteDraft(draftId);
+            await deleteDraft(draftId, user.id);
             setDrafts(drafts.filter(draft => draft.id !== draftId));
         } catch (error) {
             console.error("Error deleting draft:", error);

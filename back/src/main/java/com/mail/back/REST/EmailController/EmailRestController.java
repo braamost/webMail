@@ -3,6 +3,7 @@ package com.mail.back.REST.EmailController;
 import com.mail.back.Service.EmailService.EmailService;
 import com.mail.back.entity.Email;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -27,9 +28,11 @@ public class EmailRestController implements IEmailController {
     }
 
     @Override
-    public Email addEmail(Email email) {
+    public ResponseEntity<Email> addEmail(Email email) {
         email.setId(null);
-        return emailService.save(email);
+        Email savedEmail = emailService.save(email);
+        System.out.println("here it's: " + savedEmail);
+        return ResponseEntity.ok(emailService.save(email));
     }
 
     @Override

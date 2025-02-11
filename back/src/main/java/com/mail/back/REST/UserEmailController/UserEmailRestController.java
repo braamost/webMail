@@ -69,6 +69,9 @@ public class UserEmailRestController implements IUserEmailController {
       case "STARRED":
         emails = userEmailService.getEmailsByStarred(id);
         break;
+      case "DRAFT":
+        emails = userEmailService.getEmailsBySenderAndFolder(id, Email.Folder.DRAFT);
+        break;
       default:
         theFolder = Email.Folder.valueOf(folder);
         emails = userEmailService.getEmailsByReceiverAndFolder(id, theFolder);

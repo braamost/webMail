@@ -55,16 +55,9 @@ public class EmailServiceImp implements EmailService{
     }
 
     public Email saveDraft(Email email) {
-        if ((email.getSubject() == null || email.getSubject().trim().isEmpty()) &&
-                (email.getBody() == null || email.getBody().trim().isEmpty())) {
-            if (email.getId() != null) { // If it exists in DB, delete it
-                emailRepository.deleteById(email.getId());
-            }
-            return null; // Return null to indicate deletion
-        }
-
-        email.setFolder(Email.Folder.DRAFT);
-        return emailRepository.save(email);
+      email.setFolder(Email.Folder.DRAFT);
+      email.setEmailDirection(Email.EmailDirection.SENT);
+      return emailRepository.save(email);
     }
 
 

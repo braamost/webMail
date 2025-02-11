@@ -27,6 +27,7 @@ function HomePage({ emails, setEmails, user, error, setError, handleLogout }) {
               setError={setError}
               callback={setEmailPage}
               FuncEmailPage={setSelectedEmail}
+              user={user}
             />
           </>
         )}

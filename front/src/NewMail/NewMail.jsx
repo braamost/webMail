@@ -63,10 +63,8 @@ function NewMail({ user, setIsNewMail }) {
       const isEmpty = !toMail && !subject && !message && attachedFiles.length === 0;
       if (isEmpty) {
         return ;
-      } else if (!isEmpty) {  
-          const newDraftId = await saveDraft(toMail, subject, message, attachedFiles,user);
-        }
-      
+      }
+      const newDraftId = await saveDraft(toMail, subject, message, attachedFiles, user);      
     };
 
   return (

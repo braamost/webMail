@@ -24,7 +24,7 @@ CREATE TABLE emails (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   subject VARCHAR(255) NOT NULL,
   body TEXT NOT NULL,
-  sent_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  sent_at DATETIME DEFAULT CURRENT_TIMESTAMP default NULL,
   is_read BOOLEAN DEFAULT FALSE, -- Tracks whether the email has been read
   is_starred BOOLEAN DEFAULT FALSE, -- Tracks starred
   email_direction ENUM ('SENT', 'RECEIVED') DEFAULT 'RECEIVED', -- Email types 

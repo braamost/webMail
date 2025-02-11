@@ -20,7 +20,7 @@ import {
   handleIconClick,
   handleSelectedOnClick,
 } from "./TableHandlers";
-function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
+function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage, user }) {
   const location = useLocation();
   const [inputSearch, setInputSearch] = useState("");
   const [filteredEmails, setFilteredEmails] = useState([]);
@@ -310,7 +310,8 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
                   "starred",
                   selectedRows,
                   setError,
-                  setEmails
+                  setEmails,
+                  user.id
                 )
               }
             >
@@ -324,7 +325,8 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
                   "starred",
                   selectedRows,
                   setError,
-                  setEmails
+                  setEmails,
+                  user.id
                 )
               }
             >
@@ -341,7 +343,8 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
                     "trash",
                     selectedRows,
                     setError,
-                    setEmails
+                    setEmails,
+                    user.id
                   )
                 }
               >
@@ -354,7 +357,8 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
                     "permanent-delete",
                     selectedRows,
                     setError,
-                    setEmails
+                    setEmails,
+                    user.id
                   );
                   setSelectedRows([]);
                 }}
@@ -370,7 +374,8 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage }) {
                   "trash",
                   selectedRows,
                   setError,
-                  setEmails
+                  setEmails,
+                  user.id
                 )
               }
             >

@@ -55,7 +55,7 @@ public class EmailControllerProxy implements IEmailController {
 
     @Override
     @PostMapping("/add")
-    public Email addEmail(@RequestBody Email email) {
+    public ResponseEntity<Email> addEmail(@RequestBody Email email) {
         logger.info("Proxy: Adding new email");
         try {
             validateNewEmail(email);
@@ -131,8 +131,9 @@ public class EmailControllerProxy implements IEmailController {
     // Save or Update Draft
     @PostMapping("/drafts/save")
     public ResponseEntity<Email> saveDraft(@RequestBody Email email) {
-        Email savedDraft = emailService.saveDraft(email);
-        return ResponseEntity.ok(savedDraft);
+        email.setFolder(Email.Folder.DRAFT);
+        email.setEmailDirection(Email.EmailDirection.DRAFT);
+        return realController.addEmail(email);
     }
 
     @DeleteMapping("/drafts/delete/{id}")
@@ -140,4 +141,12 @@ public class EmailControllerProxy implements IEmailController {
         emailService.deleteDraft(id);
         return ResponseEntity.ok("Draft deleted successfully.");
     }
+
+    @PutMapping("/drafts/update/{id}")
+    public ResponseEntity<Email> updateDraft(@PathVariable Integer id, @RequestBody Email updatedDraft) {
+        updatedDraft.setId(id);
+        Email savedDraft = emailService.saveDraft(updatedDraft);
+        return ResponseEntity.ok(savedDraft);
+    }
+
 }
