@@ -1,4 +1,4 @@
-import { useEafect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./newMail.css";
 import { emailCreation } from "./EmailCreationHandling/EmailCreation";
 import { saveDraft, updateDraft, deleteDraft } from "../Draft/REST.jsx"; // New functions
@@ -17,12 +17,16 @@ function NewMail({
   const [toMail, setToMail] = useState(propToMail);
   const [subject, setSubject] = useState(propSubject);
   const [message, setMessage] = useState(propMessage);
-  const [draftId, setDraftId] = useState(null);
+  const [draftId, setDraftId] = useState(propDraft);
   const [error, setError] = useState("");
   const attachments = useRef(null);
   const navigate = useNavigate();
   const [attachedFiles, setAttachedFiles] = useState([]);
-
+  
+  useEffect(() => {
+    setDraftId(propDraft);
+  }, [propDraft]);
+  
   const handleDeleteAttachment = (indexToRemove) => {
     setAttachedFiles(prevFiles => prevFiles.filter((_, index) => index !== indexToRemove));
 
@@ -59,7 +63,7 @@ function NewMail({
       window.alert("Email sent successfully!");
       navigate("/InboxFolder");
       if (draftId) {
-        await deleteDraft(draftId);
+        await deleteDraft(draftId,user.id);
       }
     }
   };
@@ -69,7 +73,12 @@ function NewMail({
     if (isEmpty) {
       return;
     } 
-      const newDraftId = await saveDraft(toMail, subject, message, attachedFiles, user);    
+      console.log("Draft ID:", draftId);  
+      if (draftId) {
+      const newDraftId = await updateDraft(draftId,toMail, subject, message, attachedFiles);    
+      } else {
+        const newDraftId = await saveDraft(toMail, subject, message, attachedFiles, user);    
+      }
   };
 
   return (

@@ -32,7 +32,7 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage, user
   const searchBarRef = useRef(null);
   const [isNewMail, setIsNewMail] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState(null);
-
+  const [, forceUpdate] = useState();
   const newMail = (email = null) => {
     setSelectedEmail(email);  
     setIsNewMail(true);
@@ -286,11 +286,17 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage, user
   };
 
   const handleRowClick = (row, event) => {
-    console.log("hey iam clicked the email" , row.folder);
+    console.log("hey iam clicked the email" , row.folder , "the draft id is : =>>>" , row.id);
    
   if(row.folder == "DRAFT"){
      console.log("this is draft cant be opened");
-     newMail(row);
+     setSelectedEmail(row);
+     setIsNewMail(false);
+
+     setTimeout(() => {
+      setIsNewMail(true);
+      forceUpdate({}); // Triggers a re-render
+    }, 10);
   }else{
     if (event.target.closest(".timestamp-icons")) {
       return;

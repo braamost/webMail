@@ -3,8 +3,8 @@ import {UserEmailCreation} from '../NewMail/EmailCreationHandling/addUserEmail';
 
 
 
-export async function saveDraft( toMail, subject, body, attachments,user) {
-    // Create draft data without id
+export async function saveDraft( toMail, subject, body, attachments,user ) {
+    
     let draftData = {
         toMail,
         subject,
@@ -27,7 +27,8 @@ export async function saveDraft( toMail, subject, body, attachments,user) {
 
 export async function updateDraft(draftId,toMail,subject,body,attachments) {
     try {
-        await axios.put(`http://localhost:8080/api/drafts/update/${draftId}`, {
+        console.log("Updating draft:", draftId); // Debugging log
+        await axios.put(`http://localhost:8080/api/emails/drafts/update/${draftId}`, {
             toMail,
             subject,
             body,
@@ -40,8 +41,9 @@ export async function updateDraft(draftId,toMail,subject,body,attachments) {
 
 export async function deleteDraft(draftId, userId) {
     try {
-        await axios.delete(`http://localhost:8080/api/emails/drafts/delete/${draftId}`);
         await axios.delete(`http://localhost:8080/api/userEmails/${userId}/${userId}/${draftId}`);
+        await axios.delete(`http://localhost:8080/api/emails/drafts/delete/${draftId}`);
+        
 
     } catch (error) {
         console.error("Error deleting draft:", error);
