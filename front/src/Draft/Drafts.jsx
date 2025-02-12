@@ -8,7 +8,6 @@ import { fetchDrafts, deleteDraft } from "./REST";
 
 function Drafts({ user, handleLogout }) {
     const [drafts, setDrafts] = useState([]);
-
     useEffect(() => {
         const fetchUserDrafts = async () => {
             try {

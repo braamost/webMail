@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import NewMail from "../NewMail/NewMail";
 import "./EmailTable.css";
 import DataTable from "react-data-table-component";
 import {
@@ -29,7 +30,14 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage, user
   const [searchKey, setSearchKey] = useState("sender");
   const [showButtons, setShowButtons] = useState(false);
   const searchBarRef = useRef(null);
+  const [isNewMail, setIsNewMail] = useState(false);
+  const [selectedEmail, setSelectedEmail] = useState(null);
 
+  const newMail = (email = null) => {
+    setSelectedEmail(email);  
+    setIsNewMail(true);
+  };
+  
   const handleSearchKeyChange = (key) => {
     setSearchKey(key);
     if (searchBarRef.current) {
@@ -278,14 +286,20 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage, user
   };
 
   const handleRowClick = (row, event) => {
-    // Prevent row click when clicking icons
+    console.log("hey iam clicked the email" , row.folder);
+   
+  if(row.folder == "DRAFT"){
+     console.log("this is draft cant be opened");
+     newMail(row);
+  }else{
     if (event.target.closest(".timestamp-icons")) {
       return;
     }
     FuncEmailPage(row);
     console.log("Row Data:", row);
     callback(true);
-    handleIconClick("open", row, setError, setEmails);
+  }
+    //handleIconClick("open", row, setError, setEmails);
   };
 
   const NoDataComponent = () => (
@@ -463,6 +477,15 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage, user
           persistTableHead
         />
       </div>
+      {isNewMail && <NewMail 
+          user={user} 
+          setIsNewMail={setIsNewMail} 
+          toMail={selectedEmail.emailOfReceiver || ""}  
+          subject={selectedEmail.subject || ""} 
+          message={selectedEmail.body || ""} 
+          draftId={selectedEmail.id || null} 
+        />
+        }
     </div>
   );
 }

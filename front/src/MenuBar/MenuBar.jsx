@@ -5,7 +5,7 @@ import NewMail from "../NewMail/NewMail";
 function MenuBar({ user, handleLogout }) {
   const [isNewMail, setIsNewMail] = useState(false);
 
-  const newMail = () => {
+  const newMail = (email = null) => {
     setIsNewMail(!isNewMail);
   };
   return (

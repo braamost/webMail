@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.mail.back.Service.UserEmailService.UserEmailService;
 
+import static com.mail.back.entity.Email.Folder.DRAFT;
+
 @Component
 public class UserEmailRestController implements IUserEmailController {
   private final UserEmailService userEmailService;
@@ -70,7 +72,8 @@ public class UserEmailRestController implements IUserEmailController {
         emails = userEmailService.getEmailsByStarred(id);
         break;
       case "DRAFT":
-        emails = userEmailService.getEmailsBySenderAndFolder(id, Email.Folder.DRAFT);
+        emails = userEmailService.getEmailsBySenderAndFolder(id, DRAFT);
+        System.out.println(emails);
         break;
       default:
         theFolder = Email.Folder.valueOf(folder);

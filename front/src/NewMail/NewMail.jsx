@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEafect, useRef, useState } from "react";
 import "./newMail.css";
 import { emailCreation } from "./EmailCreationHandling/EmailCreation";
 import { saveDraft, updateDraft, deleteDraft } from "../Draft/REST.jsx"; // New functions
@@ -6,12 +6,18 @@ import { useNavigate } from "react-router-dom";
 import { handleFileSelection } from "./AttachmentHandling/HandleFileSelection";
 import { uploadAttachments } from "./AttachmentHandling/upload";
 import AttachmentDisplay from './AttachmentDisplay/AttachmentDisplay.jsx'; 
-
-function NewMail({ user, setIsNewMail }) {
-  const [toMail, setToMail] = useState("");
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
-  const [draftId, setDraftId] = useState(null);  // Track draft ID
+function NewMail({ 
+  user, 
+  setIsNewMail, 
+  toMail: propToMail = "", 
+  subject: propSubject = "", 
+  message: propMessage = "", 
+  draftId : propDraft = ""
+}) {
+  const [toMail, setToMail] = useState(propToMail);
+  const [subject, setSubject] = useState(propSubject);
+  const [message, setMessage] = useState(propMessage);
+  const [draftId, setDraftId] = useState(null);
   const [error, setError] = useState("");
   const attachments = useRef(null);
   const navigate = useNavigate();
@@ -53,27 +59,26 @@ function NewMail({ user, setIsNewMail }) {
       window.alert("Email sent successfully!");
       navigate("/InboxFolder");
       if (draftId) {
-        await deleteDraft(draftId); // Delete draft when email is sent
+        await deleteDraft(draftId);
       }
     }
   };
 
-   
-    const saveOrUpdateDraft = async () => {
-      const isEmpty = !toMail && !subject && !message && attachedFiles.length === 0;
-      if (isEmpty) {
-        return ;
-      }
-      const newDraftId = await saveDraft(toMail, subject, message, attachedFiles, user);      
-    };
+  const saveOrUpdateDraft = async () => {
+    const isEmpty = !toMail && !subject && !message && attachedFiles.length === 0;
+    if (isEmpty) {
+      return;
+    } 
+      const newDraftId = await saveDraft(toMail, subject, message, attachedFiles, user);    
+  };
 
   return (
     <>
       <div className="form-container">
-      <button className="exitButton" onClick={() => { 
-    saveOrUpdateDraft(); 
-    setIsNewMail(false); 
-}}>✕</button>
+        <button className="exitButton" onClick={() => { 
+          saveOrUpdateDraft(); 
+          setIsNewMail(false); 
+        }}>✕</button>
 
         <div>
           <label>From:</label>

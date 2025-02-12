@@ -27,7 +27,7 @@ CREATE TABLE emails (
   sent_at DATETIME DEFAULT CURRENT_TIMESTAMP default NULL,
   is_read BOOLEAN DEFAULT FALSE, -- Tracks whether the email has been read
   is_starred BOOLEAN DEFAULT FALSE, -- Tracks starred
-  email_direction ENUM ('SENT', 'RECEIVED') DEFAULT 'RECEIVED', -- Email types 
+  email_direction ENUM ('SENT', 'RECEIVED' ,'DRAFT') DEFAULT 'RECEIVED', -- Email types 
   folder ENUM ('GENERAL', 'SPAM', 'TRASH', 'DRAFT', 'ARCHIVE') DEFAULT 'GENERAL' -- Organize emails into folders
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 

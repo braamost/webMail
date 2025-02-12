@@ -25,7 +25,7 @@ export async function saveDraft( toMail, subject, body, attachments,user) {
     }
 }
 
-export async function updateDraft(draftId, userId, toMail, subject, message, attachments) {
+export async function updateDraft(draftId,toMail,subject,body,attachments) {
     try {
         await axios.put(`http://localhost:8080/api/drafts/update/${draftId}`, {
             toMail,
