@@ -3,13 +3,19 @@ package com.mail.back.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Setter
+@Getter
+@ToString
 @Entity
 @Table(name = "emails")
 public class Email {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -56,6 +62,7 @@ public class Email {
     @JsonProperty("emailDirection")
     private EmailDirection emailDirection;
 
+    // Getter and Setter for attachments
     @OneToMany(mappedBy = "email", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Attachment> attachments;
@@ -89,127 +96,4 @@ public class Email {
         }
     }
 
-    // Getters and Setters
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public LocalDateTime getSentAt() {
-        return sentAt;
-    }
-
-    public void setSentAt(LocalDateTime sentAt) {
-        this.sentAt = sentAt;
-    }
-
-    public boolean isRead() {
-        return isRead;
-    }
-
-    public void setRead(boolean isRead) {
-        this.isRead = isRead;
-    }
-
-    public Folder getFolder() {
-        return folder;
-    }
-
-    public void setFolder(Folder folder) {
-        this.folder = folder;
-    }
-
-    public String getEmailOfSender() {
-        return EmailOfSender;
-    }
-
-    public void setEmailOfSender(String emailOfSender) {
-        EmailOfSender = emailOfSender;
-    }
-
-    public String getUserNameOfSender() {
-        return UserNameOfSender;
-    }
-
-    public void setUserNameOfSender(String userNameOfSender) {
-        UserNameOfSender = userNameOfSender;
-    }
-
-    // Getter and Setter for attachments
-    public List<Attachment> getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(List<Attachment> attachments) {
-        this.attachments = attachments;
-    }
-
-    public String getEmailOfReceiver() {
-        return EmailOfReceiver;
-    }
-
-    public void setEmailOfReceiver(String emailOfReceiver) {
-        EmailOfReceiver = emailOfReceiver;
-    }
-
-    public String getUserNameOfReceiver() {
-        return UserNameOfReceiver;
-    }
-
-    public void setUserNameOfReceiver(String userNameOfReceiver) {
-        UserNameOfReceiver = userNameOfReceiver;
-    }
-
-    public EmailDirection getEmailDirection() {
-        return emailDirection;
-    }
-
-    public void setEmailDirection(EmailDirection emailDirection) {
-        this.emailDirection = emailDirection;
-    }
-
-    public boolean isStarred() {
-        return isStarred;
-    }
-
-    public void setStarred(boolean starred) {
-        isStarred = starred;
-    }
-
-    @Override
-    public String toString() {
-        return "Email{" +
-                "id=" + id +
-                ", subject='" + subject + '\'' +
-                ", body='" + body + '\'' +
-                ", sentAt=" + sentAt +
-                ", isRead=" + isRead +
-                ", folder=" + folder +
-                ", emailDirection=" + emailDirection +
-                ", attachments=" + attachments +
-                ", EmailOfSender='" + EmailOfSender + '\'' +
-                ", UserNameOfSender='" + UserNameOfSender + '\'' +
-                ", EmailOfReceiver='" + EmailOfReceiver + '\'' +
-                ", UserNameOfReceiver='" + UserNameOfReceiver + '\'' +
-                '}';
-    }
 }

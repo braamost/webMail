@@ -5,8 +5,7 @@ import com.mail.back.GlobalHandle.UnauthorizedException;
 import com.mail.back.GlobalHandle.UserAlreadyExistsException;
 import com.mail.back.Service.UserService.UserService;
 import com.mail.back.entity.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,11 +17,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RequestMapping("/api/users")
+@Slf4j
 public class UserControllerProxy implements IUserController {
     private final IUserController realController;
     private final UserService userService;
-    private final Logger logger = LoggerFactory.getLogger(UserControllerProxy.class);
-
     public UserControllerProxy(UserRestController realController, UserService userService) {
         this.realController = realController;
         this.userService = userService;
@@ -31,11 +29,11 @@ public class UserControllerProxy implements IUserController {
     @Override
     @GetMapping
     public List<User> findAll() {
-        logger.info("Proxy: Retrieving all users");
+        log.info("Proxy: Retrieving all users");
         try {
             return realController.findAll();
         } catch (Exception e) {
-            logger.error("Error retrieving all users", e);
+            log.error("Error retrieving all users", e);
             throw e;
         }
     }
@@ -43,7 +41,7 @@ public class UserControllerProxy implements IUserController {
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<User> findById(@PathVariable int id) {
-        logger.info("Proxy: Finding user by id: {}", id);
+        log.info("Proxy: Finding user by id: {}", id);
         validateId(id);
         return realController.findById(id);
     }
@@ -51,7 +49,7 @@ public class UserControllerProxy implements IUserController {
     @Override
     @GetMapping("/username/{username}")
     public ResponseEntity<User> findByUserName(@PathVariable String username) {
-        logger.info("Proxy: Finding user by username: {}", username);
+        log.info("Proxy: Finding user by username: {}", username);
         validateUsername(username);
         return realController.findByUserName(username);
     }
@@ -59,7 +57,7 @@ public class UserControllerProxy implements IUserController {
     @Override
     @GetMapping("/email/{email}")
     public ResponseEntity<User> findByEmail(@PathVariable String email) {
-        logger.info("Proxy: Finding user by email: {}", email);
+        log.info("Proxy: Finding user by email: {}", email);
         validateEmail(email);
         return realController.findByEmail(email);
     }
@@ -67,15 +65,15 @@ public class UserControllerProxy implements IUserController {
     @Override
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody User loginRequest) {
-        logger.info("Proxy: Login attempt for user: {}", loginRequest.getUserName());
+        log.info("Proxy: Login attempt for user: {}", loginRequest.getUserName());
         validateLoginRequest(loginRequest);
         return realController.login(loginRequest);
     }
 
     @Override
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<User> addUser(@RequestBody User user) {
-        logger.info("Proxy: Adding new user: {}", user.getUserName());
+        log.info("Proxy: Adding new user: {}", user.getUserName());
         validateNewUser(user);
         validateNewPassword(user.getPassword());
         return realController.addUser(user);
@@ -84,7 +82,7 @@ public class UserControllerProxy implements IUserController {
     @Override
     @PutMapping
     public ResponseEntity<User> updateUser(@RequestBody User user) {
-        logger.info("Proxy: Updating user: {}", user.getUserName());
+        log.info("Proxy: Updating user: {}", user.getUserName());
         validateUpdateUser(user);
         return realController.updateUser(user);
     }
@@ -92,7 +90,7 @@ public class UserControllerProxy implements IUserController {
     @Override
     @PutMapping("/update-password/{oldPassword}/{newPassword}")
     public ResponseEntity<User> updatePassword(@PathVariable String oldPassword, @PathVariable String newPassword, @RequestBody User user) {
-        logger.info("Proxy: Updating password: {}", user);
+        log.info("Proxy: Updating password: {}", user);
         validateOldPassword(user, oldPassword);
         validateNewPassword(newPassword);
         return realController.updatePassword(oldPassword, newPassword, user);
@@ -101,7 +99,7 @@ public class UserControllerProxy implements IUserController {
     @Override
     @DeleteMapping
     public ResponseEntity<String> deleteUser(@RequestBody User user) {
-        logger.info("Proxy: Deleting user: {}", user.getUserName());
+        log.info("Proxy: Deleting user: {}", user.getUserName());
         validateDeleteUser(user);
         return realController.deleteUser(user);
     }
@@ -109,8 +107,8 @@ public class UserControllerProxy implements IUserController {
     @PostMapping("/upload-photo/{email}")
     public User uploadPhoto(@PathVariable  String email,
                             @RequestParam("photo") MultipartFile photo) throws IOException {
-        logger.info("Proxy: Uploading photo for user: {}", email);
-        logger.info("Proxy: the photo before: {}", photo);
+        log.info("Proxy: Uploading photo for user: {}", email);
+        log.info("Proxy: the photo before: {}", photo);
         validateEmail (email);
         return realController.uploadPhoto(email, photo);
     }
@@ -203,13 +201,13 @@ public class UserControllerProxy implements IUserController {
 
     private void validateOldPassword(User user, String oldPassword) {
         if(userService.checkPassword(user, oldPassword)){
-            logger.error("Invalid oldPassword");
+            log.error("Invalid oldPassword");
             throw new UnauthorizedException("Invalid oldPassword");
         }
     }
     private void validateNewPassword( String newPassword) {
         if (newPassword == null || newPassword.trim().isEmpty()) {
-            logger.error("New password cannot be empty");
+            log.error("New password cannot be empty");
             throw new IllegalArgumentException("New password cannot be empty");
         }
     }

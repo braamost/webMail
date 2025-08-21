@@ -5,12 +5,21 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
 @Entity
+@NoArgsConstructor
 @Table(name = "attachments")
 public class Attachment {
 
+    // Getters and setters
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -27,44 +36,10 @@ public class Attachment {
     @Column(nullable = false)
     private byte[] fileContent; // BLOB to store the file content
 
-    // Getters and setters
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Email getEmail() {
-        return email;
-    }
-
-    public void setEmail(Email email) {
+    public Attachment(Email email, String fileName, String fileType, byte[] fileContent) {
         this.email = email;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
         this.fileName = fileName;
-    }
-
-    public String getFileType() {
-        return fileType;
-    }
-
-    public void setFileType(String fileType) {
         this.fileType = fileType;
-    }
-
-    public byte[] getFileContent() {
-        return fileContent;
-    }
-
-    public void setFileContent(byte[] fileContent) {
         this.fileContent = fileContent;
     }
 }

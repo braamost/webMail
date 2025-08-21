@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EmailRepository extends JpaRepository<Email, Integer> {
-
     @Query("SELECT a FROM Attachment a WHERE a.email.id = :emailId")
     List<Attachment> findAttachmentsByEmailId(@Param("emailId") Integer emailId);
 
@@ -20,7 +19,4 @@ public interface EmailRepository extends JpaRepository<Email, Integer> {
     @Transactional
     @Query("DELETE FROM Email e WHERE e.folder = 'TRASH' AND e.sentAt < :threshold")
     int deleteOldTrashEmails(@Param("threshold") LocalDateTime threshold);
-
-
-
 }

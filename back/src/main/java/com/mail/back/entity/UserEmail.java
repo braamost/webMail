@@ -1,7 +1,11 @@
 package com.mail.back.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "user_emails")
 
@@ -33,35 +37,4 @@ public class UserEmail {
         this.email = email;
     }
 
-    public UserEmailID getUserEmailID() {
-        return userEmailID;
-    }
-
-    public void setUserEmailID(UserEmailID userEmailID) {
-        this.userEmailID = userEmailID;
-    }
-
-    public User getSender() {
-        return sender;
-    }
-
-    public void setSender(User sender) {
-        this.sender = sender;
-    }
-
-    public User getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
-    }
-
-    public Email getEmail() {
-        return email;
-    }
-
-    public void setEmail(Email email) {
-        this.email = email;
-    }
 }

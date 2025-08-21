@@ -11,7 +11,7 @@ export async function Register(username, password, email, phoneNumber, setError)
   const jsonData = JSON.stringify(userData);
   console.log(jsonData);
   try {
-    const apiUrl = `http://localhost:8080/api/users`;
+    const apiUrl = `http://localhost:8080/api/users/register`;
 
     const response = await axios.post(apiUrl, userData, {
       withCredentials: true, // Important for session cookies
