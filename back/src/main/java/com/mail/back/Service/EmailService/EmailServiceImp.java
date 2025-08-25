@@ -3,14 +3,10 @@ package com.mail.back.Service.EmailService;
 import com.mail.back.DAO.EmailRepository;
 import com.mail.back.GlobalHandle.NotFoundException;
 import com.mail.back.entity.*;
-
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -9,6 +9,7 @@ export default function RegisterPage({setUser}) {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [photo, setPhoto] = useState(null); 
 
   const navigate = useNavigate();
 
@@ -20,11 +21,11 @@ export default function RegisterPage({setUser}) {
       password,
       email,
       phoneNumber,
+      photo,
       setError
     );
 
-    if (response !== null) {
-      console.log(response);
+    if (response.status >= 200 && response.status < 300) {
       window.alert("Account created successfully!");
       navigate("/");
     }
@@ -86,6 +87,18 @@ export default function RegisterPage({setUser}) {
           />
           <label htmlFor="phone">Telephone</label>
         </div>
+
+        <div className="inputbox">
+          <ion-icon name="image-outline"></ion-icon>
+          <input
+            type="file"
+            id="photo"
+            accept="image/*"
+            onChange={(e) => setPhoto(e.target.files[0])}
+          />
+          <label htmlFor="photo">Profile Photo (optional)</label>
+        </div>
+
 
         <button type="submit">Create new account</button>
 

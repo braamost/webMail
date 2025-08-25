@@ -181,3 +181,44 @@ button {
   justify-content: center;
   text-align: center;
 }
+
+.inputbox input[type="file"] {
+  width: 100%;
+  padding: 10px 0;
+  color: #fff;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.inputbox input[type="file"]::-webkit-file-upload-button {
+  border-radius: 8px;
+  background: #646cff;
+  color: #fff;
+  border: none;
+  padding: 0.5em 1em;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.inputbox input[type="file"]:hover::-webkit-file-upload-button {
+  background: #535bf2;
+}
+
+.inputbox input[type="file"]::file-selector-button {
+  border-radius: 8px;
+  background: #646cff;
+  color: #fff;
+  border: none;
+  padding: 0.5em 1em;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.inputbox input[type="file"]:hover::file-selector-button {
+  background: #535bf2;
+}

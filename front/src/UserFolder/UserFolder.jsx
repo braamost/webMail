@@ -4,7 +4,7 @@ import "./userFolder.css";
 import MenuBar from "../MenuBar/MenuBar";
 import UploadPhotoForm from "./Photo";
 import axios from "axios";
-function UserFolder({ user, setUser, handleLogout }) {
+function UserFolder({ handleLogout, user, setUser }) {
   const [changePass, setChangePass] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -17,30 +17,27 @@ function UserFolder({ user, setUser, handleLogout }) {
   const deleteUser = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.delete("http://localhost:8080/api/users", {
-        data: {
-          id: user.id,
-          userName: user.userName,
-          email: user.email,
-          password: user.password,
-        },
+      const response = await axios.delete(`http://localhost:8080/api/users/${user.id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        }
       });
 
-      if (response.status === 200) {
+      if (response.status >= 200 && response.status < 300) {
         alert("User deleted successfully");
         handleLogout();
       }
     } catch (error) {
-      console.error("Delete error:", error.response?.data);
+      console.error("Delete error:", error.response);
       alert(
         `Failed to delete user: ${
-          error.response?.data?.message || error.message
+           error.message
         }`
       );
     }
   };
   const handleDeleteUser = async (e) => {
-    console.log("User object:", user);
     e.preventDefault();
     const confirmed = window.confirm(
       "Are you sure you want to delete your account? This action cannot be undone."
@@ -57,14 +54,14 @@ function UserFolder({ user, setUser, handleLogout }) {
       return;
     }
     try {
-      console.log(user);
-      const response = await axios.put(`http://localhost:8080/api/users/update-password/${oldPassword}/${newPassword}`, {
-          id: user.id,
-          userName: user.userName,
-          email: user.email,
-          password: user.password
+      const response = await axios.put(`http://localhost:8080/api/users/update-password/${user.id}/${oldPassword}/${newPassword}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        }
       });
-      if (response.status === 200) {
+    if (response.status >= 200 && response.status < 300) {
         alert("Password changed successfully");
         setChangePass(false);
         navigate("/");
@@ -89,7 +86,7 @@ function UserFolder({ user, setUser, handleLogout }) {
             <div style={{ marginTop: "20px" }}>
               <div className="info">
                 <strong>Username:</strong>
-                <strong>{user.userName}</strong>
+                <strong>{user.username}</strong>
               </div>
               <div className="info">
                 <strong>Email:</strong>
@@ -100,7 +97,7 @@ function UserFolder({ user, setUser, handleLogout }) {
                 <strong>{user.phoneNumber}</strong>
               </div>
             </div>
-            <UploadPhotoForm email={user.email} setUser={setUser} />
+            <UploadPhotoForm user={user} setUser={setUser}/>
           </div>
           <button className="changePass" onClick={handleChangePassword}>
             Change Password
@@ -166,7 +163,7 @@ function UserFolder({ user, setUser, handleLogout }) {
           </button>
         </div>
       )}
-      <MenuBar user={user} handleLogout={handleLogout} />
+      <MenuBar user= {user} handleLogout={handleLogout} />
     </>
   );
 }

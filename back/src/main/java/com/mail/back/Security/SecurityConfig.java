@@ -3,9 +3,12 @@ package com.mail.back.Security;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -35,7 +38,7 @@ public class SecurityConfig {
 
                 .exceptionHandling(ex -> ex
                                 .authenticationEntryPoint(unauthorizedEntryPoint())
-                ).cors(cors -> {})
+                ).cors(_ -> {})
 
                 // Authorization rules (order matters: first match wins)
                 .authorizeHttpRequests(auth -> auth
@@ -43,6 +46,7 @@ public class SecurityConfig {
                                         "/api/users/login",
                                         "/api/users/register"
                                 ).permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/users/*/profile-photo/**").permitAll()
                                 .requestMatchers("/api/**").authenticated()
                                 .anyRequest().permitAll()
                 )
@@ -51,6 +55,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+    @SuppressWarnings("unused")
     @Bean
     public AuthenticationEntryPoint unauthorizedEntryPoint() {
         // Called when a protected endpoint is hit without valid authentication.
@@ -61,6 +66,11 @@ public class SecurityConfig {
                 response.getWriter().write("{\"error\":\"Unauthorized\"}");
             } catch (IOException ignored) {}
         };
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 
     @Bean

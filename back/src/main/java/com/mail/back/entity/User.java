@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 @Setter
 @Getter
@@ -34,20 +33,19 @@ public class User {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @Lob
-    @Column(name = "photo")
-    private byte[] photo; // Added photo column for storing binary data
+    @Column(name = "profile_url")
+    private String profileUrl;
 
     public User() {
     }
 
 
-    public User(String userName, String password, String email, String phoneNumber, byte[] photo) {
+    public User(String userName, String password, String email, String phoneNumber, String profileUrl) {
         this.userName = userName;
         this.password = password;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.photo = photo;
+        this.profileUrl = profileUrl;
     }
 
     @PrePersist

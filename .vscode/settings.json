@@ -2,5 +2,6 @@
     "java.configuration.updateBuildConfiguration": "interactive",
     "files.associations": {
         "cmath": "cpp"
-    }
+    },
+    "java.compile.nullAnalysis.mode": "automatic"
 }

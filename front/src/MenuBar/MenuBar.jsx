@@ -4,6 +4,9 @@ import { useState } from "react";
 import NewMail from "../NewMail/NewMail";
 function MenuBar({ user, handleLogout }) {
   const [isNewMail, setIsNewMail] = useState(false);
+  const imgSrc = user?.profileUrl
+  ? `http://localhost:8080${user.profileUrl}` // ✅ use the saved relative URL
+  : "/man.jpg"; // fallback
 
   const newMail = (email = null) => {
     setIsNewMail(!isNewMail);
@@ -14,9 +17,9 @@ function MenuBar({ user, handleLogout }) {
         <li className="profile">
           <Link className="Link" to="/UserFolder">
             <div className="img-box">
-              <img src={user.photo || "man.jpg"} alt="profile" />
+              <img src={imgSrc} alt="profile" />
             </div>
-            <h2>{user.userName}</h2>
+            <h2>{user.username}</h2>
           </Link>
         </li>
         <li>

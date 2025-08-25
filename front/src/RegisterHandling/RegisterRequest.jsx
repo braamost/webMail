@@ -1,31 +1,41 @@
 import axios from "axios";
 
-export async function Register(username, password, email, phoneNumber, setError) {
-  const userData = {
-    "userName": username,
-    "password": password,
-    "email": email,
-    "phoneNumber": phoneNumber,
- 
-  };
-  const jsonData = JSON.stringify(userData);
-  console.log(jsonData);
+export async function Register(username, password, email, phoneNumber, photo, setError) {
+
+  const formData = new FormData();
+
+  // Add JSON as a Blob with the right type
+  formData.append(
+    "user",
+    new Blob([JSON.stringify({
+      username: username,
+      email: email,
+      password: password,
+      phoneNumber: phoneNumber
+    })], { type: "application/json" })
+  );
+
+  // Add file (optional)
+  if (photo) {
+    formData.append("photo", photo);
+  }
+
   try {
     const apiUrl = `http://localhost:8080/api/users/register`;
 
-    const response = await axios.post(apiUrl, userData, {
-      withCredentials: true, // Important for session cookies
-      headers: { "Content-Type": "application/json" },
+    const response = await axios.post(apiUrl, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
 
-    return response.data;
+    console.log("Response from server: ", response);
+    return response;
   } catch (error) {
     if (error.response) {
-      const { status, data } = error.response;
+      const { status, message } = error.response.data;
       if (status === 409) {
-        setError(data); // Backend will return specific conflict error (username or email exists)
+        setError(message); // Backend will return specific conflict error (username or email exists)
       } else {
-        setError(`Unexpected error: ${data}`);
+        setError(`Unexpected error: ${error.response.statusText}`);
       }
     } else {
       setError("Network error or server unreachable.");

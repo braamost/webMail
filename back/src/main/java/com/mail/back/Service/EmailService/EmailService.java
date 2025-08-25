@@ -11,5 +11,4 @@ public interface EmailService {
 
     Email saveDraft(Email email);
     void deleteDraft(Integer id);
-
 }
