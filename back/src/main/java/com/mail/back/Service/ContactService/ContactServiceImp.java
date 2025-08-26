@@ -13,9 +13,6 @@ public class ContactServiceImp implements ContactService {
     @Autowired
     private ContactRepository contactRepository;
 
-    // Get all contacts for a user
-
-
     // Add a new contact
     public Contact addContact(Contact contact) {
         return contactRepository.save(contact);

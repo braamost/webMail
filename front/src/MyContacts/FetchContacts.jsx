@@ -1,17 +1,15 @@
 import axios from 'axios';
 
-export async function FetchContacts(userId) {
+export async function FetchContacts(user) {
     try {
-        const response = await axios.get(`http://localhost:8080/api/contacts/user/${userId}`, {
+        const response = await axios.get(`http://localhost:8080/api/contacts/user/${user.id}`, {
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${user.token}` 
             }
         });
         console.log(response.data , "zz");
 
-
-
-        console.log("how are you");
         return response.data;
     } catch (error) {
         if (error.response) {
@@ -29,56 +27,43 @@ export async function FetchContacts(userId) {
 
 
 
-export async function CreateContact(userId, userName, email , setError) {
+export async function CreateContact(user, userName, email , setError) {
   const contactData = {
       contactName: userName,
       contactEmail: email,
-      user: { id: userId } // Include the user object with an id
+      user: {id:user.id}
   };
   console.log(contactData);
-
   try {
-      const response = await fetch('http://localhost:8080/api/contacts', { // Adjust URL if necessary
-          method: 'POST',
+      const response = await axios.post('http://localhost:8080/api/contacts', contactData, { 
           headers: {
               'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user.token}`
           },
-          body: JSON.stringify(contactData),
       });
 
-      if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-      }
-
-      const newContact = await response.json();
+      const newContact = response.data;
       console.log('Contact added:', newContact);
       return newContact; // Return the created contact
   } catch (error) {
-      setError("The User Email Not Found");
+      setError(error.response?.data?.message || 'Error creating contact');
       console.error('Error creating contact:', error);
-      throw error;
   }
 }
 
 
 
- export async function handleDeleteContact (contactId) {
+ export async function handleDeleteContact (user, contactId, setError) {
   try {
-      const response = await fetch("http://localhost:8080/api/contacts", {
-          method: "DELETE",
+      const response = await axios.delete(`http://localhost:8080/api/contacts/${contactId}`,{
           headers: {
-              "Content-Type": "application/json",
+              "Authorization" : `Bearer ${user.token}`
           },
-          body: JSON.stringify({ id: contactId }), // Send only the ID
       });
-
-      if (!response.ok) {
-          throw new Error(`Failed to delete contact with ID: ${contactId}`);
-      }
-
       console.log(`Contact with ID ${contactId} successfully deleted.`);
   } catch (error) {
-      console.error("Error deleting contact:", error);
+        setError(error.response?.data?.message || 'Error deleting contact');
+        console.error("Error deleting contact:", error);
   }
 };
 

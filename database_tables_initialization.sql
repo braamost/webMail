@@ -15,7 +15,7 @@ CREATE TABLE users (
   password VARCHAR(255) COLLATE utf8mb4_bin DEFAULT NULL, -- Case-sensitive collation
   email VARCHAR(320) COLLATE utf8mb4_bin DEFAULT NULL,
   phone_number VARCHAR(20) DEFAULT NULL,
-  profile_url LONGBLOB DEFAULT NULL, -- Added photo column
+  profile_url varchar(100) DEFAULT NULL, -- Added photo column
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 

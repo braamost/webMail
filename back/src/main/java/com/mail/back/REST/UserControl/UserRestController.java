@@ -2,25 +2,22 @@ package com.mail.back.REST.UserControl;
 
 import com.mail.back.GlobalHandle.NotFoundException;
 import com.mail.back.GlobalHandle.UnauthorizedException;
-import com.mail.back.GlobalHandle.UserAlreadyExistsException;
 import com.mail.back.Service.UserService.UserService;
 import com.mail.back.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Objects;
+
 
 import org.springframework.web.multipart.MultipartFile;
 @RestController
@@ -59,8 +56,15 @@ public class UserRestController implements IUserController {
     @PostMapping("/{id}/profile-photo")
     public ResponseEntity<String> uploadProfilePhoto(
             @PathVariable Integer id,
-            @RequestParam("file") MultipartFile file) {
+            @RequestParam("file") MultipartFile file,
+            Authentication authentication) {
         try {
+            String usernameFromToken = (String) authentication.getPrincipal();
+            log.info("Proxy: Uploading profile photo for user: {}", usernameFromToken);
+            User user = userService.findByUserName(usernameFromToken);
+            if(user.getId() != (int)id)
+                throw new UnauthorizedException("You are not authorized to upload profile photo for this user");
+
             String url = userService.saveProfilePhoto(id, file);
             return ResponseEntity.ok(url);
         } catch (IOException e) {
@@ -111,8 +115,15 @@ public class UserRestController implements IUserController {
 
     @Override
     @PutMapping("/update-password/{id}/{oldPassword}/{newPassword}")
-    public ResponseEntity<Void> updatePassword(@PathVariable int id, @PathVariable String oldPassword, @PathVariable String newPassword) {
+    public ResponseEntity<Void> updatePassword(@PathVariable int id,
+                                               @PathVariable String oldPassword,
+                                               @PathVariable String newPassword,
+                                               Authentication authentication) {
         log.info("Proxy: Updating password for user: {}", id);
+        String usernameFromToken = (String) authentication.getPrincipal();
+        User user = userService.findByUserName(usernameFromToken);
+        if(user.getId() != id)
+            throw new UnauthorizedException("You are not authorized to update password for this user");
         validateOldPassword(id, oldPassword);
         validateNewPassword(newPassword);
         User u = userService.updatePassword(userService.findById(id), newPassword);
@@ -121,8 +132,13 @@ public class UserRestController implements IUserController {
 
     @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable int id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable int id,
+                                           Authentication authentication) {
         log.info("Proxy: Deleting user: {}", id);
+        String usernameFromToken = (String) authentication.getPrincipal();
+        User user = userService.findByUserName(usernameFromToken);
+        if(user.getId() != id)
+            throw new UnauthorizedException("You are not authorized to delete this user");
         validateDeleteUser(id);
         userService.deleteById(id);
         return ResponseEntity.noContent().build();
@@ -146,26 +162,6 @@ public class UserRestController implements IUserController {
         }
         if (userService.findByEmail(email) == null) {
             throw new NotFoundException("User not found");
-        }
-    }
-
-    private void validateUpdateUser(User user) {
-        if (user.getId() <= 0) {
-            throw new IllegalArgumentException("Invalid user ID");
-        }
-        User existingUser = userService.findById(user.getId());
-        if (existingUser == null) {
-            throw new NotFoundException("User not found");
-        }
-        // Check if new username is taken by another user
-        User userWithUsername = userService.findByUserName(user.getUserName());
-        if (userWithUsername != null && !Objects.equals(userWithUsername.getId(), user.getId())) {
-            throw new UserAlreadyExistsException("Username taken");
-        }
-        // Check if new email is taken by another user
-        User userWithEmail = userService.findByEmail(user.getEmail());
-        if (userWithEmail != null && !Objects.equals(userWithEmail.getId(), user.getId())) {
-            throw new UserAlreadyExistsException("Email taken");
         }
     }
 

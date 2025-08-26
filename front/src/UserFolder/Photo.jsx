@@ -6,7 +6,7 @@ function UploadPhotoForm({user, setUser}) {
   const [photo, setPhoto] = useState(null);
   const [preview, setPreview] = useState(null); 
   const imgSrc = user?.profileUrl
-  ? `http://localhost:8080${user.profileUrl}` // ✅ use the saved relative URL
+  ? `http://localhost:8080${user.profileUrl}` 
   : "/man.jpg"; // fallback
 
   // Handle file change (photo upload)

@@ -27,7 +27,7 @@ public class Contact {
     @Column(name = "contact_email", nullable = false, length = 320)
     private String contactEmail;
 
-    @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     public Contact(User user, String contactName, String contactEmail) {
@@ -36,9 +36,11 @@ public class Contact {
         this.contactEmail = contactEmail;
     }
 
-    @PostPersist
-    private void setCreatedAt (){
-        createdAt = LocalDateTime.now();
+    @PrePersist
+    public void prePersist() {
+        if(createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
     }
     public Contact() {}
 }

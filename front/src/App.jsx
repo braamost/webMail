@@ -15,7 +15,6 @@ import {
 
 function App() {
   const [user, setUser] = useState(() => getUserForTab());
-  const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
     const handleStorageChange = (e) => {
@@ -135,7 +134,6 @@ function App() {
             <ProtectedRoute user={user}>
               <MyContacts
                 user={user}
-                contacts={contacts}
                 handleLogout={handleLogout}
               />
 
