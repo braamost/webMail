@@ -126,7 +126,7 @@ public class UserRestController implements IUserController {
             throw new UnauthorizedException("You are not authorized to update password for this user");
         validateOldPassword(id, oldPassword);
         validateNewPassword(newPassword);
-        User u = userService.updatePassword(userService.findById(id), newPassword);
+        userService.updatePassword(userService.findById(id), newPassword);
         return ResponseEntity.noContent().build();
     }
 

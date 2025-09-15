@@ -1,13 +1,8 @@
-import axios from 'axios';
+import apiClient from '../utils/apiUtils';
 
 export async function FetchContacts(user) {
     try {
-        const response = await axios.get(`http://localhost:8080/api/contacts/user/${user.id}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.token}` 
-            }
-        });
+        const response = await apiClient.get(`/api/contacts/user/${user.id}`);
         console.log(response.data , "zz");
 
         return response.data;
@@ -35,12 +30,7 @@ export async function CreateContact(user, userName, email , setError) {
   };
   console.log(contactData);
   try {
-      const response = await axios.post('http://localhost:8080/api/contacts', contactData, { 
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${user.token}`
-          },
-      });
+      const response = await apiClient.post('/api/contacts', contactData);
 
       const newContact = response.data;
       console.log('Contact added:', newContact);
@@ -55,11 +45,7 @@ export async function CreateContact(user, userName, email , setError) {
 
  export async function handleDeleteContact (user, contactId, setError) {
   try {
-      const response = await axios.delete(`http://localhost:8080/api/contacts/${contactId}`,{
-          headers: {
-              "Authorization" : `Bearer ${user.token}`
-          },
-      });
+      const response = await apiClient.delete(`/api/contacts/${contactId}`);
       console.log(`Contact with ID ${contactId} successfully deleted.`);
   } catch (error) {
         setError(error.response?.data?.message || 'Error deleting contact');

@@ -1,11 +1,11 @@
-import axios from "axios";
+import apiClient from "../utils/apiUtils";
 import { UserIsFound } from "../NewMail/EmailCreationHandling/CheckUserExistence";
 
 export async function MovetoFolder(folder, id, setError) {
   try {
     console.log("folder and id ", folder, id);
-    const response = await axios.put(
-      `http://localhost:8080/api/emails/${folder}/${id}`
+    const response = await apiClient.put(
+      `/api/emails/${folder}/${id}`
     );
   } catch (error) {
     if (error.response) {
@@ -47,9 +47,9 @@ export const handleSelectedOnClick = async (
       console.log(selectedRows);
       
       const response = selectedRows.map((email) =>{
-        axios.delete(`http://localhost:8080/api/emails/${email.id}`);
+        apiClient.delete(`/api/emails/${email.id}`);
         const receiverId = UserIsFound(email.emailOfReceiver);
-        axios.delete(`http://localhost:8080/api/userEmails/${userId}/${receiverId}/${email.id}`);
+        apiClient.delete(`/api/userEmails/${userId}/${receiverId}/${email.id}`);
       });
       await Promise.all(response);
 

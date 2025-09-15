@@ -1,10 +1,9 @@
-import axios from "axios";
-
+import { uploadWithToken } from "../../utils/apiUtils";
 
 export async function uploadAttachments(formData, setError) {
   // Send the data to the backend
   try {
-    const response = await axios.post(
+    const response = await uploadWithToken(
       "http://localhost:8080/api/attachments/upload",
       formData,
       {
