@@ -1,16 +1,18 @@
-import React, { useState } from "react";
-import "./userFolder.css"
-import axios from "axios";
+import { useState } from "react";
+import { uploadWithToken } from "../utils/apiUtils";
 
-function UploadPhotoForm({ email, setUser }) {
+function UploadPhotoForm({user, setUser}) {
   const [photo, setPhoto] = useState(null);
-  const [preview, setPreview] = useState(null); // State to store the photo preview
+  const [preview, setPreview] = useState(null); 
+  const imgSrc = user?.profileUrl
+  ? `http://localhost:8080${user.profileUrl}` 
+  : "/man.jpg"; // fallback
 
   // Handle file change (photo upload)
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    setPhoto(selectedFile); // Get the file from the input
-    // Create a preview URL for the selected file (to show it before uploading)
+    setPhoto(selectedFile); 
+
     setPreview(URL.createObjectURL(selectedFile));
   };
 
@@ -18,35 +20,18 @@ function UploadPhotoForm({ email, setUser }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    // Create a FormData object to send both email and photo
     const formData = new FormData();
-    formData.append("photo", photo); // Attach photo file
+    formData.append("file", photo); 
   
     try {
       // Send the data to the backend API
-      const response = await axios.post(`http://localhost:8080/api/users/upload-photo/${email}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await uploadWithToken(`http://localhost:8080/api/users/${user.id}/profile-photo`, formData);
   
-      // After a successful upload, update the user with the new photo URL
       if (response.status === 200) {
-        const updatedUser = response.data; // Assuming the backend returns the updated user data with a base64-encoded photo
-        console.log(updatedUser);  ///
-        // Check if the backend returns a base64 string for the image
-          // If it's base64, convert it back to the original image format (Blob)
-          const blob = base64ToBlob(updatedUser.photo);
-          const url = URL.createObjectURL(blob);
-  
-          // Update the user's profile with the image URL
-          setPreview(url); // Display the image on the UI
-          updatedUser.photo = url; // Update the user data with the new image URL
-          console.log(updatedUser);
-          alert("Photo uploaded and updated successfully!");
-
-        
-        setUser(updatedUser); // Update the user state in the parent component
+        const profile_url = response.data; // the new photo url
+        setUser(prevUser => ({ ...prevUser, profileUrl: profile_url }));
+        console.log("Profile URL updated:", profile_url);
+        alert("Photo uploaded successfully!");
       }
     } catch (error) {
       console.error("Error uploading photo:", error);
@@ -54,30 +39,11 @@ function UploadPhotoForm({ email, setUser }) {
     }
   };
   
-  // Helper function to convert base64 to Blob
-  const base64ToBlob = (base64, contentType = 'image/jpeg') => {
-    const byteCharacters = atob(base64);
-    const byteArrays = [];
-  
-    for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
-      const slice = byteCharacters.slice(offset, offset + 1024);
-      const byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-      byteArrays.push(new Uint8Array(byteNumbers));
-    }
-  
-    return new Blob(byteArrays, { type: contentType });
-  };
-  
-
   return (
-    <div className="updatePhoto">
-      <h2>update profile Photo</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="selectPre">
-        <div>
+    <div className="flex flex-col items-center justify-center bg-white rounded-2xl shadow-lg border border-blue-100 p-6 mb-4">
+      <h2 className="text-xl font-semibold text-blue-700 mb-4">Update Profile Photo</h2>
+      <form onSubmit={handleSubmit} className="w-full flex flex-col items-center">
+        <div className="flex flex-col items-center gap-2 mb-4 w-full">
           <input
             type="file"
             id="photo"
@@ -85,18 +51,19 @@ function UploadPhotoForm({ email, setUser }) {
             accept="image/*"
             onChange={handleFileChange}
             required
+            className="w-full px-4 py-2 border border-blue-200 rounded-lg bg-blue-50 text-blue-900"
           />
-        </div>
-
-        {/* Display the selected photo preview */}
-        {preview && (
-          <div className="preview">
-            <h3>Photo Preview:</h3>
-            <img src={preview} alt="Preview" style={{ width: 100, height: 100 }} />
+          {/* Display the selected photo preview */}
+          <div className="flex items-center justify-center bg-blue-100 rounded-full shadow-inner w-28 h-28 mb-2 overflow-hidden">
+            <img src={preview ? preview : imgSrc} alt="Preview" className="object-cover w-24 h-24 rounded-full border-4 border-blue-400 shadow" />
           </div>
-        )}
-      </div>
-        <button type="submit">update profile Photo</button>
+        </div>
+        <button
+          type="submit"
+          className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition-colors duration-200 font-semibold"
+        >
+          Update Profile Photo
+        </button>
       </form>
     </div>
   );

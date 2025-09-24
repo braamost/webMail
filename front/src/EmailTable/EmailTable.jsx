@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import NewMail from "../NewMail/NewMail";
-import "./EmailTable.css";
 import DataTable from "react-data-table-component";
 import {
   FaSearch,
@@ -12,6 +11,8 @@ import {
   FaExclamationTriangle,
   FaEnvelope,
   FaEnvelopeOpen,
+  FaFilter,
+  FaTimes,
 } from "react-icons/fa";
 import { FaPaperclip } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
@@ -21,6 +22,8 @@ import {
   handleIconClick,
   handleSelectedOnClick,
 } from "./TableHandlers";
+import Loading from "../components/Loading";
+import Toast from "../components/Toast";
 function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage, user }) {
   const location = useLocation();
   const [inputSearch, setInputSearch] = useState("");
@@ -33,6 +36,8 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage, user
   const [isNewMail, setIsNewMail] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState(null);
   const [, forceUpdate] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' });
   const newMail = (email = null) => {
     setSelectedEmail(email);  
     setIsNewMail(true);
@@ -82,38 +87,25 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage, user
           ? row.emailOfReceiver || "No Reciever"
           : row.emailOfSender || "No Sender",
       sortable: true,
-      width: "240px",
     },
     {
       name: "Subject",
       selector: (row) => row.subject || "No Subject",
       sortable: true,
-      width: "290px",
     },
     {
       name: "Attachments",
       selector: (row) => row.processedAttachments || [],
-      width: "201px",
       cell: (row) => {
-        // Check if processed attachments exist and have length
-        if (
-          !row.processedAttachments ||
-          row.processedAttachments.length === 0
-        ) {
+        if (!row.processedAttachments || row.processedAttachments.length === 0) {
           return <span>No Attachments</span>;
         }
-
         return (
           <div className="attachments-cell">
-            {/* Show attachment count */}
             <span className="attachment-count">
               {row.processedAttachments.length}
-              {row.processedAttachments.length === 1
-                ? " Attachment"
-                : " Attachments"}
+              {row.processedAttachments.length === 1 ? " Attachment" : " Attachments"}
             </span>
-
-            {/* Attachment icons */}
             <div className="attachment-icons">
               {row.processedAttachments.map((file, index) => (
                 <FaPaperclip
@@ -138,13 +130,11 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage, user
       name: "Timestamp",
       selector: (row) => row.sentAt,
       sortable: true,
-      width: "420px",
       cell: (row) => (
         <div className="timestamp-cell">
           <span className="timestamp-text">{formatTimestamp(row.sentAt)}</span>
           {hoveredRowId === row.id && (
-            <div className="timestamp-icons">
-              {/* Star Icon */}
+            <div className="timestamp-icons flex flex-row items-center gap-2">
               {row.isStarred ? (
                 <FaStar
                   className="icon-starred"
@@ -164,8 +154,6 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage, user
                   title="Star"
                 />
               )}
-
-              {/* Trash Icon */}
               {row.folder === "TRASH" ? (
                 <FaTrash
                   className="icon-trash-active"
@@ -185,8 +173,6 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage, user
                   title="Trash"
                 />
               )}
-
-              {/* Spam Icon */}
               {row.folder === "SPAM" ? (
                 <FaExclamationTriangle
                   className="icon-spam-active"
@@ -205,8 +191,6 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage, user
                   title="Mark as Spam"
                 />
               )}
-
-              {/* Archive Icon */}
               {row.folder === "ARCHIVE" ? (
                 <FaArchive
                   className="icon-archive-active"
@@ -318,114 +302,131 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage, user
   };
 
   return (
-    <div>
-      {selectedRows.length > 0 && (
-        <div className="button-container">
-          {/* Add to Favorites Button */}
-          {location.pathname === "/Starred" ? (
-            <button
-              className="action-button favorite-button"
-              onClick={() =>
-                handleSelectedOnClick(
-                  "starred",
-                  selectedRows,
-                  setError,
-                  setEmails,
-                  user.id
-                )
-              }
-            >
-              Remove from Favorites
-            </button>
-          ) : (
-            <button
-              className="action-button favorite-button"
-              onClick={() =>
-                handleSelectedOnClick(
-                  "starred",
-                  selectedRows,
-                  setError,
-                  setEmails,
-                  user.id
-                )
-              }
-            >
-              Add to Favorites
-            </button>
-          )}
-          {/* Add to Trash Button */}
-          {location.pathname === "/Trash" ? (
-            <>
-              <button
-                className="action-button trash-button"
-                onClick={() =>
-                  handleSelectedOnClick(
-                    "trash",
-                    selectedRows,
-                    setError,
-                    setEmails,
-                    user.id
-                  )
-                }
-              >
-                Remove from Trash
-              </button>
-              <button
-                className="removeAll"
-                onClick={() => {
-                  handleSelectedOnClick(
-                    "permanent-delete",
-                    selectedRows,
-                    setError,
-                    setEmails,
-                    user.id
-                  );
-                  setSelectedRows([]);
-                }}
-              >
-                Delete permanently
-              </button>
-            </>
-          ) : (
-            <button
-              className="action-button trash-button"
-              onClick={() =>
-                handleSelectedOnClick(
-                  "trash",
-                  selectedRows,
-                  setError,
-                  setEmails,
-                  user.id
-                )
-              }
-            >
-              Add to Trash
-            </button>
-          )}
+  <div className="w-full bg-white/80 rounded-xl shadow-lg p-6 mb-6">
+      {/* Header with actions */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 space-y-4 lg:space-y-0">
+        <div className="flex items-center space-x-4">
+          <h1 className="text-2xl font-bold text-gray-900">
+            {location.pathname === "/InboxFolder" && "Inbox"}
+            {location.pathname === "/SentMails" && "Sent"}
+            {location.pathname === "/Starred" && "Starred"}
+            {location.pathname === "/Archive" && "Archive"}
+            {location.pathname === "/Spam" && "Spam"}
+            {location.pathname === "/Trash" && "Trash"}
+            {location.pathname === "/Draft" && "Drafts"}
+          </h1>
+          <button
+            onClick={handleRefresh}
+            className="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors duration-200"
+            title="Refresh"
+          >
+            <FaSync className="w-5 h-5" />
+          </button>
         </div>
-      )}
-      <div className="refresh-container">
-        <FaSync
-          className="refresh-icon"
-          onClick={handleRefresh}
-          title="Refresh"
-          style={{
-            cursor: "pointer",
-            fontSize: "20px",
-            marginLeft: "10px",
-            color: "#007bff",
-          }}
-        />
+
+        {/* Bulk Actions */}
+        {selectedRows.length > 0 && (
+          <div className="flex items-center space-x-2">
+            <span className="text-sm text-gray-600">
+              {selectedRows.length} selected
+            </span>
+            <div className="flex space-x-2">
+              {location.pathname === "/Starred" ? (
+                <button
+                  className="btn-secondary text-sm"
+                  onClick={() =>
+                    handleSelectedOnClick(
+                      "starred",
+                      selectedRows,
+                      setError,
+                      setEmails,
+                      user.id
+                    )
+                  }
+                >
+                  Remove from Favorites
+                </button>
+              ) : (
+                <button
+                  className="btn-secondary text-sm"
+                  onClick={() =>
+                    handleSelectedOnClick(
+                      "starred",
+                      selectedRows,
+                      setError,
+                      setEmails,
+                      user.id
+                    )
+                  }
+                >
+                  Add to Favorites
+                </button>
+              )}
+              
+              {location.pathname === "/Trash" ? (
+                <>
+                  <button
+                    className="btn-secondary text-sm"
+                    onClick={() =>
+                      handleSelectedOnClick(
+                        "trash",
+                        selectedRows,
+                        setError,
+                        setEmails,
+                        user.id
+                      )
+                    }
+                  >
+                    Remove from Trash
+                  </button>
+                  <button
+                    className="btn-danger text-sm"
+                    onClick={() => {
+                      handleSelectedOnClick(
+                        "permanent-delete",
+                        selectedRows,
+                        setError,
+                        setEmails,
+                        user.id
+                      );
+                      setSelectedRows([]);
+                    }}
+                  >
+                    Delete Permanently
+                  </button>
+                </>
+              ) : (
+                <button
+                  className="btn-secondary text-sm"
+                  onClick={() =>
+                    handleSelectedOnClick(
+                      "trash",
+                      selectedRows,
+                      setError,
+                      setEmails,
+                      user.id
+                    )
+                  }
+                >
+                  Add to Trash
+                </button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="search-bar-container">
-        <div className="input-wrapper">
-          <FaSearch id="search-icon" />
+      {/* Search Bar */}
+      <div className="mb-6">
+        <div className="relative max-w-md">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <FaSearch className="h-5 w-5 text-gray-400" />
+          </div>
           <input
-            className="inputStyle"
             ref={searchBarRef}
             type="text"
-            placeholder="Search mail ..."
+            className="input-field pl-10 pr-4"
+            placeholder="Search emails..."
             onFocus={() => setShowButtons(true)}
             onBlur={(e) => {
               if (!e.target.value) setShowButtons(false);
@@ -435,63 +436,86 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage, user
           />
         </div>
 
+        {/* Search Filters */}
         {showButtons && (
-          <div
-            onMouseDown={(e) => e.preventDefault()} // Prevents losing focus on click
-            className="search-buttons-container"
-          >
+          <div className="mt-3 flex flex-wrap gap-2">
             <button
-              className={`action-button search-button ${
-                searchKey === "sender" ? "selected" : ""
+              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors duration-200 ${
+                searchKey === "sender"
+                  ? "bg-primary-100 text-primary-700"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
               onClick={() => handleSearchKeyChange("sender")}
             >
-              {location.pathname === "/SentMails" ? "Reciever" : "Sender"}
+              {location.pathname === "/SentMails" ? "Receiver" : "Sender"}
             </button>
             <button
-              className={`action-button search-button ${
-                searchKey === "subject" ? "selected" : ""
+              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors duration-200 ${
+                searchKey === "subject"
+                  ? "bg-primary-100 text-primary-700"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
               onClick={() => handleSearchKeyChange("subject")}
             >
               Subject
             </button>
             <button
-              className={`action-button search-button ${
-                searchKey === "timestamp" ? "selected" : ""
+              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors duration-200 ${
+                searchKey === "timestamp"
+                  ? "bg-primary-100 text-primary-700"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
               onClick={() => handleSearchKeyChange("timestamp")}
             >
-              Timestamp
+              Date
             </button>
           </div>
         )}
       </div>
 
-      <div className="tableContainer">
-        <DataTable
-          columns={columns}
-          data={filteredEmails}
-          customStyles={customStyles}
-          onRowClicked={handleRowClick}
-          onRowMouseEnter={(row) => setHoveredRowId(row.id)}
-          onRowMouseLeave={() => setHoveredRowId(null)}
-          noDataComponent={<NoDataComponent />}
-          fixedHeader
-          selectableRows
-          onSelectedRowsChange={handleSelectedRowsChange}
-          persistTableHead
-        />
+      {/* Email Table */}
+      <div className="email-table">
+        {isLoading ? (
+          <div className="flex justify-center items-center py-12">
+            <Loading size="lg" text="Loading emails..." />
+          </div>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={filteredEmails}
+            customStyles={customStyles}
+            onRowClicked={handleRowClick}
+            onRowMouseEnter={(row) => setHoveredRowId(row.id)}
+            onRowMouseLeave={() => setHoveredRowId(null)}
+            noDataComponent={<NoDataComponent />}
+            fixedHeader
+            selectableRows
+            onSelectedRowsChange={handleSelectedRowsChange}
+            persistTableHead
+            responsive
+          />
+        )}
       </div>
-      {isNewMail && <NewMail 
+
+      {/* New Mail Modal */}
+      {isNewMail && (
+        <NewMail 
           user={user} 
           setIsNewMail={setIsNewMail} 
-          toMail={selectedEmail.emailOfReceiver || ""}  
-          subject={selectedEmail.subject || ""} 
-          message={selectedEmail.body || ""} 
-          draftId={selectedEmail.id || null} 
+          toMail={selectedEmail?.emailOfReceiver || ""}  
+          subject={selectedEmail?.subject || ""} 
+          message={selectedEmail?.body || ""} 
+          draftId={selectedEmail?.id || null} 
         />
-        }
+      )}
+
+      {/* Toast Notifications */}
+      <Toast
+        isVisible={toast.isVisible}
+        message={toast.message}
+        type={toast.type}
+        onClose={() => setToast({ ...toast, isVisible: false })}
+      />
     </div>
   );
 }

@@ -1,4 +1,5 @@
-import axios from "axios";
+import apiClient from "../../utils/apiUtils";
+
 export async function UserEmailCreation(SenderId, ReceiverId, EmailId) {
   console.log(SenderId, ReceiverId, EmailId);
   const userEmailData = {
@@ -9,7 +10,5 @@ export async function UserEmailCreation(SenderId, ReceiverId, EmailId) {
     },
   };
   // Save the user-email relationship
-  return await axios.post("http://localhost:8080/api/userEmails", userEmailData, {
-    headers: { "Content-Type": "application/json" },
-  });
+  return await apiClient.post("/api/userEmails", userEmailData);
 }

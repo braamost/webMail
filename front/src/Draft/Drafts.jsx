@@ -2,7 +2,6 @@
 import MenuBar from "../MenuBar/MenuBar";
 import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
-import "../style.css";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { fetchDrafts, deleteDraft } from "./REST";
 
@@ -53,10 +52,10 @@ function Drafts({ user, handleLogout }) {
             name: "Actions",
             cell: (row) => (
                 <>
-                    <button className="edit-button" onClick={() => console.log("Edit draft", row.id)}>
+                    <button className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-700 transition-colors duration-200 mr-2" onClick={() => console.log("Edit draft", row.id)}>
                         <FaEdit />
                     </button>
-                    <button className="delete-button" onClick={() => handleDeleteDraft(row.id)}>
+                    <button className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700 transition-colors duration-200" onClick={() => handleDeleteDraft(row.id)}>
                         <FaTrash />
                     </button>
                 </>

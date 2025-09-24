@@ -1,4 +1,4 @@
-import axios from 'axios';
+import apiClient from '../utils/apiUtils';
 import {UserEmailCreation} from '../NewMail/EmailCreationHandling/addUserEmail';
 
 
@@ -15,7 +15,7 @@ export async function saveDraft( toMail, subject, body, attachments,user ) {
     console.log("Sending draft data:", draftData); // Debugging log
 
     try {
-        const response = await axios.post("http://localhost:8080/api/emails/drafts/save", draftData);
+        const response = await apiClient.post("/api/emails/drafts/save", draftData);
         console.log("Draft saved:", response.data);
         const draftId = response.data.id;
         const receiverId = await UserEmailCreation(user.id, user.id, draftId);
@@ -28,7 +28,7 @@ export async function saveDraft( toMail, subject, body, attachments,user ) {
 export async function updateDraft(draftId,toMail,subject,body,attachments) {
     try {
         console.log("Updating draft:", draftId); // Debugging log
-        await axios.put(`http://localhost:8080/api/emails/drafts/update/${draftId}`, {
+        await apiClient.put(`/api/emails/drafts/update/${draftId}`, {
             toMail,
             subject,
             body,
@@ -41,8 +41,8 @@ export async function updateDraft(draftId,toMail,subject,body,attachments) {
 
 export async function deleteDraft(draftId, userId) {
     try {
-        await axios.delete(`http://localhost:8080/api/userEmails/${userId}/${userId}/${draftId}`);
-        await axios.delete(`http://localhost:8080/api/emails/drafts/delete/${draftId}`);
+        await apiClient.delete(`/api/userEmails/${userId}/${userId}/${draftId}`);
+        await apiClient.delete(`/api/emails/drafts/delete/${draftId}`);
         
 
     } catch (error) {
@@ -51,7 +51,7 @@ export async function deleteDraft(draftId, userId) {
 }
 export async function fetchDrafts(userId) {
     try {
-        const response = await axios.get(`http://localhost:8080/api/UserEmails/emails/${userId}/draft`);
+        const response = await apiClient.get(`/api/userEmails/emails/${userId}/draft`);
         console.log("Fetched drafts:", response.data);
         return response.data; // Return the draft object
     } catch (error) {

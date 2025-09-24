@@ -1,17 +1,10 @@
-import axios from 'axios';
+import apiClient from '../utils/apiUtils';
 
-export async function FetchContacts(userId) {
+export async function FetchContacts(user) {
     try {
-        const response = await axios.get(`http://localhost:8080/api/contacts/user/${userId}`, {
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
+        const response = await apiClient.get(`/api/contacts/user/${user.id}`);
         console.log(response.data , "zz");
 
-
-
-        console.log("how are you");
         return response.data;
     } catch (error) {
         if (error.response) {
@@ -29,56 +22,34 @@ export async function FetchContacts(userId) {
 
 
 
-export async function CreateContact(userId, userName, email , setError) {
+export async function CreateContact(user, userName, email , setError) {
   const contactData = {
       contactName: userName,
       contactEmail: email,
-      user: { id: userId } // Include the user object with an id
+      user: {id:user.id}
   };
   console.log(contactData);
-
   try {
-      const response = await fetch('http://localhost:8080/api/contacts', { // Adjust URL if necessary
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(contactData),
-      });
+      const response = await apiClient.post('/api/contacts', contactData);
 
-      if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-      }
-
-      const newContact = await response.json();
+      const newContact = response.data;
       console.log('Contact added:', newContact);
       return newContact; // Return the created contact
   } catch (error) {
-      setError("The User Email Not Found");
+      setError(error.response?.data?.message || 'Error creating contact');
       console.error('Error creating contact:', error);
-      throw error;
   }
 }
 
 
 
- export async function handleDeleteContact (contactId) {
+ export async function handleDeleteContact (user, contactId, setError) {
   try {
-      const response = await fetch("http://localhost:8080/api/contacts", {
-          method: "DELETE",
-          headers: {
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id: contactId }), // Send only the ID
-      });
-
-      if (!response.ok) {
-          throw new Error(`Failed to delete contact with ID: ${contactId}`);
-      }
-
+      const response = await apiClient.delete(`/api/contacts/${contactId}`);
       console.log(`Contact with ID ${contactId} successfully deleted.`);
   } catch (error) {
-      console.error("Error deleting contact:", error);
+        setError(error.response?.data?.message || 'Error deleting contact');
+        console.error("Error deleting contact:", error);
   }
 };
 

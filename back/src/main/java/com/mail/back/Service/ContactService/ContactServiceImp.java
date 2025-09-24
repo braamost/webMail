@@ -2,7 +2,6 @@ package com.mail.back.Service.ContactService;
 
 import com.mail.back.DAO.ContactRepository;
 import com.mail.back.entity.Contact;
-import com.mail.back.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +12,6 @@ public class ContactServiceImp implements ContactService {
 
     @Autowired
     private ContactRepository contactRepository;
-
-    // Get all contacts for a user
-
 
     // Add a new contact
     public Contact addContact(Contact contact) {

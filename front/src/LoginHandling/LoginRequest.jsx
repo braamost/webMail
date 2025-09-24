@@ -10,7 +10,6 @@ export async function Login(username, password, setError) {
     };
 
     const response = await axios.post(apiUrl, userData, {
-      withCredentials: true, // Important for session cookies
       headers: {
         "Content-Type": "application/json",
       },
