@@ -1,42 +1,53 @@
 package com.mail.back.Service.UserService;
 
+import com.mail.back.DAO.UserRepository;
+import com.mail.back.DTO.EntityMapper;
+import com.mail.back.DTO.LoginRequest;
+import com.mail.back.DTO.LoginResponse;
+import com.mail.back.DTO.RegisterRequest;
+import com.mail.back.DTO.UpdatePasswordRequest;
+import com.mail.back.DTO.UserResponse;
 import com.mail.back.GlobalHandle.NotFoundException;
 import com.mail.back.GlobalHandle.UserAlreadyExistsException;
-import com.mail.back.REST.UserControl.LoginRequest;
-import com.mail.back.REST.UserControl.LoginResponse;
 import com.mail.back.Security.JwtUtil;
+import com.mail.back.Service.Validation.ValidationService;
+import com.mail.back.Storage.ObjectService;
+import com.mail.back.Storage.ObjectService.StoredObject;
+import com.mail.back.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import com.mail.back.entity.*;
-import com.mail.back.DAO.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
+
 @Service
 public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-    private final Path root = Paths.get("uploads/profile-photos");
-
+    private final ObjectService objectService;
+    private final ValidationService validationService;
+    private final EntityMapper entityMapper;
 
     @Autowired
-    public UserServiceImp(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public UserServiceImp(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            JwtUtil jwtUtil,
+            ObjectService objectService,
+            ValidationService validationService,
+            EntityMapper entityMapper) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
+        this.objectService = objectService;
+        this.validationService = validationService;
+        this.entityMapper = entityMapper;
     }
 
     @Override
@@ -46,108 +57,142 @@ public class UserServiceImp implements UserService {
 
     @Override
     public User findById(Integer theId) {
+        @SuppressWarnings("null")
         Optional<User> result = userRepository.findById(theId);
-
-        User theUser = null;
-
         if (result.isPresent()) {
-            theUser = result.get();
+            return result.get();
         }
-        else {
-            // we didn't find the User
-            throw new NotFoundException("User with ID " + theId + " not found.");
-        }
-
-        return theUser;
+        throw new NotFoundException("User with ID " + theId + " not found.");
     }
 
     @Override
     public User save(User theUser) {
         String email = theUser.getEmail(), userName = theUser.getUserName(), password = theUser.getPassword();
-        if(email == null || userName == null || password == null)
+        if (email == null || userName == null || password == null) {
             throw new IllegalArgumentException("User name, email and password are required");
-        if(userRepository.findByEmail(email) != null)
-            throw new  UserAlreadyExistsException("email taken");
-        if(userRepository.findByUserName(userName) != null)
-            throw new  UserAlreadyExistsException("username taken");
+        }
+        if (userRepository.findByEmail(email) != null) {
+            throw new UserAlreadyExistsException("email taken");
+        }
+        if (userRepository.findByUserName(userName) != null) {
+            throw new UserAlreadyExistsException("username taken");
+        }
         theUser.setPassword(passwordEncoder.encode(theUser.getPassword()));
         return userRepository.save(theUser);
     }
 
     @Override
+    public UserResponse register(RegisterRequest request, MultipartFile photo) {
+        User savedUser = save(entityMapper.toUser(request));
+        if (photo != null && !photo.isEmpty()) {
+            validationService.validateFile(photo);
+            persistProfilePhoto(savedUser, photo);
+        }
+        return entityMapper.toUserResponse(savedUser);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public LoginResponse login(LoginRequest request) {
-        // find user by username or email
         User user = userRepository.findByUserName(request.getUserName());
-        if(user == null)
+        if (user == null) {
             throw new NotFoundException("User not found");
-
-        // check password
+        }
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid username/email or password");
         }
-
-        // generate JWT token
         String token = jwtUtil.generateToken(user.getUserName());
-
-        return new LoginResponse(token, user.getId(), user.getUserName(), user.getProfileUrl(), user.getEmail(),user.getPhoneNumber());
+        return new LoginResponse(
+                token,
+                user.getId(),
+                user.getUserName(),
+                user.getProfileUrl(),
+                user.getEmail(),
+                user.getPhoneNumber());
     }
 
     @Override
-    public String saveProfilePhoto(Integer id, MultipartFile file) throws IOException {
-        if (!Files.exists(root)) {
-            Files.createDirectories(root);
-        }
+    public String saveProfilePhoto(Integer id, MultipartFile file, Authentication authentication) {
+        User authenticated = validationService.requireAuthenticatedUser(authentication);
+        validationService.requireOwnership(
+                authenticated, id, "You are not authorized to upload profile photo for this user");
+        validationService.validateFile(file);
+        User user = findById(id);
+        return persistProfilePhoto(user, file);
+    }
 
-        String filename = id + "_" + file.getOriginalFilename();
-        Path filePath = root.resolve(filename);
-        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-        return userRepository.findById(id).map(user -> {
-            String url = "/api/users/" + id + "/profile-photo/" + filename;
-            user.setProfileUrl(url);
-            userRepository.save(user);
-            return url;
-        }).orElseThrow(() -> new NotFoundException("User not found"));
+    private String persistProfilePhoto(User user, MultipartFile file) {
+        String storedReference = objectService.save(file, "users/photos");
+        String url = storedReference.startsWith("http://") || storedReference.startsWith("https://")
+                ? storedReference
+                : "/api/users/" + user.getId() + "/profile-photo/"
+                + Path.of(storedReference).getFileName();
+        user.setProfileUrl(url);
+        userRepository.save(user);
+        return url;
     }
 
     @Override
-    public Resource getProfilePhoto(Integer id, String filename) throws IOException {
-        Path file = root.resolve(filename);
-        Resource resource = new UrlResource(file.toUri());
-        if (resource.exists() && resource.isReadable()) {
-            return resource;
+    public StoredObject openProfilePhoto(Integer id, String filename) {
+        User user = findById(id);
+        if (user.getProfileUrl() == null || user.getProfileUrl().isBlank()) {
+            throw new NotFoundException("Profile photo not found");
         }
-        throw new FileNotFoundException("Profile photo not found: " + filename);
+        String storedReference = user.getProfileUrl().startsWith("/api/")
+                ? "users/photos/" + filename
+                : user.getProfileUrl();
+        return objectService.open(storedReference);
     }
 
-
+    @SuppressWarnings("null")
     @Override
     public User update(User theUser) {
         return userRepository.save(theUser);
     }
 
     @Override
-    public User updatePassword(User user, String newPassword) {
-        user.setPassword(passwordEncoder.encode(newPassword));
-        return userRepository.save(user);
+    public void updatePassword(Integer id, UpdatePasswordRequest request, Authentication authentication) {
+        User authenticated = validationService.requireAuthenticatedUser(authentication);
+        validationService.requireOwnership(
+                authenticated, id, "You are not authorized to update password for this user");
+        User user = findById(id);
+        validationService.validateOldPassword(user, request.getOldPassword());
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 
+    @SuppressWarnings("null")
     @Override
-    public void deleteById(Integer theId) {
+    public void deleteById(Integer theId, Authentication authentication) {
+        User authenticated = validationService.requireAuthenticatedUser(authentication);
+        validationService.requireOwnership(
+                authenticated, theId, "You are not authorized to delete this user");
+        validationService.requireExistingUserId(theId);
         userRepository.deleteById(theId);
     }
 
     @Override
-    public User findByUserName(String Username){
+    public User findByUserName(String Username) {
         return userRepository.findByUserName(Username);
     }
+
     @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
+    @Override
+    public UserResponse getByUserName(String username) {
+        return entityMapper.toUserResponse(validationService.requireExistingUsername(username));
+    }
+
+    @Override
+    public UserResponse getByEmail(String email) {
+        return entityMapper.toUserResponse(validationService.requireExistingEmail(email));
+    }
+
     @Override
     public boolean checkPassword(User user, String password) {
-        return !passwordEncoder.matches(password, user.getPassword());
+        return passwordEncoder.matches(password, user.getPassword());
     }
 }

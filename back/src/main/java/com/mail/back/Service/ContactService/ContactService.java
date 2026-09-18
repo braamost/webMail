@@ -1,13 +1,17 @@
 package com.mail.back.Service.ContactService;
 
-import com.mail.back.entity.Contact;
+import com.mail.back.DTO.ContactRequest;
+import com.mail.back.DTO.ContactResponse;
+import org.springframework.security.core.Authentication;
+
 import java.util.List;
 
 public interface ContactService {
-    public Contact addContact(Contact contact);
-    public void deleteContact(int contactId);
-    public Contact getContactById(int contactId);
-    public List<Contact> getContactsByUserId(int userId);
+    ContactResponse addContact(ContactRequest contact, Authentication authentication);
 
-    Contact findByContactEmail(String contactEmail);
+    void deleteContact(int contactId, Authentication authentication);
+
+    ContactResponse getContactById(int contactId, Authentication authentication);
+
+    List<ContactResponse> getContactsByUserId(int userId, Authentication authentication);
 }

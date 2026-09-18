@@ -1,3 +1,4 @@
+-- Superseded by Flyway migrations; retained for historical reference only.
 CREATE DATABASE IF NOT EXISTS web_mail;
 USE web_mail;
 
@@ -61,4 +62,3 @@ CREATE TABLE contacts (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, -- Timestamp when the contact is added
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE -- Relationship with users
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
-

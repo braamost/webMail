@@ -61,7 +61,10 @@ function UserFolder({ handleLogout, user, setUser }) {
     }
     setIsLoading(true);
     try {
-      const response = await apiClient.put(`/api/users/update-password/${user.id}/${oldPassword}/${newPassword}`);
+      const response = await apiClient.put(`/api/users/${user.id}/password`, {
+        oldPassword,
+        newPassword,
+      });
       if (response.status >= 200 && response.status < 300) {
         setToast({
           isVisible: true,

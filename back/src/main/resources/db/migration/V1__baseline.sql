@@ -1,0 +1,57 @@
+-- Baseline copied from database_tables_initialization.sql. Flyway runs this
+-- against the database selected by the datasource; it must not create/drop it.
+CREATE TABLE users (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  user_name VARCHAR(50) COLLATE utf8mb4_bin DEFAULT NULL,
+  password VARCHAR(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  email VARCHAR(320) COLLATE utf8mb4_bin DEFAULT NULL,
+  phone_number VARCHAR(20) DEFAULT NULL,
+  profile_url VARCHAR(100) DEFAULT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE emails (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  subject VARCHAR(255) NOT NULL,
+  body TEXT NOT NULL,
+  sent_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  is_read BOOLEAN DEFAULT FALSE,
+  is_starred BOOLEAN DEFAULT FALSE,
+  email_direction ENUM ('SENT', 'RECEIVED', 'DRAFT') DEFAULT 'RECEIVED',
+  folder ENUM ('GENERAL', 'SPAM', 'TRASH', 'DRAFT', 'ARCHIVE') DEFAULT 'GENERAL'
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE user_emails (
+  sender_id INT NOT NULL,
+  receiver_id INT NOT NULL,
+  email_id INT NOT NULL,
+  PRIMARY KEY (sender_id, receiver_id, email_id),
+  FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (email_id) REFERENCES emails(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE attachments (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  email_id INT NOT NULL,
+  file_name VARCHAR(255) NOT NULL,
+  file_type VARCHAR(100) NOT NULL,
+  file_content LONGBLOB NOT NULL,
+  FOREIGN KEY (email_id) REFERENCES emails(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE contacts (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  contact_name VARCHAR(255) NOT NULL,
+  contact_email VARCHAR(320) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+CREATE INDEX idx_users_username ON users (user_name);
+CREATE INDEX idx_users_email ON users (email);
+CREATE INDEX idx_user_emails_user_id ON user_emails (sender_id, receiver_id);
+CREATE INDEX idx_user_emails_email_id ON user_emails (email_id);
+CREATE INDEX idx_attachments_email_id ON attachments (email_id);
+CREATE INDEX idx_contacts_user_id ON contacts (user_id);

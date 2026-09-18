@@ -114,7 +114,7 @@ function EmailTable({ emails, setEmails, setError, callback, FuncEmailPage, user
                   onClick={(e) => {
                     e.stopPropagation();
                     const downloadLink = document.createElement("a");
-                    downloadLink.href = URL.createObjectURL(file);
+                    downloadLink.href = file.downloadUrl;
                     downloadLink.download = file.name;
                     downloadLink.click();
                   }}

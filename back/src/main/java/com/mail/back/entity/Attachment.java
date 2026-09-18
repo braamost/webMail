@@ -29,14 +29,13 @@ public class Attachment {
     private String fileName; // The file's name
     private String fileType; // The MIME type of the file
 
-    @Lob
-    @Column(nullable = false)
-    private byte[] fileContent; // BLOB to store the file content
+    @Column(name = "file_path", nullable = false, length = 500)
+    private String filePath;
 
-    public Attachment(Email email, String fileName, String fileType, byte[] fileContent) {
+    public Attachment(Email email, String fileName, String fileType, String filePath) {
         this.email = email;
         this.fileName = fileName;
         this.fileType = fileType;
-        this.fileContent = fileContent;
+        this.filePath = filePath;
     }
 }

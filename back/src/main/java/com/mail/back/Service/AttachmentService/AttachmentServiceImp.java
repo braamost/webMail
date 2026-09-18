@@ -1,48 +1,96 @@
 package com.mail.back.Service.AttachmentService;
 
-
-
-import com.mail.back.entity.Attachment;
-import com.mail.back.entity.Email;
 import com.mail.back.DAO.AttachmentRepository;
 import com.mail.back.DAO.EmailRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mail.back.DTO.AttachmentResponse;
+import com.mail.back.DTO.EntityMapper;
+import com.mail.back.GlobalHandle.NotFoundException;
+import com.mail.back.Service.Validation.ValidationService;
+import com.mail.back.Storage.ObjectService;
+import com.mail.back.entity.Attachment;
+import com.mail.back.entity.Email;
+import com.mail.back.entity.User;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
-public class AttachmentServiceImp implements AttachmentService{
+public class AttachmentServiceImp implements AttachmentService {
 
-    @Autowired
-    private AttachmentRepository attachmentRepository;
+    private final AttachmentRepository attachmentRepository;
+    private final EmailRepository emailRepository;
+    private final ObjectService objectService;
+    private final ValidationService validationService;
+    private final EntityMapper entityMapper;
 
-    @Autowired
-    private EmailRepository emailRepository;
+    public AttachmentServiceImp(
+            AttachmentRepository attachmentRepository,
+            EmailRepository emailRepository,
+            ObjectService objectService,
+            ValidationService validationService,
+            EntityMapper entityMapper) {
+        this.attachmentRepository = attachmentRepository;
+        this.emailRepository = emailRepository;
+        this.objectService = objectService;
+        this.validationService = validationService;
+        this.entityMapper = entityMapper;
+    }
 
-    // Method to save an attachment
-    public Attachment saveAttachment(MultipartFile file, Integer emailId) throws IOException {
-        // Find the associated Email by emailId
+    @Override
+    public List<AttachmentResponse> uploadAttachments(
+            MultipartFile[] files, Integer emailId, Authentication authentication) {
+        User user = validationService.requireAuthenticatedUser(authentication);
+        validationService.validateUploadRequest(files, emailId);
+        validationService.requireEmailAccess(user, emailId);
+
+        List<Attachment> attachments = new ArrayList<>();
+        try {
+            for (MultipartFile file : files) {
+                attachments.add(saveAttachment(file, emailId));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to upload attachments", e);
+        }
+        return entityMapper.toAttachmentResponses(attachments);
+    }
+
+    private Attachment saveAttachment(MultipartFile file, Integer emailId) {
         Email email = emailRepository.findById(emailId)
-                .orElseThrow(() -> new RuntimeException("Email not found"));
+                .orElseThrow(() -> new NotFoundException("Email not found"));
 
-        // Create a new Attachment and set its properties
         Attachment attachment = new Attachment();
-        attachment.setFileName(file.getOriginalFilename());
         attachment.setFileType(file.getContentType());
-        attachment.setFileContent(file.getBytes());
-
-        // Set the associated email to the attachment
+        String storedPath = objectService.save(file, "attachments");
+        attachment.setFilePath(storedPath);
+        attachment.setFileName(storedPath.substring(storedPath.lastIndexOf('/') + 1));
         attachment.setEmail(email);
-
-        // Save the attachment to the database
         return attachmentRepository.save(attachment);
     }
 
-    // Method to retrieve an attachment by its ID
+    @Override
+    public AttachmentResponse getAttachment(Integer id, Authentication authentication) {
+        User user = validationService.requireAuthenticatedUser(authentication);
+        validationService.requireAttachmentAccess(user, id);
+        return entityMapper.toAttachmentResponse(getAttachmentById(id));
+    }
+
+    @Override
     public Attachment getAttachmentById(Integer id) {
         return attachmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Attachment not found"));
+                .orElseThrow(() -> new NotFoundException("Attachment not found"));
+    }
+
+    @Override
+    public AttachmentDownload prepareDownload(Integer id, Authentication authentication) {
+        User user = validationService.requireAuthenticatedUser(authentication);
+        validationService.requireAttachmentAccess(user, id);
+        Attachment attachment = getAttachmentById(id);
+        return new AttachmentDownload(
+                attachment.getFileName(),
+                attachment.getFileType(),
+                objectService.open(attachment.getFilePath()));
     }
 }

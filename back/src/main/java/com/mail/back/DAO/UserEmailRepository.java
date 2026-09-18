@@ -9,17 +9,27 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailID>{
+public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailID> {
 
     @Query("SELECT ue FROM UserEmail ue WHERE ue.receiver.id = :receiverId AND ue.email.folder = :folder AND ue.email.emailDirection = 'RECEIVED'")
-    List<UserEmail> findByReceiverIdAndFolder(@Param("receiverId") Integer receiverId, @Param("folder") Email.Folder folder);
+    List<UserEmail> findByReceiverIdAndFolder(
+            @Param("receiverId") Integer receiverId, @Param("folder") Email.Folder folder);
 
     @Query("SELECT ue FROM UserEmail ue WHERE ue.sender.id = :senderId AND ue.email.folder = :folder AND ue.email.emailDirection = 'SENT' OR ue.email.emailDirection = 'DRAFT'")
-    List<UserEmail> findBySenderIdAndFolder(@Param("senderId") Integer senderId, @Param("folder") Email.Folder folder);
+    List<UserEmail> findBySenderIdAndFolder(
+            @Param("senderId") Integer senderId, @Param("folder") Email.Folder folder);
 
-    @Query("SELECT ue FROM UserEmail ue WHERE   ((ue.sender.id = :userId AND ue.email.emailDirection = 'SENT')" +
-                                                "OR (ue.receiver.id = :userId AND ue.email.emailDirection = 'RECEIVED')) " +
-                                                "AND ue.email.isStarred = true")
+    @Query("SELECT ue FROM UserEmail ue WHERE   ((ue.sender.id = :userId AND ue.email.emailDirection = 'SENT')"
+            + "OR (ue.receiver.id = :userId AND ue.email.emailDirection = 'RECEIVED')) "
+            + "AND ue.email.isStarred = true")
     List<UserEmail> findByStarred(@Param("userId") Integer userId);
 
+    @Query("SELECT ue FROM UserEmail ue WHERE ue.sender.id = :userId OR ue.receiver.id = :userId")
+    List<UserEmail> findAllByParticipant(@Param("userId") Integer userId);
+
+    @Query("SELECT CASE WHEN COUNT(ue) > 0 THEN true ELSE false END FROM UserEmail ue "
+            + "WHERE ue.email.id = :emailId AND (ue.sender.id = :userId OR ue.receiver.id = :userId)")
+    boolean isParticipant(@Param("emailId") Integer emailId, @Param("userId") Integer userId);
+
+    boolean existsByEmail_Id(Integer emailId);
 }

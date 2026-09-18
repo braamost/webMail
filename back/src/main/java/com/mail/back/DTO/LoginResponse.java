@@ -1,4 +1,4 @@
-package com.mail.back.REST.UserControl;
+package com.mail.back.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

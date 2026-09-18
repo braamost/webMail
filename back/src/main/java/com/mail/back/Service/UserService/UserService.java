@@ -1,34 +1,45 @@
 package com.mail.back.Service.UserService;
-import com.mail.back.REST.UserControl.LoginRequest;
-import com.mail.back.REST.UserControl.LoginResponse;
-import com.mail.back.entity.*;
-import org.springframework.core.io.Resource;
+
+import com.mail.back.DTO.LoginRequest;
+import com.mail.back.DTO.LoginResponse;
+import com.mail.back.DTO.RegisterRequest;
+import com.mail.back.DTO.UpdatePasswordRequest;
+import com.mail.back.DTO.UserResponse;
+import com.mail.back.Storage.ObjectService.StoredObject;
+import com.mail.back.entity.User;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
+
 public interface UserService {
-  List<User> findAll();
+    List<User> findAll();
 
-  User findById(Integer theId);
+    User findById(Integer theId);
 
-  User save(User theUser);
+    User save(User theUser);
 
-  LoginResponse login(LoginRequest loginRequest);
+    UserResponse register(RegisterRequest request, MultipartFile photo);
 
-  User update(User theUser);
+    LoginResponse login(LoginRequest loginRequest);
 
-  User updatePassword(User user, String newPassword);
+    User update(User theUser);
 
-  void deleteById(Integer theId);
+    void updatePassword(Integer id, UpdatePasswordRequest request, Authentication authentication);
 
-  User findByUserName(String Username);
+    void deleteById(Integer theId, Authentication authentication);
 
-  User findByEmail(String email);
+    User findByUserName(String Username);
 
-  boolean checkPassword(User user, String password);
+    User findByEmail(String email);
 
-  String saveProfilePhoto(Integer id, MultipartFile file) throws IOException;
+    UserResponse getByUserName(String username);
 
-  Resource getProfilePhoto(Integer id, String filename) throws IOException;
+    UserResponse getByEmail(String email);
+
+    boolean checkPassword(User user, String password);
+
+    String saveProfilePhoto(Integer id, MultipartFile file, Authentication authentication);
+
+    StoredObject openProfilePhoto(Integer id, String filename);
 }

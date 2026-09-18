@@ -1,22 +1,28 @@
 package com.mail.back.Service.UserEmailService;
-import com.mail.back.entity.Email;
-import com.mail.back.entity.UserEmail;
-import com.mail.back.entity.UserEmailID;
+
+import com.mail.back.DTO.EmailResponse;
+import com.mail.back.DTO.UserEmailRequest;
+import com.mail.back.DTO.UserEmailResponse;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
+
 public interface UserEmailService {
-  List<UserEmail> findAll();
+    List<UserEmailResponse> findAll(Authentication authentication);
 
-  UserEmail findById(UserEmailID theId);
+    UserEmailResponse findById(
+            Integer senderId,
+            Integer receiverId,
+            Integer emailId,
+            Authentication authentication);
 
-  UserEmail save(UserEmail theUserEmail);
+    UserEmailResponse save(UserEmailRequest request, Authentication authentication);
 
-  void deleteById(UserEmailID theId);
+    void deleteById(
+            Integer senderId,
+            Integer receiverId,
+            Integer emailId,
+            Authentication authentication);
 
-  List<Email> getEmailsByReceiverAndFolder(Integer receiverId,  Email.Folder folder);
-
-  List<Email> getEmailsBySenderAndFolder(Integer senderId,  Email.Folder folder);
-
-  List<Email> getEmailsByStarred(Integer userId);
-
+    List<EmailResponse> getEmails(String folder, Integer userId, Authentication authentication);
 }
