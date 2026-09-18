@@ -53,4 +53,15 @@ public class EmailServiceImp implements EmailService{
     public List<Attachment> getAttachmentsForEmail(Integer emailId) {
         return emailRepository.findAttachmentsByEmailId(emailId);
     }
+
+    public Email saveDraft(Email email) {
+      email.setFolder(Email.Folder.DRAFT);
+      email.setEmailDirection(Email.EmailDirection.SENT);
+      return emailRepository.save(email);
+    }
+
+
+    public void deleteDraft(Integer id) {
+        emailRepository.deleteById(id);
+    }
 }

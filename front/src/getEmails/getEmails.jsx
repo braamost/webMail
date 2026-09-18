@@ -1,17 +1,12 @@
-import axios from "axios";
+import apiClient from "../utils/apiUtils";
 
 // Attachment conversion function
 import { processEmailAttachments } from "./RetrieveAttachments";
 
 export const getEmails = async (folder, user) => {
   try {
-    const response = await axios.get(
-      `http://localhost:8080/api/userEmails/emails/${user.id}/${folder}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+    const response = await apiClient.get(
+      `/api/userEmails/emails/${user.id}/${folder}`
     );
     console.log("fetched emails: ", response.data);
     // Process the response data and ensure newlines are preserved

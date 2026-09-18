@@ -64,7 +64,7 @@ public class UserEmailServiceImp implements UserEmailService{
     public List<Email> getEmailsBySenderAndFolder(Integer senderId, Email.Folder folder) {
         // Fetch UserEmails by senderId and folder
         List<UserEmail> userEmails = userEmailRepository.findBySenderIdAndFolder(senderId, folder);
-
+        System.out.println(userEmails);
         // Extract the Email data from UserEmail entries
         return getTheEmails(userEmails);
     }

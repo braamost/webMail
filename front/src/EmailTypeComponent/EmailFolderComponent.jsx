@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import HomePage from "../homePage/homePage";
 import { getEmails } from "../getEmails/getEmails";
 import { getUserForTab, getTabId } from "../SessionManager";

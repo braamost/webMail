@@ -4,12 +4,11 @@ import java.util.List;
 public interface EmailService {
   
     List<Email> findAll();
-
     Email findById(Integer id);
-
     Email save(Email email);
-
     void deleteById(Integer id);
-
     List<Attachment> getAttachmentsForEmail(Integer emailId);
+
+    Email saveDraft(Email email);
+    void deleteDraft(Integer id);
 }

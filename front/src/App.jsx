@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UserFolder from "./UserFolder/UserFolder.jsx";
 import EmailFolderComponent from "./EmailTypeComponent/EmailFolderComponent.jsx";
 import Register from "./RegisterHandling/RegisterPage.jsx";
@@ -15,7 +15,6 @@ import {
 
 function App() {
   const [user, setUser] = useState(() => getUserForTab());
-  const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
     const handleStorageChange = (e) => {
@@ -135,7 +134,19 @@ function App() {
             <ProtectedRoute user={user}>
               <MyContacts
                 user={user}
-                contacts={contacts}
+                handleLogout={handleLogout}
+              />
+
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Draft"
+          element={
+            <ProtectedRoute user={user}>
+              <EmailFolderComponent
+                user={user}
+                folderName="DRAFT"
                 handleLogout={handleLogout}
               />
             </ProtectedRoute>

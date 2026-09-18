@@ -1,4 +1,4 @@
-package com.mail.back.CleanTrash;
+package com.mail.back.Service;
 
 import com.mail.back.DAO.EmailRepository;
 import org.springframework.scheduling.annotation.Scheduled;

@@ -1,11 +1,17 @@
 package com.mail.back.entity;
 
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 
+@Setter
+@Getter
+@ToString
 @Embeddable
 public class UserEmailID implements Serializable {
     private Integer senderId;
@@ -17,30 +23,6 @@ public class UserEmailID implements Serializable {
     public UserEmailID(Integer senderId, Integer receiverId, Integer emailId) {
         this.senderId = senderId;
         this.receiverId = receiverId;
-        this.emailId = emailId;
-    }
-
-    public Integer getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderId(Integer senderId) {
-        this.senderId = senderId;
-    }
-
-    public Integer getReceiverId() {
-        return receiverId;
-    }
-
-    public void setReceiverId(Integer receiverId) {
-        this.receiverId = receiverId;
-    }
-
-    public Integer getEmailId() {
-        return emailId;
-    }
-
-    public void setEmailId(Integer emailId) {
         this.emailId = emailId;
     }
 
@@ -56,12 +38,5 @@ public class UserEmailID implements Serializable {
     public int hashCode() {
         return Objects.hash(senderId, receiverId, emailId);
     }
-    @Override
-    public String toString() {
-        return "UserEmailID{" +
-                "senderId=" + senderId +
-                ", receiverId=" + receiverId +
-                ", emailId=" + emailId +
-                '}';
-    }
+
 }

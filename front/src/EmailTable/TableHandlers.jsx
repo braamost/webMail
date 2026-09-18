@@ -1,10 +1,11 @@
-import axios from "axios";
+import apiClient from "../utils/apiUtils";
+import { UserIsFound } from "../NewMail/EmailCreationHandling/CheckUserExistence";
 
 export async function MovetoFolder(folder, id, setError) {
   try {
     console.log("folder and id ", folder, id);
-    const response = await axios.put(
-      `http://localhost:8080/api/emails/${folder}/${id}`
+    const response = await apiClient.put(
+      `/api/emails/${folder}/${id}`
     );
   } catch (error) {
     if (error.response) {
@@ -33,7 +34,8 @@ export const handleSelectedOnClick = async (
   folder,
   selectedRows,
   setError,
-  setEmails
+  setEmails,
+  userId
 ) => {
   const shouldKeepInView = folder === "read" || folder === "starred" ;
   const currentPath = window.location.pathname;
@@ -43,9 +45,12 @@ export const handleSelectedOnClick = async (
     if (folder === "permanent-delete") {
       console.log(folder);
       console.log(selectedRows);
-      const response = selectedRows.map((email) =>
-        axios.delete(`http://localhost:8080/api/emails/${email.id}`)
-      );
+      
+      const response = selectedRows.map((email) =>{
+        apiClient.delete(`/api/emails/${email.id}`);
+        const receiverId = UserIsFound(email.emailOfReceiver);
+        apiClient.delete(`/api/userEmails/${userId}/${receiverId}/${email.id}`);
+      });
       await Promise.all(response);
 
       setEmails((prevEmails) => {
