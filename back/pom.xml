@@ -14,7 +14,8 @@
 	<properties>
 		<java.version>25</java.version>
 		<spring-boot.version>4.1.1</spring-boot.version>
-		<aws.java.sdk.version>2.27.21</aws.java.sdk.version>
+		<aws.java.sdk.version>2.41.30</aws.java.sdk.version>
+		<jjwt.version>0.12.6</jjwt.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 	</properties>
 
@@ -26,14 +27,7 @@
 				<version>${aws.java.sdk.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
-			</dependency><!-- TEMP: override to pick up the CVE-2025-41242 fix now -->
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-framework-bom</artifactId>
-                <version>6.2.10</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+			</dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -84,18 +78,18 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
-            <version>0.11.5</version>
+            <version>${jjwt.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
-            <version>0.11.5</version>
+            <version>${jjwt.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
-            <version>0.11.5</version>
+            <version>${jjwt.version}</version>
             <scope>runtime</scope>
         </dependency>
 

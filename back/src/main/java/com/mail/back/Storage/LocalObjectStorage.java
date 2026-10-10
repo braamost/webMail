@@ -2,6 +2,7 @@ package com.mail.back.Storage;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,14 +12,16 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 @Component
+@Primary
 @ConditionalOnProperty(name = "storage.type", havingValue = "local", matchIfMissing = true)
 public class LocalObjectStorage extends ObjectStorage {
     private final Path basePath;
 
     public LocalObjectStorage(@Value("${storage.local.base-path:./uploads}") String basePath) {
         try {
-            Files.createDirectories(Path.of(basePath).toAbsolutePath().normalize());
-            this.basePath = Path.of(basePath).toRealPath();
+            Path path = Path.of(basePath).toAbsolutePath().normalize();
+            Files.createDirectories(path);
+            this.basePath = path.toRealPath();
         } catch (IOException exception) {
             throw new IllegalStateException("Unable to initialize local storage directory", exception);
         }
